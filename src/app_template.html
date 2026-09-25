@@ -291,7 +291,7 @@ details.how .how-body { display: grid; gap: 10px; margin-top: 12px; max-width: 6
 .task-big.ja { font-weight: 600; font-size: 64px; color: var(--ink); }
 .task-sub { font-size: 15px; color: var(--muted); display: flex; gap: 8px; align-items: center; justify-content: center; flex-wrap: wrap; font-weight: 700; }
 .hint-chip { font-size: 12px; font-weight: 800; padding: 3px 9px; border-radius: 999px; background: var(--cream); color: var(--primary); }
-.pad { width: 100%; max-width: 420px; margin: 0 auto; position: relative; }
+.pad { width: 100%; max-width: 420px; max-width: max(240px, min(420px, calc(100dvh - 370px - env(safe-area-inset-bottom, 0px)))); margin: 0 auto; position: relative; }
 .pad-canvas {
   display: block; width: 100%; aspect-ratio: 1; max-width: 100%;
   border: 5px solid #fff; border-radius: 30px; background: var(--surface);
@@ -311,7 +311,26 @@ details.how .how-body { display: grid; gap: 10px; margin-top: 12px; max-width: 6
   12% { opacity: 1; transform: translate(0, 20px) rotate(20deg) scale(1); }
   100% { transform: translate(var(--dx, 30px), 460px) rotate(var(--rot, 300deg)) scale(.9); opacity: 0; }
 }
-.tools { display: grid; grid-template-columns: 1fr 1fr 1.4fr; gap: 8px; max-width: 420px; margin: 0 auto; width: 100%; }
+.tools { display: grid; grid-template-columns: 1fr 1fr 1.4fr; gap: 8px; width: 100%; }
+/* Панель действий задания: прилипает к низу экрана, чтобы «Проверить» и «Дальше» не приходилось искать прокруткой */
+.act-bar {
+  position: sticky; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); z-index: 4;
+  display: grid; gap: 10px; width: 100%; max-width: 440px; margin: 0 auto; padding: 8px; border-radius: 30px;
+  background: rgb(255 246 250 / .82); backdrop-filter: blur(16px) saturate(1.5); -webkit-backdrop-filter: blur(16px) saturate(1.5);
+  border: 1.5px solid rgb(255 255 255 / .95); box-shadow: 0 8px 24px rgb(234 79 135 / .16);
+}
+.act-bar > .btn { width: 100%; min-height: 52px; font-size: 17px; }
+.act-verdict { display: flex; align-items: center; gap: 10px; padding: 2px 6px 0; }
+.act-verdict .mascot, .act-verdict .hanamaru { width: 48px; height: 48px; flex: none; }
+.act-verdict .verdict-title { font-size: 17px; }
+.act-verdict.ok .verdict-title { color: var(--ok); }
+.act-verdict.bad .verdict-title { color: var(--accent); }
+.act-verdict .muted { font-size: 14px; line-height: 1.35; }
+.act-reveal { font-weight: 800; color: var(--ink); }
+@media (max-height: 720px) { .act-verdict .muted { display: none; } .act-verdict .mascot, .act-verdict .hanamaru { width: 36px; height: 36px; } }
+.act-row { display: flex; gap: 8px; }
+.act-row .btn { flex: 1 1 auto; min-width: 0; padding: 0 12px; white-space: nowrap; }
+.act-row .btn.quiet { flex: 0 1 auto; }
 .tools .btn { padding: 4px 8px; font-size: 14px; line-height: 1.2; }
 .feedback { min-height: 24px; display: grid; gap: 12px; }
 .verdict { display: flex; gap: 12px; align-items: center; background: rgb(255 255 255 / .9); border: 3px solid #fff; border-radius: 22px; padding: 10px 14px; box-shadow: var(--shadow); }
@@ -1233,25 +1252,32 @@ function writeTask(opts) {
   const trace = opts.mode === "trace";
   let attempts = 0, firstOk = null, helped = false, finished = false;
   const fb = h("div", { class: "feedback", "aria-live": "polite" });
-  const helpBox = h("div", { hidden: true });
   const checkBtn = h("button", { class: "btn primary", type: "button", disabled: true }, "Проверить");
+  // Панель действий под клеткой: всегда на экране, после проверки в ней итог и «Дальше»
+  const bar = h("div", { class: "act-bar" });
   const pad = makePad({
     guide: trace ? k : null,
-    onReset: () => { fb.replaceChildren(); checkBtn.disabled = true; },
+    onReset: () => { fb.replaceChildren(); checkBtn.disabled = true; showTools(); },
     onStroke: (n) => { checkBtn.disabled = n === 0; }
   });
   const undoBtn = h("button", { class: "btn", type: "button", onclick: () => pad.undo() }, "Отменить черту");
   const clearBtn = h("button", { class: "btn", type: "button", onclick: () => { pad.clear(); fb.replaceChildren(); } }, "Стереть");
+  const tools = h("div", { class: "tools" }, undoBtn, clearBtn, checkBtn);
+  function showTools() { if (!finished && !bar.contains(tools)) bar.replaceChildren(tools); }
   const hint = HINT[k] ? h("span", { class: "hint-chip" }, HINT[k]) : null;
   const head = h("div", { class: "task-head" },
     h("div", { class: "task-label" }, opts.label || (trace ? "Обведи знак по розовому образцу" : "Напиши по памяти")),
     trace ? h("div", { class: "task-big ja", lang: "ja" }, k) : h("div", { class: "task-big" }, INFO[k][0]),
     h("div", { class: "task-sub" }, trace ? readingLine(k) : INFO[k][1], hint, sayBtn(k), trace ? null : h("span", { class: "muted" }, "· " + Recog.cherta(KANA[k].length)))
   );
+  // Подсказка открывается шторкой: посмотрела — закрыла, и клетка прямо перед глазами
   function showHelp() {
     helped = true;
-    helpBox.hidden = false;
-    helpBox.replaceChildren(h("div", { class: "meet" }, animBlock(k, true), mnemoNode(k)));
+    openSheet(`Как пишется ${k}`, (close) => [
+      h("div", { class: "sheet-head" }, h("div", {}, h("div", { class: "eyebrow" }, "Подсказка"), h("h2", {}, h("span", { class: "ja", lang: "ja" }, k), "  ", INFO[k][0])),
+        h("button", { class: "icon-btn", type: "button", "aria-label": "Закрыть", onclick: close }, icon("close"))),
+      h("div", { class: "meet" }, animBlock(k, true), mnemoNode(k)),
+      h("div", { class: "row", style: "justify-content:center" }, h("button", { class: "btn primary", type: "button", onclick: close }, "Понятно, пишу"))]);
   }
   function finish(skipped) {
     if (finished) return;
@@ -1270,35 +1296,37 @@ function writeTask(opts) {
       if (res.grade === "excellent") petalBurst(pad.el);
       const gain = opts.reward && attempts === 1 && !helped ? (res.grade === "excellent" ? 2 : 1) : 0;
       if (gain) award(gain);
-      fillEl(fb,
-        h("div", { class: "verdict ok" }, res.grade === "excellent" ? hanamaru() : mascot("happy"),
+      bar.replaceChildren(
+        h("div", { class: "act-verdict ok" }, res.grade === "excellent" ? hanamaru() : mascot("happy"),
           h("div", {}, h("div", { class: "verdict-title" }, jpTitle(res.grade === "excellent" ? "great" : "good"), res.grade === "excellent" ? "Отлично!" : "Верно", gain ? h("span", { class: "gain" }, `+${gain} ★`) : null),
-            h("div", { class: "muted" }, res.grade === "excellent" ? "Все черты на месте, в нужном порядке и направлении." : "Знак узнаваем. Есть что подправить:"))),
+            h("div", { class: "muted" }, res.grade === "excellent" ? "Все черты на месте." : "Есть что подправить, смотри ниже."))),
+        next);
+      fillEl(fb,
         res.messages.length ? h("ul", { class: "msgs" }, res.messages.map((m) => h("li", {}, m))) : null,
-        res.messages.length ? legend : null,
-        h("div", { class: "row" }, next)
+        res.messages.length ? legend : null
       );
       requestAnimationFrame(() => next.focus({ preventScroll: true }));
     } else {
-      const acts = [h("button", { class: "btn primary", type: "button", onclick: () => { pad.clear(); fb.replaceChildren(); } }, "Написать ещё раз")];
-      if (!trace) acts.push(h("button", { class: "btn", type: "button", onclick: showHelp }, "Посмотреть, как пишется"));
+      const acts = [h("button", { class: "btn primary", type: "button", onclick: () => { pad.clear(); fb.replaceChildren(); showTools(); } }, "Ещё раз")];
+      if (!trace) acts.push(h("button", { class: "btn", type: "button", onclick: showHelp }, "Как пишется"));
       if (attempts >= 2) acts.push(h("button", { class: "btn quiet", type: "button", onclick: () => finish(true) }, "Пропустить"));
+      bar.replaceChildren(
+        h("div", { class: "act-verdict bad" }, mascot("sad", false, []), h("div", {}, h("div", { class: "verdict-title" }, jpTitle(attempts >= 2 ? "cheer" : "oops"), "Пока не то"), h("div", { class: "muted" }, "Можно сразу рисовать заново."))),
+        h("div", { class: "act-row" }, acts));
       fillEl(fb,
-        h("div", { class: "verdict bad" }, mascot("sad", false, []), h("div", {}, h("div", { class: "verdict-title" }, jpTitle(attempts >= 2 ? "cheer" : "oops"), "Пока не то"), h("div", { class: "muted" }, "Можно сразу рисовать заново: клетка очистится сама."))),
         h("ul", { class: "msgs" }, res.messages.map((m) => h("li", {}, m))),
-        res.aligned.length ? legend : null,
-        h("div", { class: "row" }, acts)
+        res.aligned.length ? legend : null
       );
       if (!trace && attempts >= 2 && !helped) showHelp();
     }
   }
   checkBtn.addEventListener("click", check);
-  const tools = h("div", { class: "tools" }, undoBtn, clearBtn, checkBtn);
+  bar.append(tools);
   const extra = [];
   if (!trace && opts.allowForgot !== false) {
     extra.push(h("button", { class: "btn quiet", type: "button", onclick: () => { if (firstOk === null) firstOk = false; showHelp(); } }, "Не помню, покажи"));
   }
-  return h("div", { class: "task" }, head, pad.el, tools, h("div", { class: "row", style: "justify-content:center" }, extra), helpBox, fb);
+  return h("div", { class: "task" }, head, pad.el, bar, h("div", { class: "row", style: "justify-content:center" }, extra), fb);
 }
 
 /* ===================== Задание: прочитать ===================== */
@@ -1308,6 +1336,7 @@ function readTask(opts) {
   const go = h("button", { class: "btn primary", type: "button" }, "Проверить");
   const fb = h("div", { class: "feedback", "aria-live": "polite" });
   const forgot = h("button", { class: "btn quiet", type: "button" }, "Не помню");
+  const bar = h("div", { class: "act-bar", hidden: true });
   let done = false;
   function answer(given) {
     if (done) return;
@@ -1317,13 +1346,15 @@ function readTask(opts) {
     const gain = ok && opts.reward ? 1 : 0;
     if (gain) award(gain);
     const next = h("button", { class: "btn primary", type: "button", onclick: () => opts.onDone({ ok }) }, "Дальше");
-    fillEl(fb,
-      h("div", { class: "verdict " + (ok ? "ok" : "bad") }, mascot(ok ? "happy" : "sad"),
+    bar.hidden = false;
+    bar.replaceChildren(
+      h("div", { class: "act-verdict " + (ok ? "ok" : "bad") }, mascot(ok ? "happy" : "sad"),
         h("div", {}, h("div", { class: "verdict-title" }, ok ? jpTitle("good") : given === null ? null : jpTitle("oops"), ok ? "Верно" : given === null ? "Ответ" : "Не совсем", gain ? h("span", { class: "gain" }, "+1 ★") : null),
-          h("div", {}, opts.reveal))),
+          h("div", { class: "act-reveal" }, opts.reveal))),
+      next);
+    fillEl(fb,
       opts.meaning ? h("div", { class: "meaning" }, "Значение: " + opts.meaning) : null,
-      !ok && opts.mnemoK ? mnemoNode(opts.mnemoK) : null,
-      h("div", { class: "row" }, next)
+      !ok && opts.mnemoK ? mnemoNode(opts.mnemoK) : null
     );
     if (ok && !opts.meaning) setTimeout(() => { if (next.isConnected) next.click(); }, 750);
     else requestAnimationFrame(() => next.focus({ preventScroll: true }));
@@ -1337,6 +1368,7 @@ function readTask(opts) {
     card,
     h("div", { class: "answer" }, input, go),
     h("div", { class: "row", style: "justify-content:center" }, forgot),
+    bar,
     fb);
   if (window.matchMedia && matchMedia("(pointer: fine)").matches) requestAnimationFrame(() => input.focus({ preventScroll: true }));
   return el;
