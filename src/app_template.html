@@ -264,6 +264,7 @@ body.in-session .star-toast { bottom: calc(24px + env(safe-area-inset-bottom, 0p
 .chip { font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 999px; white-space: nowrap; background: var(--cream); color: var(--ink-soft); }
 .chip.done { background: var(--ok-soft); color: var(--ok); }
 .chip.next { background: var(--primary); color: #fff; }
+.resume-note { background: var(--cream); border: 3px solid #fff; border-radius: 18px; padding: 10px 14px; font-weight: 800; color: var(--ink); box-shadow: var(--shadow); }
 details.how { background: rgb(255 255 255 / .9); border: 3px solid #fff; border-radius: 22px; padding: 14px 16px; box-shadow: var(--shadow); }
 details.how summary { font-weight: 800; cursor: pointer; color: var(--ink); }
 details.how .how-body { display: grid; gap: 10px; margin-top: 12px; max-width: 62ch; color: var(--ink-soft); }
@@ -870,6 +871,8 @@ function streak() {
   return n;
 }
 const lessonDone = (i) => !!(S.lessons[i + 1] && S.lessons[i + 1].done);
+// Незаконченный урок: где остановилась (хранится в записи урока, поле resume)
+const lessonResume = (i) => (S.lessons[i + 1] && S.lessons[i + 1].resume) || null;
 const nextLessonIndex = () => { for (let i = 0; i < LESSONS.length; i++) if (!lessonDone(i)) return i; return -1; };
 
 /* ===================== Мелочи для DOM ===================== */
@@ -1410,7 +1413,23 @@ function startLesson(li) {
   phases.push({ t: "finish" });
   const stats = { wOk: 0, wTot: 0, rOk: 0, rTot: 0 };
   let pi = -1;
-  const next = () => { pi++; sh.progress(pi / (phases.length - 1)); runPhase(phases[pi]); };
+  const saved = lessonResume(li);
+  let sub = null; // где продолжить внутри этапа
+  // Запоминаем место в уроке после каждого шага, чтобы можно было выйти и вернуться
+  const keep = (state) => {
+    if (phases[pi].t === "intro" || phases[pi].t === "finish") return;
+    S.lessons[li + 1] = Object.assign(S.lessons[li + 1] || {}, { resume: { pi, stats: Object.assign({}, stats), sub: state || null, at: Date.now() } });
+    save();
+  };
+  const next = () => { pi++; sh.progress(pi / (phases.length - 1)); keep(); runPhase(phases[pi]); };
+  const resume = () => {
+    Object.assign(stats, saved.stats || {});
+    pi = Math.min(saved.pi, phases.length - 2);
+    sub = saved.sub;
+    sh.progress(pi / (phases.length - 1));
+    runPhase(phases[pi]);
+  };
+  const takeSub = () => { const x = sub; sub = null; return x; };
 
   function runPhase(ph) {
     sh.count("");
@@ -1424,6 +1443,10 @@ function startLesson(li) {
     if (ph.t === "finish") return finish();
   }
 
+  function phaseName(ph) {
+    if (ph.t === "meet") return `знакомство с ${ph.k}`;
+    return { drill: "закрепление", yoon: "слияния", words: "чтение слов", dict: "диктант", final: "итоговая проверка" }[ph.t] || "начало";
+  }
   function intro() {
     sh.stage("начало");
     const parts = [h("div", { class: "eyebrow" }, `Урок ${li + 1} из ${LESSONS.length}`), h("h2", {}, L.title)];
@@ -1445,6 +1468,13 @@ function startLesson(li) {
       parts.push(h("p", { class: "muted" }, "Для каждого знака три шага: посмотри порядок черт, обведи по образцу, напиши по памяти. Потом закрепление вперемешку, чтение слов и короткий диктант."));
     }
     const go = h("button", { class: "btn primary", type: "button", onclick: next }, "Начать");
+    if (saved && saved.pi > 0 && saved.pi < phases.length - 1) {
+      const where = phaseName(phases[Math.min(saved.pi, phases.length - 2)]);
+      go.textContent = "Начать сначала"; go.className = "btn";
+      parts.unshift(h("div", { class: "resume-note" }, `Ты остановилась на этапе «${where}». Продолжим с этого места?`));
+      sh.set(h("div", { class: "task explain" }, parts, h("div", { class: "row" }, h("button", { class: "btn primary", type: "button", onclick: resume }, "Продолжить"), go)));
+      return;
+    }
     sh.set(h("div", { class: "task explain" }, parts, h("div", { class: "row" }, go)));
   }
 
@@ -1484,18 +1514,22 @@ function startLesson(li) {
   }
 
   function drill() {
-    const queue = [];
-    for (const k of kana) { queue.push({ k, sk: "w", need: light ? 1 : 2 }); queue.push({ k, sk: "r", need: light ? 1 : 2 }); }
-    const prev = learned().filter((k) => !kana.includes(k)).sort((a, b) => level(a) - level(b)).slice(0, 3);
-    for (const k of prev) queue.push({ k, sk: Math.random() < 0.5 ? "w" : "r", need: 1, review: true, graded: false });
-    shuffle(queue);
-    for (let i = 1; i < queue.length; i++) if (queue[i].k === queue[i - 1].k) { const j = (i + 2) % queue.length; [queue[i], queue[j]] = [queue[j], queue[i]]; }
-    const total = queue.reduce((s, q) => s + q.need, 0);
-    let doneCount = 0;
+    const st = takeSub();
+    let queue = [], total = 0, doneCount = 0;
+    if (st && Array.isArray(st.queue)) { queue = st.queue; total = st.total; doneCount = st.doneCount; }
+    else {
+      for (const k of kana) { queue.push({ k, sk: "w", need: light ? 1 : 2 }); queue.push({ k, sk: "r", need: light ? 1 : 2 }); }
+      const prev = learned().filter((k) => !kana.includes(k)).sort((a, b) => level(a) - level(b)).slice(0, 3);
+      for (const k of prev) queue.push({ k, sk: Math.random() < 0.5 ? "w" : "r", need: 1, review: true, graded: false });
+      shuffle(queue);
+      for (let i = 1; i < queue.length; i++) if (queue[i].k === queue[i - 1].k) { const j = (i + 2) % queue.length; [queue[i], queue[j]] = [queue[j], queue[i]]; }
+      total = queue.reduce((s, q) => s + q.need, 0);
+    }
     function serve() {
       sh.stage("закрепление");
       sh.count(`${doneCount} / ${total}`);
       if (!queue.length) return next();
+      keep({ queue, total, doneCount });
       const it = queue.shift();
       const after = (ok) => {
         if (it.review && !it.graded) { grade(it.k, it.sk, ok); it.graded = true; save(); }
@@ -1511,11 +1545,13 @@ function startLesson(li) {
   }
 
   function yoonDrill() {
-    const items = shuffle(YOON.slice()).slice(0, 12);
-    let i = 0;
+    const st = takeSub();
+    const items = st && st.items ? st.items : shuffle(YOON.slice()).slice(0, 12);
+    let i = st ? st.i || 0 : 0;
     const serve = () => {
       sh.stage("слияния"); sh.count(`${i} / ${items.length}`);
       if (i >= items.length) return next();
+      keep({ items, i });
       const y = items[i];
       sh.set(readTask({ reward: true, show: y, answers: answersFor(y), reveal: `${sylOpts(y, 0)[0]} · ${sylOpts(y, 1)[0]}`, onDone: (r) => { stats.rTot++; if (r.ok) stats.rOk++; i++; serve(); } }));
     };
@@ -1524,10 +1560,12 @@ function startLesson(li) {
 
   function words() {
     const list = lessonWords(L);
-    let i = 0;
+    const st = takeSub();
+    let i = st ? st.i || 0 : 0;
     const serve = () => {
       sh.stage("чтение слов"); sh.count(`${i} / ${list.length}`);
       if (i >= list.length) return next();
+      keep({ i });
       const w = list[i];
       sh.set(readTask({ reward: true, show: w[0], big: false, label: "Прочитай слово", answers: answersFor(w[0], w[1], w[2]), reveal: `${w[1]} · ${w[2]}`, meaning: w[3], sayText: w[0], onDone: (r) => { stats.rTot++; if (r.ok) stats.rOk++; i++; serve(); } }));
     };
@@ -1536,10 +1574,12 @@ function startLesson(li) {
 
   function dictation() {
     const list = L.words.filter((w) => [...w[0]].every((c) => KANA[c]) && w[0].length <= 3).slice(0, 3);
-    let wi = 0;
+    const st = takeSub();
+    let wi = st ? st.wi || 0 : 0;
     function word() {
       sh.stage("диктант"); sh.count(`${wi} / ${list.length}`);
       if (wi >= list.length) return next();
+      keep({ wi });
       const w = list[wi], chars = [...w[0]];
       let ci = 0;
       function one() {
@@ -1554,12 +1594,14 @@ function startLesson(li) {
   }
 
   function finalTest() {
+    const st = takeSub();
     const pool = learned().filter((k) => KANA[k]);
-    const items = shuffle(pool.length ? pool : ALL_KANA.slice(0, 46)).slice(0, 15);
-    let i = 0;
+    const items = st && st.items ? st.items : shuffle(pool.length ? pool : ALL_KANA.slice(0, 46)).slice(0, 15);
+    let i = st ? st.i || 0 : 0;
     const serve = () => {
       sh.stage("итоговая проверка"); sh.count(`${i} / ${items.length}`);
       if (i >= items.length) return next();
+      keep({ items, i });
       const k = items[i];
       sh.set(writeTask({ reward: true, k, mode: "memory", onDone: (r) => { if (S.cards[k]) grade(k, "w", r.firstOk); stats.wTot++; if (r.firstOk) stats.wOk++; save(); i++; serve(); } }));
     };
@@ -2146,13 +2188,13 @@ function homeView() {
     today.append(h("h2", {}, `Повторение: ${due.length} ${plural(due.length, "задание", "задания", "заданий")}`),
       h("p", { class: "muted" }, "Сначала повтори то, что уже пора вспомнить, потом переходи к новому уроку."));
     actions.append(h("button", { class: "btn primary", type: "button", onclick: () => startReview(due, true) }, "Начать повторение"));
-    if (ni >= 0) actions.append(h("button", { class: "btn", type: "button", onclick: () => startLesson(ni) }, `Урок ${ni + 1}`));
+    if (ni >= 0) actions.append(h("button", { class: "btn", type: "button", onclick: () => startLesson(ni) }, lessonResume(ni) ? `Продолжить урок ${ni + 1}` : `Урок ${ni + 1}`));
   } else if (ni >= 0) {
     const L = LESSONS[ni];
     today.append(h("h2", {}, `Урок ${ni + 1}. ${L.title}`),
       L.kana ? h("div", { class: "lesson-kana", lang: "ja" }, L.kana) : null,
       h("p", { class: "muted" }, ni === 0 ? "Около 20 минут. Лучше всего проходить один урок в день, а на следующий день начинать с повторения." : "Около 20 минут. Новые знаки сразу попадут в повторение."));
-    actions.append(h("button", { class: "btn primary", type: "button", onclick: () => startLesson(ni) }, ni === 0 ? "Начать первый урок" : `Начать урок ${ni + 1}`));
+    actions.append(h("button", { class: "btn primary", type: "button", onclick: () => startLesson(ni) }, lessonResume(ni) ? `Продолжить урок ${ni + 1}` : ni === 0 ? "Начать первый урок" : `Начать урок ${ni + 1}`));
   } else {
     const nd = nextDue();
     today.append(h("h2", {}, "Все уроки пройдены"), h("p", { class: "muted" }, isFinite(nd) ? `Следующее повторение — ${whenText(nd)}. Между повторениями можно тренировать отдельные знаки в таблице.` : "Можно тренировать отдельные знаки в таблице."));
@@ -2165,7 +2207,7 @@ function homeView() {
 
   const list = h("ol", { class: "lessons" }, LESSONS.map((L, i) => {
     const done = lessonDone(i);
-    const chip = done ? h("span", { class: "chip done" }, "пройден ♡") : i === ni ? h("span", { class: "chip next" }, "следующий") : h("span", { class: "chip" }, "~20 мин");
+    const chip = lessonResume(i) ? h("span", { class: "chip next" }, "начат") : done ? h("span", { class: "chip done" }, "пройден ♡") : i === ni ? h("span", { class: "chip next" }, "следующий") : h("span", { class: "chip" }, "~20 мин");
     return h("li", {}, h("button", { class: "lesson-row" + (done ? " is-done" : i === ni ? " is-next" : ""), type: "button", onclick: () => startLesson(i) },
       h("span", { class: "lesson-no" }, done ? berrySticker() : String(i + 1)),
       h("span", { class: "lesson-main" }, h("span", { class: "lesson-kana", lang: "ja" }, L.kana || "きゃ・っ"), h("span", { class: "lesson-title" }, L.title)),
