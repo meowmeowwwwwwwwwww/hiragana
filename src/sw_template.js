@@ -1,5 +1,5 @@
 /* Тетрадь хираганы: работа без интернета. Версия меняется при каждой сборке — так телефон узнаёт об обновлении. */
-const VERSION = "hira-20260925-013401";
+const VERSION = "hira-__VERSION__";
 const ASSETS = ["./", "./index.html", "./manifest.webmanifest", "./apple-touch-icon.png", "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png"];
 
 self.addEventListener("install", (e) => {
