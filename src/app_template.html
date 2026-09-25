@@ -431,14 +431,14 @@ details.how .how-body { display: grid; gap: 10px; margin-top: 12px; max-width: 6
       <span id="brand-mascot"></span>
       <div>
         <h1>Тетрадь хираганы</h1>
-        <p>12 уроков с <span id="brand-pet">Кинако</span> <span class="kao">(&gt;ᴗ&lt;)♡</span></p>
+        <p>12 уроков с <span id="brand-pet">Моней</span> <span class="kao">(&gt;ᴗ&lt;)♡</span></p>
       </div>
     </div>
   </header>
   <nav class="tabs" id="tabs" role="tablist" aria-label="Разделы">
     <button class="tab" role="tab" data-tab="home" aria-selected="true">Уроки</button>
     <button class="tab" role="tab" data-tab="review" aria-selected="false">Повторы<span class="badge" id="due-badge" hidden>0</span></button>
-    <button class="tab" role="tab" data-tab="pet" aria-selected="false" id="pet-tab">Кинако</button>
+    <button class="tab" role="tab" data-tab="pet" aria-selected="false" id="pet-tab">Моня</button>
     <button class="tab" role="tab" data-tab="table" aria-selected="false">Таблица</button>
   </nav>
   <main id="main"></main>
@@ -713,12 +713,26 @@ const readingLine = (k) => `${INFO[k][0]} · ${INFO[k][1]}`;
 const LS_KEY = "hiragana-notebook-v1";
 const DAY = 86400000;
 const INTERVALS = [0, 1, 2, 4, 8, 16];
-function defPet() { return { name: "Кинако", food: 85, joy: 85, last: 0, stars: 0, owned: [], wear: [], game: { day: "", stars: 0 }, pat: 0 }; }
+function defPet() { return { name: "Моня", food: 85, joy: 85, last: 0, stars: 0, owned: [], wear: [], game: { day: "", stars: 0 }, pat: 0 }; }
 function defState() { return { v: 1, updatedAt: 0, lessons: {}, cards: {}, notes: {}, days: [], lenient: false, pet: defPet() }; }
 function ensurePet() {
   S.pet = Object.assign(defPet(), S.pet || {});
   if (!S.pet.game) S.pet.game = { day: "", stars: 0 };
   if (!S.pet.last) S.pet.last = Date.now();
+  if (S.pet.name === "Кинако") S.pet.name = "Моня"; // прежнее имя по умолчанию
+}
+// Имя щенка в нужном падеже: gen «для Мони», dat «к Моне», acc «погладить Моню», ins «с Моней».
+// Несклоняемые имена (на -о, -е, -и, -у, латиница) остаются как есть.
+function petCase(c) {
+  const n = S.pet.name, last = n.slice(-1).toLowerCase(), prev = n.slice(-2, -1).toLowerCase();
+  const hush = "жшчщц".includes(prev), velar = "гкхжшчщ".includes(prev);
+  let st = n.slice(0, -1), f;
+  if (last === "я") f = prev === "и" ? { gen: "и", dat: "и", acc: "ю", ins: "ей" } : { gen: "и", dat: "е", acc: "ю", ins: "ей" };
+  else if (last === "а") f = { gen: velar ? "и" : "ы", dat: "е", acc: "у", ins: hush ? "ей" : "ой" };
+  else if (last === "й" || last === "ь") f = { gen: "я", dat: "ю", acc: "я", ins: "ем" };
+  else if ("бвгджзклмнпрстфхцчшщ".includes(last)) { st = n; f = { gen: "а", dat: "у", acc: "а", ins: "жшчщц".includes(last) ? "ем" : "ом" }; }
+  else return n;
+  return st + f[c];
 }
 const SMOOTH_NAMES = ["выкл", "слабое", "среднее", "сильное"];
 const smoothLevel = () => 3;
@@ -1610,7 +1624,7 @@ function petCommit(df = 0, dj = 0) {
   S.pet.last = Date.now();
 }
 function toastStars(n, text) {
-  const t = h("div", { class: "star-toast", role: "status" }, text || `+${n} ★ для ${S.pet.name}`);
+  const t = h("div", { class: "star-toast", role: "status" }, text || `+${n} ★ для ${petCase("gen")}`);
   document.body.append(t);
   setTimeout(() => t.remove(), 1900);
 }
@@ -1703,7 +1717,7 @@ function petHeartBurst(el) {
 const PAT_WORDS = [["わん！", "ван!"], ["すき！", "суки! — люблю!"], ["うれしい！", "урэсий! — радостно!"], ["もっと！", "мотто! — ещё!"]];
 function petStageEl(size = 180, onPat) {
   const st = stageInfo();
-  const wrap = h("button", { class: "pet-stage", type: "button", "aria-label": `Погладить ${S.pet.name}` });
+  const wrap = h("button", { class: "pet-stage", type: "button", "aria-label": `Погладить ${petCase("acc")}` });
   const svgBox = h("span", { class: "pet-svg" });
   const draw = (mood) => { svgBox.replaceChildren(mascot(mood, true)); };
   draw(petMood());
@@ -1732,7 +1746,7 @@ function petCardMini() {
     h("div", { class: "pet-mini-bars" }, bar("Сытость", n.food, "food"), bar("Настроение", n.joy, "joy")),
     h("div", { class: "row" },
       h("span", { class: "stars-pill num" }, "★ ", String(S.pet.stars)),
-      h("button", { class: "btn", type: "button", onclick: () => { tab = "pet"; render(); } }, `К ${S.pet.name}`)));
+      h("button", { class: "btn", type: "button", onclick: () => { tab = "pet"; render(); } }, `К ${petCase("dat")}`)));
 }
 /* Диалог: прочитать название, чтобы купить или покормить */
 function openReadDialog(item, kind, onSuccess) {
@@ -1896,7 +1910,7 @@ function startFetch() {
       h("h2", {}, `${ok} из ${rounds.length}`),
       h("p", { class: "muted" }, S.pet.game.stars >= 10 ? "За игры сегодня ★ больше не дают, но настроение растёт." : "Настроение щенка выросло."),
       h("div", { class: "row", style: "justify-content:center" },
-        h("button", { class: "btn primary", type: "button", onclick: () => { closeShell(); tab = "pet"; render(); } }, `К ${S.pet.name}`),
+        h("button", { class: "btn primary", type: "button", onclick: () => { closeShell(); tab = "pet"; render(); } }, `К ${petCase("dat")}`),
         h("button", { class: "btn", type: "button", onclick: () => { closeShell(); startFetch(); } }, "Ещё раз"))));
   };
   serve();
@@ -1952,7 +1966,7 @@ function transferSection() {
     if (armed !== text) {
       armed = text;
       loadBtn.textContent = "Нажми ещё раз: текущий прогресс заменится";
-      inNote.textContent = `В коде ${nZnak(n)} и щенок ${data.pet && data.pet.name ? data.pet.name : "Кинако"}.`;
+      inNote.textContent = `В коде ${nZnak(n)} и щенок ${data.pet && data.pet.name ? data.pet.name : "Моня"}.`;
       setTimeout(() => { armed = null; if (loadBtn.isConnected) loadBtn.textContent = "Загрузить прогресс из кода"; }, 5000);
       return;
     }
@@ -1994,7 +2008,7 @@ function updateBadge() {
 }
 function render() {
   const pt = document.getElementById("pet-tab"); if (pt) pt.textContent = S.pet.name;
-  const bp = document.getElementById("brand-pet"); if (bp) bp.textContent = S.pet.name;
+  const bp = document.getElementById("brand-pet"); if (bp) bp.textContent = petCase("ins");
   const bm = document.getElementById("brand-mascot"); if (bm) bm.replaceChildren(mascot(petMood()));
   document.querySelectorAll(".tab").forEach((t) => t.setAttribute("aria-selected", String(t.dataset.tab === tab)));
   updateBadge();

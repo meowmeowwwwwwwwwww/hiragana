@@ -1,63 +1,78 @@
-/* Щенок Кинако: свой персонаж в каваи-стиле. Возвращает разметку SVG строкой. */
+/* Щенок Моня: чихуахуа в стиле японских стикеров (толстый контур, плоская заливка, глазки-точки, язычок-«блеп»).
+   Возвращает разметку SVG строкой. */
 const Puppy = (() => {
-  const O = "#3F2C2C";                 // контур
-  const FUR = "#F7DFC0", EAR = "#DDA878", MUZ = "#FFF3E3", BLUSH = "#FFA3BA", TONGUE = "#FF8AA6", MOUTH = "#B8465E";
+  const O = "#2F2425";                 // контур
+  const FUR = "#FCEEDC", EAR = "#F0CB9F", EAR_IN = "#FFC6C6", BLUSH = "#FFA3B8", TONGUE = "#FF8DA8", MOUTH = "#A83F55", NOSE = "#5A3434";
   const line = (d, w = 3.6) => `<path d="${d}" fill="none" stroke="${O}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;
-  const shape = (d, fill, w = 4.2) => `<path d="${d}" fill="${fill}" stroke="${O}" stroke-width="${w}" stroke-linejoin="round"/>`;
-  const dotEyes = () => [44, 76].map((x) => `<ellipse cx="${x}" cy="62" rx="4.6" ry="5.6" fill="${O}"/><circle cx="${x + 1.6}" cy="60" r="1.7" fill="#fff"/>`).join("");
-  const starEye = (cx, cy) => {
+  const shape = (d, fill, w = 4.4) => `<path d="${d}" fill="${fill}" stroke="${O}" stroke-width="${w}" stroke-linejoin="round"/>`;
+  const star5 = (cx, cy, R, r, fill, w = 2.6) => {
     let d = "";
-    for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + (i * Math.PI) / 5, r = i % 2 ? 3 : 7.2; d += (i ? "L" : "M") + (cx + r * Math.cos(a)).toFixed(1) + " " + (cy + r * Math.sin(a)).toFixed(1); }
-    return `<path d="${d}Z" fill="#FFD84D" stroke="${O}" stroke-width="2.4" stroke-linejoin="round"/>`;
+    for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + (i * Math.PI) / 5, q = i % 2 ? r : R; d += (i ? "L" : "M") + (cx + q * Math.cos(a)).toFixed(1) + " " + (cy + q * Math.sin(a)).toFixed(1); }
+    return `<path d="${d}Z" fill="${fill}" stroke="${O}" stroke-width="${w}" stroke-linejoin="round"/>`;
   };
+  const EL = 44, ER = 76, EY = 72;
+  const dot = (x, y = EY, k = 1) => `<ellipse cx="${x}" cy="${y}" rx="${5.4 * k}" ry="${6.3 * k}" fill="${O}"/><circle cx="${x + 1.7 * k}" cy="${y - 2.2 * k}" r="${1.8 * k}" fill="#fff"/>`;
+  const dotEyes = (k) => dot(EL, EY, k) + dot(ER, EY, k);
+  const wink = (x) => line(`M${x + 4} ${EY - 5} L${x - 4} ${EY} L${x + 4} ${EY + 5}`, 3.6);           // «<»
+  const squeeze = () => line(`M${EL - 4} ${EY - 5} L${EL + 4} ${EY} L${EL - 4} ${EY + 5}`, 3.6) + line(`M${ER + 4} ${EY - 5} L${ER - 4} ${EY} L${ER + 4} ${EY + 5}`, 3.6); // «> <»
+  const arcsUp = () => line(`M${EL - 6} ${EY + 2} Q${EL} ${EY - 6} ${EL + 6} ${EY + 2}`) + line(`M${ER - 6} ${EY + 2} Q${ER} ${EY - 6} ${ER + 6} ${EY + 2}`);
+  const arcsDown = () => line(`M${EL - 6} ${EY - 1} Q${EL} ${EY + 5} ${EL + 6} ${EY - 1}`) + line(`M${ER - 6} ${EY - 1} Q${ER} ${EY + 5} ${ER + 6} ${EY - 1}`);
+  const nose = `<path d="M56 76.4 Q60 74 64 76.4 Q63 80.4 60 80.4 Q57 80.4 56 76.4 Z" fill="${NOSE}" stroke="${O}" stroke-width="2.2" stroke-linejoin="round"/>`;
+  const omega = line("M53.6 82.6 Q56.8 86.8 60 82.8 Q63.2 86.8 66.4 82.6", 3.2);
+  // язычок-«блеп», как у настоящей Мони
+  const blep = `<path d="M58.6 84.6 Q58.2 91.4 61.8 91.6 Q65.4 91.4 65 84.2 Z" fill="${TONGUE}" stroke="${O}" stroke-width="2.4" stroke-linejoin="round"/>`;
+  const openMouth = (big) => shape(big ? "M52.6 82 Q60 80 67.4 82 Q66.4 95 60 95 Q53.6 95 52.6 82 Z" : "M54 82.4 Q60 80.8 66 82.4 Q65 92 60 92 Q55 92 54 82.4 Z", MOUTH, 3)
+    + `<path d="${big ? "M55.4 89.6 Q60 85.8 64.6 89.6 Q63 93.6 60 93.6 Q57 93.6 55.4 89.6 Z" : "M56.4 88 Q60 85 63.6 88 Q62.4 90.8 60 90.8 Q57.6 90.8 56.4 88 Z"}" fill="${TONGUE}"/>`;
+  const blush = [31, 89].map((x) => `<ellipse cx="${x}" cy="82" rx="7.4" ry="4.6" fill="${BLUSH}" opacity=".85"/><circle cx="${x - 2.6}" cy="81" r="1" fill="#fff" opacity=".85"/><circle cx="${x + 1.4}" cy="83.2" r=".9" fill="#fff" opacity=".85"/><circle cx="${x + 3.2}" cy="80.4" r=".8" fill="#fff" opacity=".85"/>`).join("");
+  // розовые штрихи радости: сверху между ушами, а для «ура» ещё и по бокам
+  const burst = (sides) => `<path d="M49.6 24 L46 14.6 M60 21.6 L60 10.6 M70.4 24 L74 14.6" stroke="#FF7FA8" stroke-width="4" stroke-linecap="round"/>`
+    + (sides ? `<path d="M8.6 70 L1.6 66 M9 79 L2 80.6 M111.4 70 L118.4 66 M111 79 L118 80.6" stroke="#FF7FA8" stroke-width="4" stroke-linecap="round"/>` : "");
   const ACC = {
-    kubiwa: () => `<path d="M34 92 Q60 104 86 92 L86 99 Q60 111 34 99 Z" fill="#FF7FA8" stroke="${O}" stroke-width="3.4" stroke-linejoin="round"/><path d="M60 101 l4 4 -4 5 -4 -5z" fill="#FFD84D" stroke="${O}" stroke-width="2.4" stroke-linejoin="round"/>`,
-    erimaki: () => `<path d="M30 90 Q60 106 90 90 Q92 98 88 102 Q60 114 32 102 Q28 98 30 90 Z" fill="#AED8FF" stroke="${O}" stroke-width="3.4" stroke-linejoin="round"/><path d="M76 100 L84 116 L92 110 L84 98 Z" fill="#AED8FF" stroke="${O}" stroke-width="3.2" stroke-linejoin="round"/><path d="M40 97 L44 101 M52 101 L55 105 M66 101 L68 105" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>`,
-    boushi: () => `<ellipse cx="60" cy="27" rx="25" ry="9" fill="#FFB0CD" stroke="${O}" stroke-width="3.6"/><path d="M42 26 Q44 8 60 8 Q76 8 78 26 Z" fill="#FFB0CD" stroke="${O}" stroke-width="3.6" stroke-linejoin="round"/><circle cx="60" cy="6" r="4.5" fill="#fff" stroke="${O}" stroke-width="3"/><path d="M44 22 Q60 27 76 22" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>`,
-    hana: () => { let s = ""; for (let i = 0; i < 5; i++) s += `<ellipse cx="94" cy="${31 - 5.5}" rx="4.2" ry="6" fill="#FF9EC4" stroke="${O}" stroke-width="2.2" transform="rotate(${i * 72} 94 31)"/>`; return s + `<circle cx="94" cy="31" r="3.4" fill="#FFD84D" stroke="${O}" stroke-width="2.2"/>`; },
-    hoshi: () => { let d = ""; for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + (i * Math.PI) / 5, r = i % 2 ? 4.2 : 9.5; d += (i ? "L" : "M") + (27 + r * Math.cos(a)).toFixed(1) + " " + (33 + r * Math.sin(a)).toFixed(1); } return `<path d="${d}Z" fill="#FFE27A" stroke="${O}" stroke-width="2.6" stroke-linejoin="round"/>`; },
-    megane: () => `<circle cx="44" cy="62" r="11" fill="rgba(255,255,255,.35)" stroke="${O}" stroke-width="3"/><circle cx="76" cy="62" r="11" fill="rgba(255,255,255,.35)" stroke="${O}" stroke-width="3"/><path d="M55 61 Q60 57 65 61" fill="none" stroke="${O}" stroke-width="3" stroke-linecap="round"/>`
+    kubiwa: () => `<path d="M32 91 Q60 104 88 91 L88 98.4 Q60 111.4 32 98.4 Z" fill="#FF7FA8" stroke="${O}" stroke-width="3.4" stroke-linejoin="round"/><path d="M60 100 l4.4 4.4 -4.4 5.4 -4.4 -5.4z" fill="#FFD84D" stroke="${O}" stroke-width="2.4" stroke-linejoin="round"/>`,
+    erimaki: () => `<path d="M28 89 Q60 106 92 89 Q94 97 90 101 Q60 114 30 101 Q26 97 28 89 Z" fill="#AED8FF" stroke="${O}" stroke-width="3.4" stroke-linejoin="round"/><path d="M40 96 L44 100 M52 100 L55 104 M66 100 L68 104" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>`,
+    boushi: () => `<ellipse cx="60" cy="37" rx="24" ry="8.4" fill="#FFB0CD" stroke="${O}" stroke-width="3.6"/><path d="M43 36 Q45 18 60 18 Q75 18 77 36 Z" fill="#FFB0CD" stroke="${O}" stroke-width="3.6" stroke-linejoin="round"/><circle cx="60" cy="15.6" r="4.6" fill="#fff" stroke="${O}" stroke-width="3"/><path d="M45 32 Q60 37 75 32" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>`,
+    hana: () => { let s = ""; for (let i = 0; i < 5; i++) s += `<ellipse cx="96" cy="${36 - 5.5}" rx="4.2" ry="6" fill="#FF9EC4" stroke="${O}" stroke-width="2.2" transform="rotate(${i * 72} 96 36)"/>`; return s + `<circle cx="96" cy="36" r="3.4" fill="#FFD84D" stroke="${O}" stroke-width="2.2"/>`; },
+    hoshi: () => star5(24, 38, 9.5, 4.2, "#FFE27A"),
+    megane: () => `<circle cx="${EL}" cy="${EY}" r="10.4" fill="rgba(255,255,255,.3)" stroke="${O}" stroke-width="3.2"/><circle cx="${ER}" cy="${EY}" r="10.4" fill="rgba(255,255,255,.3)" stroke="${O}" stroke-width="3.2"/><path d="M54.4 71 Q60 67 65.6 71" fill="none" stroke="${O}" stroke-width="3.2" stroke-linecap="round"/>`
   };
   // mood: normal | happy | great | sad | sleepy | eat | hungry
   function svg(mood = "normal", opts = {}) {
     const acc = opts.acc || [];
     const cls = opts.cls || "";
     let s = `<svg viewBox="0 0 120 120" class="mascot ${cls}" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">`;
-    // лапки
-    s += shape("M31 104 C31 94 49 94 49 104 C49 110 31 110 31 104 Z", FUR, 4) + shape("M71 104 C71 94 89 94 89 104 C89 110 71 110 71 104 Z", FUR, 4);
-    s += line("M37 102 L37 106 M43 102 L43 106", 2.4) + line("M77 102 L77 106 M83 102 L83 106", 2.4);
-    // голова
-    s += shape("M60 28 C88 28 103 44 103 65 C103 87 85 99 60 99 C35 99 17 87 17 65 C17 44 32 28 60 28 Z", FUR);
+    // уши чихуахуа: большие, стоячие, с закруглёнными кончиками (рисуем до головы)
+    s += shape("M19 62 C12 46 10 30 13 18.6 C14.6 12.8 20 11.6 24.6 14.6 C35 21.4 43.4 30.6 49 42 Z", EAR);
+    s += `<path d="M24 53 C19.6 42.6 18.6 32.6 20.4 23.4 C28.4 28.4 35 35 39.4 42.4 Z" fill="${EAR_IN}"/>`;
+    s += shape("M101 62 C108 46 110 30 107 18.6 C105.4 12.8 100 11.6 95.4 14.6 C85 21.4 76.6 30.6 71 42 Z", EAR);
+    s += `<path d="M96 53 C100.4 42.6 101.4 32.6 99.6 23.4 C91.6 28.4 85 35 80.6 42.4 Z" fill="${EAR_IN}"/>`;
+    // голова-моти: широкая и приземистая
+    s += shape("M60 36 C88 36 106 52 106 72 C106 90 88 101 60 101 C32 101 14 90 14 72 C14 52 32 36 60 36 Z", FUR);
+    s += line("M55.6 37.6 C53.6 31 58 27.4 62.6 29.6", 3.2);
     if (acc.includes("kubiwa")) s += ACC.kubiwa();
     if (acc.includes("erimaki")) s += ACC.erimaki();
-    s += `<ellipse cx="60" cy="78" rx="16" ry="11" fill="${MUZ}"/>`;
-    // уши
-    s += shape("M33 34 C16 31 6 48 9 66 C11 76 21 79 27 72 C32 62 35 49 39 38 C38 36 36 34 33 34 Z", EAR);
-    s += shape("M87 34 C104 31 114 48 111 66 C109 76 99 79 93 72 C88 62 85 49 81 38 C82 36 84 34 87 34 Z", EAR);
-    s += line("M55 29 C53 22 58 18 63 21", 3.2);
-    // щёчки
-    s += `<ellipse cx="33" cy="76" rx="7.5" ry="4.6" fill="${BLUSH}" opacity=".85"/><ellipse cx="87" cy="76" rx="7.5" ry="4.6" fill="${BLUSH}" opacity=".85"/>`;
-    const nose = `<path d="M55 70 Q60 67 65 70 Q63.5 75 60 75 Q56.5 75 55 70 Z" fill="${O}"/>`;
-    if (mood === "happy" || mood === "eat") {
-      s += line("M38 64 Q44 56 50 64") + line("M70 64 Q76 56 82 64") + nose;
-      s += mood === "eat" ? line("M53 80 Q56.5 84 60 80 Q63.5 84 67 80", 3) + `<ellipse cx="30" cy="80" rx="3" ry="3" fill="#fff" opacity=".7"/>`
-        : shape("M52 78 Q60 92 68 78 Z", MOUTH, 3) + `<path d="M55.5 83 Q60 91 64.5 83 Q60 86 55.5 83 Z" fill="${TONGUE}"/>`;
+    s += blush;
+    if (mood === "happy") {
+      s += dot(EL) + wink(ER) + nose + openMouth(false) + burst(false);
+    } else if (mood === "eat") {
+      s += arcsUp() + nose + line("M53.6 84 Q56.8 88 60 84 Q63.2 88 66.4 84", 3.2) + `<circle cx="71" cy="90" r="1.8" fill="#E2B282"/><circle cx="49" cy="92" r="1.4" fill="#E2B282"/>`;
     } else if (mood === "great") {
-      s += starEye(44, 62) + starEye(76, 62) + nose + shape("M51 78 Q60 94 69 78 Z", MOUTH, 3) + `<path d="M55 84 Q60 92 65 84 Q60 87 55 84 Z" fill="${TONGUE}"/>`;
-      s += `<path d="M20 22 L14 14 M30 16 L28 6 M100 22 L106 14 M90 16 L92 6" stroke="#FF7FA8" stroke-width="3.6" stroke-linecap="round"/>`;
+      s += squeeze() + nose + openMouth(true) + burst(true);
     } else if (mood === "sad") {
-      s += `<ellipse cx="44" cy="64" rx="4.2" ry="5" fill="${O}"/><ellipse cx="76" cy="64" rx="4.2" ry="5" fill="${O}"/><circle cx="45.5" cy="62.5" r="1.5" fill="#fff"/><circle cx="77.5" cy="62.5" r="1.5" fill="#fff"/>`;
-      s += line("M37 55 L49 52", 3) + line("M83 55 L71 52", 3) + nose + line("M54 82 Q60 78 66 82", 3.2);
-      s += `<path d="M84 68 Q89 76 84 79 Q79 76 84 68 Z" fill="#9FD3FF" stroke="${O}" stroke-width="1.6"/>`;
+      s += dotEyes(0.9) + line(`M${EL - 7} ${EY - 10} L${EL + 5} ${EY - 13}`, 3.2) + line(`M${ER + 7} ${EY - 10} L${ER - 5} ${EY - 13}`, 3.2) + nose;
+      s += line("M54 87 Q57 84 60 86.6 Q63 89.2 66 86", 3.2);
+      s += `<path d="M86 74 Q91 82 86 85 Q81 82 86 74 Z" fill="#AEDCFF" stroke="${O}" stroke-width="2"/>`;
     } else if (mood === "sleepy") {
-      s += line("M38 63 Q44 68 50 63") + line("M70 63 Q76 68 82 63") + nose + line("M55 80 Q60 83 65 80", 3);
-      s += `<text x="92" y="30" font-family="system-ui,sans-serif" font-weight="800" font-size="14" fill="#9A7BFF">z</text><text x="101" y="18" font-family="system-ui,sans-serif" font-weight="800" font-size="11" fill="#9A7BFF">z</text>`;
+      s += arcsDown() + nose + omega + blep;
+      s += `<text x="66" y="30" font-family="system-ui,sans-serif" font-weight="800" font-size="14" fill="#9A7BFF">z</text><text x="75" y="19" font-family="system-ui,sans-serif" font-weight="800" font-size="11" fill="#9A7BFF">z</text>`;
     } else if (mood === "hungry") {
-      s += dotEyes() + nose + `<ellipse cx="60" cy="82" rx="4" ry="4.6" fill="${MOUTH}" stroke="${O}" stroke-width="2.6"/>`;
-      s += `<path d="M69 84 Q72 91 69 94 Q66 91 69 84 Z" fill="#BFE6FF" stroke="${O}" stroke-width="1.6"/>`;
+      s += dotEyes() + nose + `<ellipse cx="60" cy="87" rx="4" ry="4.6" fill="${MOUTH}" stroke="${O}" stroke-width="2.8"/>`;
+      s += `<path d="M69 88 Q72 95 69 98 Q66 95 69 88 Z" fill="#BFE6FF" stroke="${O}" stroke-width="1.8"/>`;
     } else {
-      s += dotEyes() + nose + line("M52 78 Q56 83 60 78 Q64 83 68 78", 3.2) + `<path d="M57 81.5 Q60 88 63 81.5 Q60 83 57 81.5 Z" fill="${TONGUE}" stroke="${O}" stroke-width="1.8"/>`;
+      s += dotEyes() + nose + omega + blep;
     }
+    // лапки спереди, как будто Моня выглядывает из-за края
+    s += shape("M26 101 C26 91 46 91 46 101 C46 108 26 108 26 101 Z", FUR, 4) + shape("M74 101 C74 91 94 91 94 101 C94 108 74 108 74 101 Z", FUR, 4);
+    s += line("M33 98.6 L33 103 M39 98.6 L39 103", 2.6) + line("M81 98.6 L81 103 M87 98.6 L87 103", 2.6);
     if (acc.includes("megane")) s += ACC.megane();
     if (acc.includes("boushi")) s += ACC.boushi();
     if (acc.includes("hana")) s += ACC.hana();
