@@ -28,7 +28,7 @@ app = fill(pt, True)
 split = app.index('<div class="wrap" id="app">')
 head_extra = ('<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
   '<meta name="theme-color" content="#FFD9E6">\n<meta name="apple-mobile-web-app-capable" content="yes">\n<meta name="mobile-web-app-capable" content="yes">\n'
-  '<meta name="apple-mobile-web-app-status-bar-style" content="default">\n<meta name="apple-mobile-web-app-title" content="Хирагана">\n'
+  '<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">\n<meta name="apple-mobile-web-app-title" content="Хирагана">\n'
   '<link rel="manifest" href="manifest.webmanifest">\n<link rel="apple-touch-icon" href="apple-touch-icon.png">\n<link rel="icon" type="image/png" href="icon-192.png">\n')
 html = '<!doctype html>\n<html lang="ru">\n<head>\n' + head_extra + app[:split] + '\n</head>\n<body>\n' + app[split:] + '\n</body>\n</html>\n'
 open(f'{OUT}/index.html', 'w', encoding='utf-8').write(html)
