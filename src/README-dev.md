@@ -8,6 +8,8 @@
 - `fonts/` — урезанные шрифты Klee One и M PLUS Rounded 1c (OFL).
 - `icons/` — иконки приложения, `licenses.txt` — лицензии (копируются в корень при сборке).
 - `sw_template.js` — service worker (работа без сети), `build.py` — сборка.
+- `make_icons.js` — рисует иконки из `puppy.js` в `icons/` (`node src/make_icons.js`, нужен playwright;
+  путь к Chromium можно задать в `CHROMIUM_PATH`). После него — обычная сборка.
 
 Сборка (из корня репозитория): `python3 src/build.py`. Она перезаписывает файлы сайта в корне
 репозитория — `index.html`, `sw.js`, `manifest.webmanifest`, иконки и `licenses.txt` — и создаёт
