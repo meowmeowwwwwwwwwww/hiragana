@@ -58,7 +58,7 @@
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
-html { background: var(--bg-mid); }
+html { background: var(--bg-mid); overscroll-behavior-x: none; }
 body {
   margin: 0;
   min-height: 100vh;
@@ -426,7 +426,13 @@ details.how .how-body { display: grid; gap: 10px; margin-top: 12px; max-width: 6
 .pair span:last-child { font-size: 14px; color: var(--muted); font-weight: 700; }
 .kana-chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .kana-chips span { font-family: var(--kana); font-weight: 600; font-size: 22px; width: 44px; height: 44px; display: grid; place-items: center; border-radius: 16px; background: #fff; border: 3px solid #fff; box-shadow: 0 3px 0 var(--line); }
+/* Свайп между вкладками: новая вкладка въезжает сбоку */
+#main.from-right { animation: tab-in-r .24s ease-out; }
+#main.from-left { animation: tab-in-l .24s ease-out; }
+@keyframes tab-in-r { from { transform: translateX(28px); opacity: .2; } to { transform: none; opacity: 1; } }
+@keyframes tab-in-l { from { transform: translateX(-28px); opacity: .2; } to { transform: none; opacity: 1; } }
 @media (prefers-reduced-motion: reduce) {
+  #main.from-right, #main.from-left { animation: none; }
   .hanamaru path { animation: none; stroke-dashoffset: 0; }
   .progress i { transition: none; }
   .mascot.bounce, .float { animation: none; }
@@ -850,7 +856,7 @@ const Puppy = (() => {
   const blep = `<path d="M58.6 84.6 Q58.2 91.4 61.8 91.6 Q65.4 91.4 65 84.2 Z" fill="${TONGUE}" stroke="${O}" stroke-width="2.4" stroke-linejoin="round"/>`;
   const openMouth = (big) => shape(big ? "M52.6 82 Q60 80 67.4 82 Q66.4 95 60 95 Q53.6 95 52.6 82 Z" : "M54 82.4 Q60 80.8 66 82.4 Q65 92 60 92 Q55 92 54 82.4 Z", MOUTH, 3)
     + `<path d="${big ? "M55.4 89.6 Q60 85.8 64.6 89.6 Q63 93.6 60 93.6 Q57 93.6 55.4 89.6 Z" : "M56.4 88 Q60 85 63.6 88 Q62.4 90.8 60 90.8 Q57.6 90.8 56.4 88 Z"}" fill="${TONGUE}"/>`;
-  const blush = [31, 89].map((x) => `<ellipse cx="${x}" cy="82" rx="7.4" ry="4.6" fill="${BLUSH}" opacity=".85"/><circle cx="${x - 2.6}" cy="81" r="1" fill="#fff" opacity=".85"/><circle cx="${x + 1.4}" cy="83.2" r=".9" fill="#fff" opacity=".85"/><circle cx="${x + 3.2}" cy="80.4" r=".8" fill="#fff" opacity=".85"/>`).join("");
+  const blush = [31, 89].map((x) => `<ellipse cx="${x}" cy="82" rx="7.4" ry="4.6" fill="${BLUSH}" opacity=".85"/>`).join("");
   // розовые штрихи радости: сверху между ушами, а для «ура» ещё и по бокам
   const burst = (sides) => `<path d="M49.6 24 L46 14.6 M60 21.6 L60 10.6 M70.4 24 L74 14.6" stroke="#FF7FA8" stroke-width="4" stroke-linecap="round"/>`
     + (sides ? `<path d="M8.6 70 L1.6 66 M9 79 L2 80.6 M111.4 70 L118.4 66 M111 79 L118 80.6" stroke="#FF7FA8" stroke-width="4" stroke-linecap="round"/>` : "");
@@ -2734,6 +2740,50 @@ document.getElementById("tabs").addEventListener("click", (e) => {
   if (!b) return;
   tab = b.dataset.tab; render();
 });
+
+// Свайп влево-вправо по экрану переключает вкладки. Не мешает рисованию (в занятиях выключен),
+// полям ввода, открытым окошкам и системным жестам у краёв экрана.
+(() => {
+  const ORDER = ["home", "review", "pet", "table"];
+  const main = document.getElementById("main");
+  let sx = 0, sy = 0, st = 0, track = false, axis = "";
+  const reset = (anim) => { main.style.transition = anim ? "transform .2s ease-out" : ""; main.style.transform = ""; };
+  document.addEventListener("touchstart", (e) => {
+    track = false; axis = "";
+    if (inSession || e.touches.length !== 1 || document.querySelector(".sheet-back")) return;
+    if (e.target.closest("input, textarea, select, canvas, .tabs")) return;
+    const t = e.touches[0];
+    if (t.clientX < 24 || t.clientX > window.innerWidth - 24) return;
+    sx = t.clientX; sy = t.clientY; st = Date.now(); track = true;
+  }, { passive: true });
+  document.addEventListener("touchmove", (e) => {
+    if (!track) return;
+    const t = e.touches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+    if (!axis) {
+      if (Math.abs(dx) < 10 && Math.abs(dy) < 10) return;
+      axis = Math.abs(dx) > Math.abs(dy) * 1.4 ? "x" : "y";
+      if (axis === "y") { track = false; return; }
+    }
+    const i = ORDER.indexOf(tab), edge = (dx > 0 && i === 0) || (dx < 0 && i === ORDER.length - 1);
+    if (!reducedMotion()) { main.style.transition = ""; main.style.transform = `translateX(${Math.round(dx * (edge ? 0.12 : 0.3))}px)`; }
+  }, { passive: true });
+  const end = (e) => {
+    if (!track) return;
+    track = false;
+    const t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+    const i = ORDER.indexOf(tab) + (dx < 0 ? 1 : -1);
+    if (axis !== "x" || Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.4 || Date.now() - st > 900 || i < 0 || i >= ORDER.length) { reset(true); return; }
+    reset(false);
+    tab = ORDER[i]; render();
+    const tabs = document.getElementById("tabs"), top = tabs.getBoundingClientRect().top;
+    if (top < 0) window.scrollBy({ top: top - 12 });
+    main.classList.remove("from-right", "from-left"); void main.offsetWidth;
+    main.classList.add(dx < 0 ? "from-right" : "from-left");
+  };
+  document.addEventListener("touchend", end, { passive: true });
+  document.addEventListener("touchcancel", () => { if (track) { track = false; reset(true); } }, { passive: true });
+  main.addEventListener("animationend", () => main.classList.remove("from-right", "from-left"));
+})();
 
 
 (() => {

@@ -47,7 +47,7 @@
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
-html { background: var(--bg-mid); }
+html { background: var(--bg-mid); overscroll-behavior-x: none; }
 body {
   margin: 0;
   min-height: 100vh;
@@ -415,7 +415,13 @@ details.how .how-body { display: grid; gap: 10px; margin-top: 12px; max-width: 6
 .pair span:last-child { font-size: 14px; color: var(--muted); font-weight: 700; }
 .kana-chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .kana-chips span { font-family: var(--kana); font-weight: 600; font-size: 22px; width: 44px; height: 44px; display: grid; place-items: center; border-radius: 16px; background: #fff; border: 3px solid #fff; box-shadow: 0 3px 0 var(--line); }
+/* Свайп между вкладками: новая вкладка въезжает сбоку */
+#main.from-right { animation: tab-in-r .24s ease-out; }
+#main.from-left { animation: tab-in-l .24s ease-out; }
+@keyframes tab-in-r { from { transform: translateX(28px); opacity: .2; } to { transform: none; opacity: 1; } }
+@keyframes tab-in-l { from { transform: translateX(-28px); opacity: .2; } to { transform: none; opacity: 1; } }
 @media (prefers-reduced-motion: reduce) {
+  #main.from-right, #main.from-left { animation: none; }
   .hanamaru path { animation: none; stroke-dashoffset: 0; }
   .progress i { transition: none; }
   .mascot.bounce, .float { animation: none; }
@@ -2139,6 +2145,50 @@ document.getElementById("tabs").addEventListener("click", (e) => {
   if (!b) return;
   tab = b.dataset.tab; render();
 });
+
+// Свайп влево-вправо по экрану переключает вкладки. Не мешает рисованию (в занятиях выключен),
+// полям ввода, открытым окошкам и системным жестам у краёв экрана.
+(() => {
+  const ORDER = ["home", "review", "pet", "table"];
+  const main = document.getElementById("main");
+  let sx = 0, sy = 0, st = 0, track = false, axis = "";
+  const reset = (anim) => { main.style.transition = anim ? "transform .2s ease-out" : ""; main.style.transform = ""; };
+  document.addEventListener("touchstart", (e) => {
+    track = false; axis = "";
+    if (inSession || e.touches.length !== 1 || document.querySelector(".sheet-back")) return;
+    if (e.target.closest("input, textarea, select, canvas, .tabs")) return;
+    const t = e.touches[0];
+    if (t.clientX < 24 || t.clientX > window.innerWidth - 24) return;
+    sx = t.clientX; sy = t.clientY; st = Date.now(); track = true;
+  }, { passive: true });
+  document.addEventListener("touchmove", (e) => {
+    if (!track) return;
+    const t = e.touches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+    if (!axis) {
+      if (Math.abs(dx) < 10 && Math.abs(dy) < 10) return;
+      axis = Math.abs(dx) > Math.abs(dy) * 1.4 ? "x" : "y";
+      if (axis === "y") { track = false; return; }
+    }
+    const i = ORDER.indexOf(tab), edge = (dx > 0 && i === 0) || (dx < 0 && i === ORDER.length - 1);
+    if (!reducedMotion()) { main.style.transition = ""; main.style.transform = `translateX(${Math.round(dx * (edge ? 0.12 : 0.3))}px)`; }
+  }, { passive: true });
+  const end = (e) => {
+    if (!track) return;
+    track = false;
+    const t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+    const i = ORDER.indexOf(tab) + (dx < 0 ? 1 : -1);
+    if (axis !== "x" || Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.4 || Date.now() - st > 900 || i < 0 || i >= ORDER.length) { reset(true); return; }
+    reset(false);
+    tab = ORDER[i]; render();
+    const tabs = document.getElementById("tabs"), top = tabs.getBoundingClientRect().top;
+    if (top < 0) window.scrollBy({ top: top - 12 });
+    main.classList.remove("from-right", "from-left"); void main.offsetWidth;
+    main.classList.add(dx < 0 ? "from-right" : "from-left");
+  };
+  document.addEventListener("touchend", end, { passive: true });
+  document.addEventListener("touchcancel", () => { if (track) { track = false; reset(true); } }, { passive: true });
+  main.addEventListener("animationend", () => main.classList.remove("from-right", "from-left"));
+})();
 
 
 (() => {

@@ -23,7 +23,7 @@ const Puppy = (() => {
   const blep = `<path d="M58.6 84.6 Q58.2 91.4 61.8 91.6 Q65.4 91.4 65 84.2 Z" fill="${TONGUE}" stroke="${O}" stroke-width="2.4" stroke-linejoin="round"/>`;
   const openMouth = (big) => shape(big ? "M52.6 82 Q60 80 67.4 82 Q66.4 95 60 95 Q53.6 95 52.6 82 Z" : "M54 82.4 Q60 80.8 66 82.4 Q65 92 60 92 Q55 92 54 82.4 Z", MOUTH, 3)
     + `<path d="${big ? "M55.4 89.6 Q60 85.8 64.6 89.6 Q63 93.6 60 93.6 Q57 93.6 55.4 89.6 Z" : "M56.4 88 Q60 85 63.6 88 Q62.4 90.8 60 90.8 Q57.6 90.8 56.4 88 Z"}" fill="${TONGUE}"/>`;
-  const blush = [31, 89].map((x) => `<ellipse cx="${x}" cy="82" rx="7.4" ry="4.6" fill="${BLUSH}" opacity=".85"/><circle cx="${x - 2.6}" cy="81" r="1" fill="#fff" opacity=".85"/><circle cx="${x + 1.4}" cy="83.2" r=".9" fill="#fff" opacity=".85"/><circle cx="${x + 3.2}" cy="80.4" r=".8" fill="#fff" opacity=".85"/>`).join("");
+  const blush = [31, 89].map((x) => `<ellipse cx="${x}" cy="82" rx="7.4" ry="4.6" fill="${BLUSH}" opacity=".85"/>`).join("");
   // розовые штрихи радости: сверху между ушами, а для «ура» ещё и по бокам
   const burst = (sides) => `<path d="M49.6 24 L46 14.6 M60 21.6 L60 10.6 M70.4 24 L74 14.6" stroke="#FF7FA8" stroke-width="4" stroke-linecap="round"/>`
     + (sides ? `<path d="M8.6 70 L1.6 66 M9 79 L2 80.6 M111.4 70 L118.4 66 M111 79 L118 80.6" stroke="#FF7FA8" stroke-width="4" stroke-linecap="round"/>` : "");
