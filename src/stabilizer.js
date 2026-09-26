@@ -21,6 +21,17 @@ const Stabilizer = (() => {
         brush = [brush[0] + dx * k, brush[1] + dy * k];
         return [brush[0], brush[1]];
       },
+      // Как будет выглядеть догон прямо сейчас — чтобы на экране линия сразу доставала до пальца (черту не меняет).
+      peek() {
+        if (!brush || !last || !P.R) return [];
+        const d = Math.hypot(last[0] - brush[0], last[1] - brush[1]);
+        const n = Math.ceil(d / 0.8), out = [];
+        for (let i = 1; i <= n; i++) {
+          const t = i / n, e = 1 - (1 - t) * (1 - t);
+          out.push([brush[0] + (last[0] - brush[0]) * e, brush[1] + (last[1] - brush[1]) * e]);
+        }
+        return out;
+      },
       // Догон: линия дотягивается до места, где палец оторвался.
       end() {
         if (!brush || !last || !P.R) return [];
