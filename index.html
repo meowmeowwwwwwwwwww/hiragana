@@ -197,6 +197,11 @@ body:has(input[type="text"]:focus, textarea:focus) .tabbar { display: none; }
 .pbar-t { height: 14px; border-radius: 999px; background: #fff; box-shadow: inset 0 0 0 2px var(--line); overflow: hidden; }
 .pbar-t i { display: block; height: 100%; border-radius: 999px; }
 .pbar.food .pbar-t i { background: linear-gradient(90deg, #FFCF6B, #FFB347); }
+.pbar.cozy .pbar-t i { background: linear-gradient(90deg, #B9E6C9, #7FD3A8); }
+.room-card { display: grid; gap: 12px; margin-bottom: 26px; }
+.room-box { display: block; width: 100%; padding: 0; border: 3px solid #fff; border-radius: 22px; overflow: hidden; background: #FFF3E8; box-shadow: 0 0 0 2px var(--line); position: relative; }
+.room-box > svg { display: block; width: 100%; height: auto; }
+.item .room-ico { border-radius: 14px; box-shadow: 0 0 0 2px var(--line); background: #FFF3E8; }
 .pbar.joy .pbar-t i { background: linear-gradient(90deg, #FFA3C4, #FF6F9F); }
 .pbar-n { text-align: right; color: var(--muted); }
 .stars-pill { display: inline-flex; align-items: center; gap: 4px; padding: 6px 14px; border-radius: 999px; background: linear-gradient(180deg, #FFF3B8, #FFE27A); border: 2px solid #fff; box-shadow: 0 3px 0 #F0C850; font-weight: 800; color: #7A5A12; }
@@ -1069,6 +1074,77 @@ const Puppy = (() => {
 })();
 if (typeof module !== "undefined") module.exports = Puppy;
 
+/* Комната Мони: сцена в стиле тетради (плоские цвета, толстый контур). Room.svg({ on, pet, hour, focus }) → SVG строкой.
+   on — включённые вещи комнаты, pet — SVG щенка строкой, hour — час (для неба за окном), focus — id вещи для иконки. */
+const Room = (() => {
+  const O = "#5A3848";
+  let uid = 0;
+  const st = (w = 3) => `stroke="${O}" stroke-width="${w}" stroke-linejoin="round"`;
+  const flower = (x, y, r, c) => { let s = ""; for (let i = 0; i < 5; i++) { const a = (i * 72 - 90) * Math.PI / 180; s += `<circle cx="${(x + r * Math.cos(a)).toFixed(1)}" cy="${(y + r * Math.sin(a)).toFixed(1)}" r="${r * 0.9}" fill="${c}"/>`; } return s + `<circle cx="${x}" cy="${y}" r="${r * 0.6}" fill="#FFD84D"/>`; };
+  const berry = (x, y, k = 1) => `<path d="M${x} ${y - 5 * k} C${x + 7 * k} ${y - 5 * k} ${x + 7 * k} ${y + 2 * k} ${x} ${y + 7 * k} C${x - 7 * k} ${y + 2 * k} ${x - 7 * k} ${y - 5 * k} ${x} ${y - 5 * k} Z" fill="#FF8FB0"/><path d="M${x - 3.6 * k} ${y - 5.4 * k} L${x} ${y - 3 * k} L${x + 3.6 * k} ${y - 5.4 * k} L${x} ${y - 7.6 * k} Z" fill="#7CC67E"/>`;
+  const WALLS = {
+    base: (id) => ({ defs: `<pattern id="${id}" width="30" height="30" patternUnits="userSpaceOnUse"><rect width="30" height="30" fill="#FFF3E8"/><path d="M15 0 V30" stroke="#FFE7D6" stroke-width="6"/></pattern>` }),
+    mizutama: (id) => ({ defs: `<pattern id="${id}" width="26" height="26" patternUnits="userSpaceOnUse"><rect width="26" height="26" fill="#FFF0F6"/><circle cx="6.5" cy="6.5" r="3.4" fill="#FFC4D8"/><circle cx="19.5" cy="19.5" r="3.4" fill="#FFC4D8"/></pattern>` }),
+    kabe_ichigo: (id) => ({ defs: `<pattern id="${id}" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="#FFF7EE"/>${berry(10, 11, 0.8)}${berry(30, 31, 0.8)}</pattern>` }),
+    kabe_sakura: (id) => ({ defs: `<pattern id="${id}" width="44" height="44" patternUnits="userSpaceOnUse"><rect width="44" height="44" fill="#FFE4EE"/>${flower(12, 12, 3.4, "#fff")}${flower(33, 32, 2.8, "#FFF5F8")}</pattern>` })
+  };
+  function sky(hour) {
+    if (hour >= 6 && hour < 17) return `<rect x="38" y="34" width="80" height="68" rx="6" fill="#CFEAFF"/><ellipse cx="62" cy="58" rx="13" ry="7" fill="#fff"/><ellipse cx="72" cy="54" rx="9" ry="7" fill="#fff"/><circle cx="104" cy="46" r="7" fill="#FFE27A"/>`;
+    if (hour >= 17 && hour < 21) return `<rect x="38" y="34" width="80" height="68" rx="6" fill="#FFD3B6"/><rect x="38" y="70" width="80" height="32" rx="6" fill="#FFB9A4"/><circle cx="92" cy="76" r="11" fill="#FF8E7A"/>`;
+    return `<rect x="38" y="34" width="80" height="68" rx="6" fill="#5F5CA8"/><circle cx="96" cy="52" r="9" fill="#FFE9A0"/><circle cx="100.4" cy="48.6" r="8" fill="#5F5CA8"/><circle cx="52" cy="46" r="1.6" fill="#fff"/><circle cx="66" cy="62" r="1.2" fill="#fff"/><circle cx="58" cy="86" r="1.4" fill="#FFE27A"/><circle cx="108" cy="84" r="1.2" fill="#fff"/>`;
+  }
+  const night = (hour) => hour >= 21 || hour < 6;
+  // части комнаты
+  const P = {
+    window: (hour) => `<rect x="30" y="26" width="96" height="84" rx="10" fill="#fff" ${st()}/>` + sky(hour) + `<path d="M78 34 V102 M38 68 H118" stroke="#fff" stroke-width="4"/><rect x="24" y="106" width="108" height="9" rx="4.5" fill="#fff" ${st()}/>`,
+    teruteru: () => `<path d="M46 26 V40" stroke="${O}" stroke-width="1.6"/><path d="M36 70 Q46 64 56 70 L53 54 Q46 50 39 54 Z" fill="#fff" ${st(2.4)}/><circle cx="46" cy="47" r="8" fill="#fff" ${st(2.4)}/><circle cx="43" cy="47" r="1.2" fill="${O}"/><circle cx="49" cy="47" r="1.2" fill="${O}"/><path d="M44 50 Q46 52 48 50" fill="none" stroke="${O}" stroke-width="1.2" stroke-linecap="round"/><path d="M40 53.4 Q46 56 52 53.4" fill="none" stroke="#FF7FA8" stroke-width="2"/>`,
+    fuurin: () => `<path d="M110 26 V36" stroke="${O}" stroke-width="1.6"/><path d="M99 50 Q99 36 110 36 Q121 36 121 50 Z" fill="#DDF2FF" fill-opacity=".9" ${st(2.4)}/><circle cx="105" cy="44" r="1.6" fill="#FF7FA8"/><circle cx="114" cy="43" r="1.6" fill="#FF7FA8"/><path d="M110 50 V56" stroke="${O}" stroke-width="1.4"/><rect x="106.5" y="56" width="7" height="17" rx="1.5" fill="#FFB0CD" ${st(1.8)}/>`,
+    kakejiku: () => `<path d="M262 22 L280 12 L298 22" fill="none" stroke="${O}" stroke-width="1.8"/><rect x="264" y="26" width="32" height="80" fill="#FFFDF4" ${st(2.4)}/><rect x="258" y="21" width="44" height="7" rx="3.5" fill="#C98E5A" ${st(2.4)}/><rect x="258" y="103" width="44" height="7" rx="3.5" fill="#C98E5A" ${st(2.4)}/><text x="280" y="58" text-anchor="middle" font-family="Klee One, serif" font-weight="600" font-size="22" fill="${O}">わ</text><text x="280" y="88" text-anchor="middle" font-family="Klee One, serif" font-weight="600" font-size="22" fill="${O}">ん</text><circle cx="289" cy="96" r="3" fill="#FF5C7C"/>`,
+    floor: () => `<rect x="0" y="168" width="360" height="10" fill="#FFD1E1"/><rect x="0" y="176" width="360" height="84" fill="#F4DAB8"/><path d="M0 200 H360 M0 226 H360 M60 176 V200 M180 176 V200 M300 176 V200 M120 200 V226 M240 200 V226 M60 226 V260 M180 226 V260 M300 226 V260" stroke="#E6C39A" stroke-width="2"/><path d="M0 176 H360" stroke="${O}" stroke-width="2.4"/>`,
+    shikimono: () => `<ellipse cx="180" cy="218" rx="84" ry="19" fill="#FFD1E1" ${st()}/><ellipse cx="180" cy="218" rx="70" ry="13" fill="none" stroke="#fff" stroke-width="2.4" stroke-dasharray="6 6"/>`,
+    kumo: () => { const c = [[118, 216, 16], [146, 206, 21], [180, 202, 24], [214, 206, 21], [242, 216, 16]]; return c.map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#EAF4FF" ${st(6)}/>`).join("") + `<ellipse cx="180" cy="222" rx="70" ry="13" fill="#EAF4FF" ${st(6)}/>` + c.map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#EAF4FF"/>`).join("") + `<ellipse cx="180" cy="222" rx="70" ry="13" fill="#EAF4FF"/><circle cx="160" cy="214" r="2.6" fill="#FFB0CD"/><circle cx="200" cy="214" r="2.6" fill="#FFB0CD"/>`; },
+    akari: (hour) => (night(hour) ? `<circle cx="326" cy="164" r="36" fill="#FFF3B0" opacity=".5"/>` : "") + `<path d="M326 180 V200" stroke="${O}" stroke-width="3"/><ellipse cx="326" cy="203" rx="15" ry="5" fill="#F0C9A0" ${st(2.6)}/><circle cx="326" cy="164" r="16" fill="#FFF3B8" ${st()}/><path d="M332 152 A14 14 0 0 1 332 176 A10 12 0 0 0 332 152 Z" fill="#FFE27A"/><circle cx="320" cy="160" r="2" fill="#F5D66A"/>`,
+    ueki: () => `<path d="M27 196 C20 184 14 180 10 170 C18 172 25 180 27 190 C29 178 34 170 44 166 C40 178 34 186 27 196 Z" fill="#8FD18C" ${st(2.4)}/><path d="M27 196 V178" stroke="#6BB36A" stroke-width="2.4"/>` + flower(27, 172, 3.6, "#FFB0CD") + `<path d="M13 196 L41 196 L37 226 L17 226 Z" fill="#FF9EC0" ${st()}/><path d="M15 204 H39" stroke="#fff" stroke-width="2.4"/>`,
+    omocha: () => `<circle cx="86" cy="226" r="10" fill="#AED8FF" ${st(2.6)}/><path d="M77 222 Q86 228 95 222" fill="none" stroke="#fff" stroke-width="2.4"/><path d="M104 236 a4.4 4.4 0 1 1 5.2 -4.6 L121 231 a4.4 4.4 0 1 1 4.6 5.2 a4.4 4.4 0 1 1 -5.2 4.6 L109 240 a4.4 4.4 0 1 1 -5 -4 Z" fill="#FFF6E6" ${st(2.2)}/>`,
+    bowl: () => `<path d="M282 222 L320 222 Q316 240 301 240 Q286 240 282 222 Z" fill="#FFB0CD" ${st()}/><circle cx="293" cy="219" r="4" fill="#C98E5A" ${st(1.6)}/><circle cx="302" cy="217" r="4" fill="#C98E5A" ${st(1.6)}/><circle cx="310" cy="219.6" r="4" fill="#C98E5A" ${st(1.6)}/><path d="M292 230 q9 5 18 0" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>`,
+    zabuton: () => `<rect x="130" y="192" width="100" height="28" rx="12" fill="#FF9EC0" ${st()}/><circle cx="148" cy="206" r="2" fill="#fff"/><circle cx="212" cy="206" r="2" fill="#fff"/><circle cx="180" cy="206" r="2" fill="#fff"/>`,
+    ouchi: () => `<rect x="116" y="94" width="128" height="118" rx="12" fill="#FFE0EC" ${st()}/><path d="M104 102 L180 48 L256 102 Z" fill="#FF7FA8" ${st()}/><path d="M180 66 c-4-6-12-3-10 3 1 4 10 9 10 9s9-5 10-9c2-6-6-9-10-3z" fill="#fff"/><path d="M140 212 L140 150 Q180 110 220 150 L220 212 Z" fill="#C0708C" ${st(2.6)}/>`,
+    kagoBack: () => `<ellipse cx="180" cy="196" rx="60" ry="11" fill="#C98E5A" ${st()}/><ellipse cx="180" cy="197" rx="50" ry="7" fill="#FFC4D8"/>`,
+    kagoFront: () => `<path d="M120 196 Q180 208 240 196 L232 228 Q180 240 128 228 Z" fill="#E8B98A" ${st()}/><path d="M130 206 Q180 216 230 206 M132 216 Q180 226 228 216" fill="none" stroke="#C98E5A" stroke-width="2.4"/><path d="M146 208 V230 M164 211 V234 M180 212 V235 M196 211 V234 M214 208 V230" stroke="#D8A576" stroke-width="2"/>`,
+    kotatsu: () => `<path d="M104 196 Q180 186 256 196 L262 236 Q180 246 98 236 Z" fill="#FFB0CD" ${st()}/><path d="M112 212 Q180 204 248 212 M108 226 Q180 218 252 226" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="2 8" stroke-linecap="round"/><rect x="110" y="184" width="140" height="12" rx="4" fill="#C98E5A" ${st()}/><circle cx="222" cy="176" r="9" fill="#FFA24C" ${st(2.4)}/><path d="M220 168 l3 -3" stroke="#6BB36A" stroke-width="2.4" stroke-linecap="round"/><circle cx="238" cy="179" r="6.5" fill="#FFA24C" ${st(2.2)}/>`
+  };
+  // рамки для иконок вещей
+  const FOCUS = { kago: "100 90 160 160", ouchi: "96 40 170 210", mizutama: "150 10 120 120", kabe_ichigo: "150 10 120 120", kabe_sakura: "150 10 120 120", shikimono: "90 150 180 100", kumo: "90 150 180 100", omocha: "70 205 64 44", ueki: "0 158 52 76", teruteru: "26 22 44 54", fuurin: "92 22 36 56", akari: "300 136 52 76", kakejiku: "250 8 60 108", kotatsu: "96 100 170 150" };
+  function svg(opts = {}) {
+    const on = opts.on || [], hour = opts.hour == null ? new Date().getHours() : opts.hour;
+    const has = (x) => on.includes(x);
+    const pid = "rw" + (++uid);
+    const wall = (WALLS[on.find((x) => WALLS[x] && x !== "base")] || WALLS.base)(pid);
+    const vb = opts.focus && FOCUS[opts.focus] ? FOCUS[opts.focus] : "0 0 360 250";
+    let s = `<svg viewBox="${vb}" class="${opts.cls || "room-svg"}" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>${wall.defs}</defs>`;
+    s += `<rect x="0" y="0" width="360" height="176" fill="url(#${pid})"/>`;
+    s += P.window(hour);
+    if (has("teruteru")) s += P.teruteru();
+    if (has("fuurin")) s += P.fuurin();
+    if (has("kakejiku")) s += P.kakejiku();
+    s += P.floor();
+    if (has("kumo")) s += P.kumo(); else if (has("shikimono")) s += P.shikimono();
+    if (has("akari")) s += P.akari(hour);
+    if (has("ueki")) s += P.ueki();
+    if (has("ouchi")) s += P.ouchi() + P.zabuton();
+    else if (has("kago")) s += P.kagoBack();
+    else s += P.zabuton();
+    if (opts.pet) s += opts.pet.replace("<svg ", `<svg x="120" y="${has("kotatsu") ? 80 : has("kago") ? 92 : 98}" width="120" height="120" `);
+    if (has("kago") && !has("ouchi")) s += P.kagoFront();
+    if (has("kotatsu")) s += P.kotatsu();
+    if (has("omocha")) s += P.omocha();
+    s += P.bowl();
+    return s + "</svg>";
+  }
+  return { svg };
+})();
+if (typeof module !== "undefined") module.exports = Room;
+
 /* Картинки-ассоциации: знак встроен в рисунок. Координаты в поле 1024×1024 (как у эталонов). */
 const Pics = (() => {
   const O = "#5A3848", SW = 18;
@@ -1467,12 +1543,13 @@ const readingLine = (k) => `${INFO[k][0]} · ${INFO[k][1]}`;
 const LS_KEY = "hiragana-notebook-v1";
 const DAY = 86400000;
 const INTERVALS = [0, 1, 2, 4, 8, 16];
-function defPet() { return { name: "Моня", food: 85, joy: 85, last: 0, stars: 0, owned: [], wear: [], game: { day: "", stars: 0 }, pat: 0, kp: 0, gacha: { n: 0, pity: 0 }, kpDay: "", kpStreak: "" }; }
+function defPet() { return { name: "Моня", food: 85, joy: 85, last: 0, stars: 0, owned: [], wear: [], game: { day: "", stars: 0 }, pat: 0, kp: 0, gacha: { n: 0, pity: 0 }, kpDay: "", kpStreak: "", room: { owned: [], on: [] } }; }
 function defState() { return { v: 1, updatedAt: 0, lessons: {}, cards: {}, notes: {}, days: [], lenient: false, pet: defPet() }; }
 function ensurePet() {
   S.pet = Object.assign(defPet(), S.pet || {});
   if (!S.pet.game) S.pet.game = { day: "", stars: 0 };
   if (!S.pet.gacha) S.pet.gacha = { n: 0, pity: 0 };
+  if (!S.pet.room) S.pet.room = { owned: [], on: [] };
   // нимб убран из автомата
   S.pet.owned = S.pet.owned.filter((x) => x !== "tenshi"); S.pet.wear = S.pet.wear.filter((x) => x !== "tenshi");
   if (!S.pet.last) S.pet.last = Date.now();
@@ -2496,7 +2573,7 @@ function openPractice(k) {
 const FOOD_RATE = 2.2, JOY_RATE = 1.8; // сколько очков сытости и настроения уходит за час
 function petNow() {
   const p = S.pet, hrs = Math.max(0, (Date.now() - (p.last || Date.now())) / 3600000);
-  return { food: Math.max(0, p.food - FOOD_RATE * hrs), joy: Math.max(0, p.joy - JOY_RATE * hrs) };
+  return { food: Math.max(0, p.food - FOOD_RATE * hrs), joy: Math.max(0, p.joy - JOY_RATE * (1 - 0.5 * cozy() / COZY_MAX) * hrs) };
 }
 function petCommit(df = 0, dj = 0) {
   const n = petNow();
@@ -2584,6 +2661,53 @@ const WEARS = [
   { id: "boushi", w: "ぼうし", cyr: "бо:си", lat: "bōshi", ru: "шапочка", cost: 25 },
   { id: "megane", w: "めがね", cyr: "мэганэ", lat: "megane", ru: "очки", cost: 30 }
 ];
+// Комната Мони: вещи покупаются за ★ (надо прочитать название), cozy — сколько уюта даёт
+const ROOM_ITEMS = [
+  { id: "omocha", slot: "toys", w: "おもちゃ", cyr: "омотя", lat: "omocha", ru: "игрушки", cost: 12, cozy: 1 },
+  { id: "mizutama", slot: "wall", w: "みずたま", cyr: "мидзутама", lat: "mizutama", ru: "обои в горошек", cost: 15, cozy: 1 },
+  { id: "shikimono", slot: "rug", w: "しきもの", cyr: "сикимоно", lat: "shikimono", ru: "коврик", cost: 15, cozy: 1 },
+  { id: "ueki", slot: "plant", w: "うえき", cyr: "уэки", lat: "ueki", ru: "цветок в горшке", cost: 18, cozy: 1 },
+  { id: "kago", slot: "bed", w: "かご", cyr: "каго", lat: "kago", ru: "корзинка-лежанка", cost: 20, cozy: 2 },
+  { id: "teruteru", slot: "teru", w: "てるてるぼうず", cyr: "тэрутэру бо:дзу", lat: "teruteru bōzu", ru: "куколка тэрутэру", cost: 22, cozy: 1 },
+  { id: "fuurin", slot: "fuurin", w: "ふうりん", cyr: "фу:рин", lat: "fūrin", ru: "колокольчик-фурин", cost: 25, cozy: 2 },
+  { id: "akari", slot: "lamp", w: "あかり", cyr: "акари", lat: "akari", ru: "ночник-луна", cost: 28, cozy: 2 },
+  { id: "kabe_ichigo", slot: "wall", w: "いちごの かべ", cyr: "итиго но кабэ", lat: "ichigo no kabe", ru: "обои с клубничками", cost: 30, cozy: 2 },
+  { id: "kakejiku", slot: "scroll", w: "かけじく", cyr: "какэдзику", lat: "kakejiku", ru: "свиток «わん»", cost: 30, cozy: 2 },
+  { id: "kumo", slot: "rug", w: "くも", cyr: "кумо", lat: "kumo", ru: "коврик-облачко", cost: 35, cozy: 2 },
+  { id: "kabe_sakura", slot: "wall", w: "さくらの かべ", cyr: "сакура но кабэ", lat: "sakura no kabe", ru: "обои с сакурой", cost: 40, cozy: 3 },
+  { id: "ouchi", slot: "bed", w: "おうち", cyr: "о:ти", lat: "ouchi", ru: "домик", cost: 45, cozy: 4 },
+  { id: "kotatsu", slot: "kotatsu", w: "こたつ", cyr: "котацу", lat: "kotatsu", ru: "котацу — столик с одеялом", cost: 60, cozy: 4 }
+];
+const COZY_MAX = Object.values(ROOM_ITEMS.reduce((m, it) => { m[it.slot] = Math.max(m[it.slot] || 0, it.cozy); return m; }, {})).reduce((a, b) => a + b, 0);
+const cozy = () => (S.pet && S.pet.room ? S.pet.room.on : []).reduce((sum, id) => { const it = ROOM_ITEMS.find((x) => x.id === id); return sum + (it ? it.cozy : 0); }, 0);
+function toggleRoom(id) {
+  const r = S.pet.room, slot = (ROOM_ITEMS.find((x) => x.id === id) || {}).slot;
+  if (r.on.includes(id)) r.on = r.on.filter((x) => x !== id);
+  else r.on = r.on.filter((x) => (ROOM_ITEMS.find((it) => it.id === x) || {}).slot !== slot).concat(id);
+  save();
+}
+const roomIcon = (id) => svgNode(Room.svg({ on: [id], hour: 12, pet: ["bed", "rug", "kotatsu"].includes((ROOM_ITEMS.find((x) => x.id === id) || {}).slot) ? Puppy.svg("normal", { acc: S.pet.wear }) : "", focus: id, cls: "item-ico room-ico" }));
+function roomScene() {
+  const box = h("button", { class: "room-box", type: "button", "aria-label": `Комната ${petCase("gen")}. Нажми, чтобы погладить` });
+  const draw = (mood) => box.replaceChildren(svgNode(Room.svg({ on: S.pet.room.on, pet: Puppy.svg(mood, { acc: S.pet.wear }) })));
+  draw(petMood());
+  box.addEventListener("click", () => {
+    draw("happy"); petHeartBurst(box);
+    const now = Date.now();
+    if (now - (S.pet.pat || 0) > 30000) { S.pet.pat = now; petCommit(0, 3); save(); }
+    setTimeout(() => draw(petMood()), 1400);
+  });
+  return box;
+}
+function roomSection() {
+  const c = cozy(), pct = Math.round((100 * c) / COZY_MAX);
+  const lvl = pct >= 90 ? "самая уютная комната ♡" : pct >= 60 ? "очень уютно" : pct >= 30 ? "уютно" : pct > 0 ? "становится уютнее" : "пока пустовато";
+  return h("section", { class: "panel room-card" },
+    roomScene(),
+    h("div", { class: "pet-bars" }, bar("Уют", pct, "cozy")),
+    h("p", { class: "muted", style: "font-size:14px" }, `${lvl[0].toUpperCase() + lvl.slice(1)}. Чем уютнее комната, тем медленнее ${S.pet.name} грустит.`));
+}
+
 // Капсульный автомат: r — редкость (1 обычная, 2 редкая, 3 особая), slot — куда надевается
 const GACHA = [
   { id: "hachimaki", w: "はちまき", cyr: "хатимаки", ru: "повязка-хатимаки", r: 1, slot: "head" },
@@ -2733,27 +2857,29 @@ function openReadDialog(item, kind, onSuccess) {
 }
 function itemCard(item, kind) {
   const miss = missingKana(item.w);
-  const owned = kind === "wear" && S.pet.owned.includes(item.id);
-  const worn = owned && S.pet.wear.includes(item.id);
+  const owned = kind === "wear" ? S.pet.owned.includes(item.id) : kind === "room" ? S.pet.room.owned.includes(item.id) : false;
+  const worn = owned && (kind === "room" ? S.pet.room.on.includes(item.id) : S.pet.wear.includes(item.id));
   const locked = miss.length > 0;
-  const ico = kind === "food" ? foodIcon(item.id) : mascot("normal", false, [item.id]);
+  const ico = kind === "food" ? foodIcon(item.id) : kind === "room" ? roomIcon(item.id) : mascot("normal", false, [item.id]);
   ico.classList.add("item-ico");
   let foot;
   if (locked) foot = h("span", { class: "item-lock" }, "Выучи: ", h("span", { class: "ja", lang: "ja" }, miss.join(" ")));
-  else if (owned) foot = h("span", { class: "chip " + (worn ? "next" : "done") }, worn ? "надето" : "надеть");
+  else if (owned) foot = h("span", { class: "chip " + (worn ? "next" : "done") }, kind === "room" ? (worn ? "в комнате" : "поставить") : worn ? "надето" : "надеть");
   else foot = h("span", { class: "item-cost num" + (S.pet.stars < item.cost ? " poor" : "") }, `${item.cost} ★`);
   const btn = h("button", { class: "item" + (locked ? " locked" : "") + (worn ? " worn" : ""), type: "button", disabled: locked && !owned },
     ico, h("span", { class: "item-w ja", lang: "ja" }, item.w), h("span", { class: "item-ru" }, locked ? "???" : item.ru), foot);
   btn.addEventListener("click", () => {
     if (locked) return;
     if (owned) {
-      toggleWear(item.id); render(); return;
+      if (kind === "room") toggleRoom(item.id); else toggleWear(item.id);
+      render(); return;
     }
     if (S.pet.stars < item.cost) { toastStars(0, `Нужно ${item.cost} ★, а у тебя ${S.pet.stars}. Позанимайся!`); return; }
     openReadDialog(item, kind, () => {
       S.pet.stars -= item.cost;
       if (kind === "food") petCommit(item.food, item.joy);
-      else { petCommit(0, 10); S.pet.owned.push(item.id); if (!S.pet.wear.includes(item.id)) toggleWear(item.id); }
+      else if (kind === "room") { petCommit(0, 10); S.pet.room.owned.push(item.id); if (!S.pet.room.on.includes(item.id)) toggleRoom(item.id); }
+      else if (kind === "wear") { petCommit(0, 10); S.pet.owned.push(item.id); if (!S.pet.wear.includes(item.id)) toggleWear(item.id); }
       save();
     });
   });
@@ -2790,18 +2916,22 @@ function petView() {
       h("button", { class: "btn primary", type: "button", disabled: !canPlay, onclick: startFetch }, "Играть")));
   const foods = h("div", { class: "items" }, FOODS.map((f) => itemCard(f, "food")));
   const wears = h("div", { class: "items" }, WEARS.map((f) => itemCard(f, "wear")));
+  const roomShop = h("div", { class: "items" }, ROOM_ITEMS.map((f) => itemCard(f, "room")));
   const how = h("details", { class: "how" }, h("summary", {}, "Как заработать ★"),
     h("div", { class: "how-body" },
       h("p", {}, "Звёздочки дают только за учёбу: +1 за верный ответ с первой попытки, +2 за идеальный знак, +10 за пройденный урок, +5 за повторение по расписанию."),
       h("p", {}, "Еду и вещи можно купить, только когда выучены все знаки в их названии, и только если прочитать название вслух… то есть вписать чтение."),
       h("p", {}, `Сытость и настроение понемногу убывают. Если долго не заниматься, ${S.pet.name} загрустит, но никуда не денется: достаточно позаниматься и покормить.`),
       h("p", {}, "Щенок растёт вместе с тобой: малыш → щенок (10 знаков) → пёсик (25) → сэнсэй (все 46 основных)."),
+      h("p", {}, `Вещи для комнаты покупаются за ★ так же, как еда и одежда. Каждая добавляет уюта, а в уютной комнате ${S.pet.name} грустит медленнее.`),
       h("p", {}, `Конпэйто — редкие леденцы для капсульного автомата: +3 за новый урок, +1 за повторение по расписанию (раз в день), +1 когда знак доходит до 5-го уровня, +2 за каждые 7 дней подряд. Ещё можно обменять ${KP_RATE} ★ на 1 конпэйто.`),
       h("p", {}, `Капсула стоит ${GACHA_COST} конпэйто. Особая вещь ★★★ выпадает не позже чем на ${GACHA_PITY}-й капсуле. Если выпала вещь, которая уже есть, вернётся 1 конпэйто.`)));
   return h("div", {}, hero,
+    h("h2", { class: "section-title" }, heartSticker("#FFB0CD"), `Комната ${petCase("gen")}`), roomSection(),
     h("h2", { class: "section-title" }, starSticker("#D8BDFF"), "Капсульный автомат"), gachaCard(),
     h("h2", { class: "section-title" }, starSticker("#FFE27A"), "Покормить"), foods,
     h("h2", { class: "section-title" }, heartSticker("#FFB0CD"), "Гардероб"), wears,
+    h("h2", { class: "section-title" }, starSticker("#A9E7CF"), "Обустроить комнату"), roomShop,
     h("h2", { class: "section-title" }, starSticker("#AED8FF"), "Поиграть"), play, how);
 }
 /* ===================== Капсульный автомат (がちゃがちゃ) ===================== */

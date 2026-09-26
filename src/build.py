@@ -7,7 +7,7 @@ OUT = '..'  # корень репозитория — оттуда GitHub Pages 
 rd = lambda f: open(f, encoding='utf-8').read()
 t = rd('app_template.html')
 parts = {'__KANA__': rd('kana2.json'), '__RECOG__': rd('recognizer.js'), '__STAB__': rd('stabilizer.js'),
-         '__PUPPY__': rd('puppy.js'), '__PICS__': rd('pics.js')}
+         '__PUPPY__': rd('puppy.js'), '__ROOM__': rd('room.js'), '__PICS__': rd('pics.js')}
 def fill(tpl, pwa):
     out = tpl.replace('__IS_PWA__', 'true' if pwa else 'false', 1)
     for k, v in parts.items(): out = out.replace(k, v, 1)

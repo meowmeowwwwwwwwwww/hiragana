@@ -186,6 +186,11 @@ body:has(input[type="text"]:focus, textarea:focus) .tabbar { display: none; }
 .pbar-t { height: 14px; border-radius: 999px; background: #fff; box-shadow: inset 0 0 0 2px var(--line); overflow: hidden; }
 .pbar-t i { display: block; height: 100%; border-radius: 999px; }
 .pbar.food .pbar-t i { background: linear-gradient(90deg, #FFCF6B, #FFB347); }
+.pbar.cozy .pbar-t i { background: linear-gradient(90deg, #B9E6C9, #7FD3A8); }
+.room-card { display: grid; gap: 12px; margin-bottom: 26px; }
+.room-box { display: block; width: 100%; padding: 0; border: 3px solid #fff; border-radius: 22px; overflow: hidden; background: #FFF3E8; box-shadow: 0 0 0 2px var(--line); position: relative; }
+.room-box > svg { display: block; width: 100%; height: auto; }
+.item .room-ico { border-radius: 14px; box-shadow: 0 0 0 2px var(--line); background: #FFF3E8; }
 .pbar.joy .pbar-t i { background: linear-gradient(90deg, #FFA3C4, #FF6F9F); }
 .pbar-n { text-align: right; color: var(--muted); }
 .stars-pill { display: inline-flex; align-items: center; gap: 4px; padding: 6px 14px; border-radius: 999px; background: linear-gradient(180deg, #FFF3B8, #FFE27A); border: 2px solid #fff; box-shadow: 0 3px 0 #F0C850; font-weight: 800; color: #7A5A12; }
@@ -569,6 +574,7 @@ const KANA = __KANA__;
 __RECOG__
 __STAB__
 __PUPPY__
+__ROOM__
 __PICS__
 
 /* ===================== Справочные данные ===================== */
@@ -831,12 +837,13 @@ const readingLine = (k) => `${INFO[k][0]} · ${INFO[k][1]}`;
 const LS_KEY = "hiragana-notebook-v1";
 const DAY = 86400000;
 const INTERVALS = [0, 1, 2, 4, 8, 16];
-function defPet() { return { name: "Моня", food: 85, joy: 85, last: 0, stars: 0, owned: [], wear: [], game: { day: "", stars: 0 }, pat: 0, kp: 0, gacha: { n: 0, pity: 0 }, kpDay: "", kpStreak: "" }; }
+function defPet() { return { name: "Моня", food: 85, joy: 85, last: 0, stars: 0, owned: [], wear: [], game: { day: "", stars: 0 }, pat: 0, kp: 0, gacha: { n: 0, pity: 0 }, kpDay: "", kpStreak: "", room: { owned: [], on: [] } }; }
 function defState() { return { v: 1, updatedAt: 0, lessons: {}, cards: {}, notes: {}, days: [], lenient: false, pet: defPet() }; }
 function ensurePet() {
   S.pet = Object.assign(defPet(), S.pet || {});
   if (!S.pet.game) S.pet.game = { day: "", stars: 0 };
   if (!S.pet.gacha) S.pet.gacha = { n: 0, pity: 0 };
+  if (!S.pet.room) S.pet.room = { owned: [], on: [] };
   // нимб убран из автомата
   S.pet.owned = S.pet.owned.filter((x) => x !== "tenshi"); S.pet.wear = S.pet.wear.filter((x) => x !== "tenshi");
   if (!S.pet.last) S.pet.last = Date.now();
@@ -1860,7 +1867,7 @@ function openPractice(k) {
 const FOOD_RATE = 2.2, JOY_RATE = 1.8; // сколько очков сытости и настроения уходит за час
 function petNow() {
   const p = S.pet, hrs = Math.max(0, (Date.now() - (p.last || Date.now())) / 3600000);
-  return { food: Math.max(0, p.food - FOOD_RATE * hrs), joy: Math.max(0, p.joy - JOY_RATE * hrs) };
+  return { food: Math.max(0, p.food - FOOD_RATE * hrs), joy: Math.max(0, p.joy - JOY_RATE * (1 - 0.5 * cozy() / COZY_MAX) * hrs) };
 }
 function petCommit(df = 0, dj = 0) {
   const n = petNow();
@@ -1948,6 +1955,53 @@ const WEARS = [
   { id: "boushi", w: "ぼうし", cyr: "бо:си", lat: "bōshi", ru: "шапочка", cost: 25 },
   { id: "megane", w: "めがね", cyr: "мэганэ", lat: "megane", ru: "очки", cost: 30 }
 ];
+// Комната Мони: вещи покупаются за ★ (надо прочитать название), cozy — сколько уюта даёт
+const ROOM_ITEMS = [
+  { id: "omocha", slot: "toys", w: "おもちゃ", cyr: "омотя", lat: "omocha", ru: "игрушки", cost: 12, cozy: 1 },
+  { id: "mizutama", slot: "wall", w: "みずたま", cyr: "мидзутама", lat: "mizutama", ru: "обои в горошек", cost: 15, cozy: 1 },
+  { id: "shikimono", slot: "rug", w: "しきもの", cyr: "сикимоно", lat: "shikimono", ru: "коврик", cost: 15, cozy: 1 },
+  { id: "ueki", slot: "plant", w: "うえき", cyr: "уэки", lat: "ueki", ru: "цветок в горшке", cost: 18, cozy: 1 },
+  { id: "kago", slot: "bed", w: "かご", cyr: "каго", lat: "kago", ru: "корзинка-лежанка", cost: 20, cozy: 2 },
+  { id: "teruteru", slot: "teru", w: "てるてるぼうず", cyr: "тэрутэру бо:дзу", lat: "teruteru bōzu", ru: "куколка тэрутэру", cost: 22, cozy: 1 },
+  { id: "fuurin", slot: "fuurin", w: "ふうりん", cyr: "фу:рин", lat: "fūrin", ru: "колокольчик-фурин", cost: 25, cozy: 2 },
+  { id: "akari", slot: "lamp", w: "あかり", cyr: "акари", lat: "akari", ru: "ночник-луна", cost: 28, cozy: 2 },
+  { id: "kabe_ichigo", slot: "wall", w: "いちごの かべ", cyr: "итиго но кабэ", lat: "ichigo no kabe", ru: "обои с клубничками", cost: 30, cozy: 2 },
+  { id: "kakejiku", slot: "scroll", w: "かけじく", cyr: "какэдзику", lat: "kakejiku", ru: "свиток «わん»", cost: 30, cozy: 2 },
+  { id: "kumo", slot: "rug", w: "くも", cyr: "кумо", lat: "kumo", ru: "коврик-облачко", cost: 35, cozy: 2 },
+  { id: "kabe_sakura", slot: "wall", w: "さくらの かべ", cyr: "сакура но кабэ", lat: "sakura no kabe", ru: "обои с сакурой", cost: 40, cozy: 3 },
+  { id: "ouchi", slot: "bed", w: "おうち", cyr: "о:ти", lat: "ouchi", ru: "домик", cost: 45, cozy: 4 },
+  { id: "kotatsu", slot: "kotatsu", w: "こたつ", cyr: "котацу", lat: "kotatsu", ru: "котацу — столик с одеялом", cost: 60, cozy: 4 }
+];
+const COZY_MAX = Object.values(ROOM_ITEMS.reduce((m, it) => { m[it.slot] = Math.max(m[it.slot] || 0, it.cozy); return m; }, {})).reduce((a, b) => a + b, 0);
+const cozy = () => (S.pet && S.pet.room ? S.pet.room.on : []).reduce((sum, id) => { const it = ROOM_ITEMS.find((x) => x.id === id); return sum + (it ? it.cozy : 0); }, 0);
+function toggleRoom(id) {
+  const r = S.pet.room, slot = (ROOM_ITEMS.find((x) => x.id === id) || {}).slot;
+  if (r.on.includes(id)) r.on = r.on.filter((x) => x !== id);
+  else r.on = r.on.filter((x) => (ROOM_ITEMS.find((it) => it.id === x) || {}).slot !== slot).concat(id);
+  save();
+}
+const roomIcon = (id) => svgNode(Room.svg({ on: [id], hour: 12, pet: ["bed", "rug", "kotatsu"].includes((ROOM_ITEMS.find((x) => x.id === id) || {}).slot) ? Puppy.svg("normal", { acc: S.pet.wear }) : "", focus: id, cls: "item-ico room-ico" }));
+function roomScene() {
+  const box = h("button", { class: "room-box", type: "button", "aria-label": `Комната ${petCase("gen")}. Нажми, чтобы погладить` });
+  const draw = (mood) => box.replaceChildren(svgNode(Room.svg({ on: S.pet.room.on, pet: Puppy.svg(mood, { acc: S.pet.wear }) })));
+  draw(petMood());
+  box.addEventListener("click", () => {
+    draw("happy"); petHeartBurst(box);
+    const now = Date.now();
+    if (now - (S.pet.pat || 0) > 30000) { S.pet.pat = now; petCommit(0, 3); save(); }
+    setTimeout(() => draw(petMood()), 1400);
+  });
+  return box;
+}
+function roomSection() {
+  const c = cozy(), pct = Math.round((100 * c) / COZY_MAX);
+  const lvl = pct >= 90 ? "самая уютная комната ♡" : pct >= 60 ? "очень уютно" : pct >= 30 ? "уютно" : pct > 0 ? "становится уютнее" : "пока пустовато";
+  return h("section", { class: "panel room-card" },
+    roomScene(),
+    h("div", { class: "pet-bars" }, bar("Уют", pct, "cozy")),
+    h("p", { class: "muted", style: "font-size:14px" }, `${lvl[0].toUpperCase() + lvl.slice(1)}. Чем уютнее комната, тем медленнее ${S.pet.name} грустит.`));
+}
+
 // Капсульный автомат: r — редкость (1 обычная, 2 редкая, 3 особая), slot — куда надевается
 const GACHA = [
   { id: "hachimaki", w: "はちまき", cyr: "хатимаки", ru: "повязка-хатимаки", r: 1, slot: "head" },
@@ -2097,27 +2151,29 @@ function openReadDialog(item, kind, onSuccess) {
 }
 function itemCard(item, kind) {
   const miss = missingKana(item.w);
-  const owned = kind === "wear" && S.pet.owned.includes(item.id);
-  const worn = owned && S.pet.wear.includes(item.id);
+  const owned = kind === "wear" ? S.pet.owned.includes(item.id) : kind === "room" ? S.pet.room.owned.includes(item.id) : false;
+  const worn = owned && (kind === "room" ? S.pet.room.on.includes(item.id) : S.pet.wear.includes(item.id));
   const locked = miss.length > 0;
-  const ico = kind === "food" ? foodIcon(item.id) : mascot("normal", false, [item.id]);
+  const ico = kind === "food" ? foodIcon(item.id) : kind === "room" ? roomIcon(item.id) : mascot("normal", false, [item.id]);
   ico.classList.add("item-ico");
   let foot;
   if (locked) foot = h("span", { class: "item-lock" }, "Выучи: ", h("span", { class: "ja", lang: "ja" }, miss.join(" ")));
-  else if (owned) foot = h("span", { class: "chip " + (worn ? "next" : "done") }, worn ? "надето" : "надеть");
+  else if (owned) foot = h("span", { class: "chip " + (worn ? "next" : "done") }, kind === "room" ? (worn ? "в комнате" : "поставить") : worn ? "надето" : "надеть");
   else foot = h("span", { class: "item-cost num" + (S.pet.stars < item.cost ? " poor" : "") }, `${item.cost} ★`);
   const btn = h("button", { class: "item" + (locked ? " locked" : "") + (worn ? " worn" : ""), type: "button", disabled: locked && !owned },
     ico, h("span", { class: "item-w ja", lang: "ja" }, item.w), h("span", { class: "item-ru" }, locked ? "???" : item.ru), foot);
   btn.addEventListener("click", () => {
     if (locked) return;
     if (owned) {
-      toggleWear(item.id); render(); return;
+      if (kind === "room") toggleRoom(item.id); else toggleWear(item.id);
+      render(); return;
     }
     if (S.pet.stars < item.cost) { toastStars(0, `Нужно ${item.cost} ★, а у тебя ${S.pet.stars}. Позанимайся!`); return; }
     openReadDialog(item, kind, () => {
       S.pet.stars -= item.cost;
       if (kind === "food") petCommit(item.food, item.joy);
-      else { petCommit(0, 10); S.pet.owned.push(item.id); if (!S.pet.wear.includes(item.id)) toggleWear(item.id); }
+      else if (kind === "room") { petCommit(0, 10); S.pet.room.owned.push(item.id); if (!S.pet.room.on.includes(item.id)) toggleRoom(item.id); }
+      else if (kind === "wear") { petCommit(0, 10); S.pet.owned.push(item.id); if (!S.pet.wear.includes(item.id)) toggleWear(item.id); }
       save();
     });
   });
@@ -2154,18 +2210,22 @@ function petView() {
       h("button", { class: "btn primary", type: "button", disabled: !canPlay, onclick: startFetch }, "Играть")));
   const foods = h("div", { class: "items" }, FOODS.map((f) => itemCard(f, "food")));
   const wears = h("div", { class: "items" }, WEARS.map((f) => itemCard(f, "wear")));
+  const roomShop = h("div", { class: "items" }, ROOM_ITEMS.map((f) => itemCard(f, "room")));
   const how = h("details", { class: "how" }, h("summary", {}, "Как заработать ★"),
     h("div", { class: "how-body" },
       h("p", {}, "Звёздочки дают только за учёбу: +1 за верный ответ с первой попытки, +2 за идеальный знак, +10 за пройденный урок, +5 за повторение по расписанию."),
       h("p", {}, "Еду и вещи можно купить, только когда выучены все знаки в их названии, и только если прочитать название вслух… то есть вписать чтение."),
       h("p", {}, `Сытость и настроение понемногу убывают. Если долго не заниматься, ${S.pet.name} загрустит, но никуда не денется: достаточно позаниматься и покормить.`),
       h("p", {}, "Щенок растёт вместе с тобой: малыш → щенок (10 знаков) → пёсик (25) → сэнсэй (все 46 основных)."),
+      h("p", {}, `Вещи для комнаты покупаются за ★ так же, как еда и одежда. Каждая добавляет уюта, а в уютной комнате ${S.pet.name} грустит медленнее.`),
       h("p", {}, `Конпэйто — редкие леденцы для капсульного автомата: +3 за новый урок, +1 за повторение по расписанию (раз в день), +1 когда знак доходит до 5-го уровня, +2 за каждые 7 дней подряд. Ещё можно обменять ${KP_RATE} ★ на 1 конпэйто.`),
       h("p", {}, `Капсула стоит ${GACHA_COST} конпэйто. Особая вещь ★★★ выпадает не позже чем на ${GACHA_PITY}-й капсуле. Если выпала вещь, которая уже есть, вернётся 1 конпэйто.`)));
   return h("div", {}, hero,
+    h("h2", { class: "section-title" }, heartSticker("#FFB0CD"), `Комната ${petCase("gen")}`), roomSection(),
     h("h2", { class: "section-title" }, starSticker("#D8BDFF"), "Капсульный автомат"), gachaCard(),
     h("h2", { class: "section-title" }, starSticker("#FFE27A"), "Покормить"), foods,
     h("h2", { class: "section-title" }, heartSticker("#FFB0CD"), "Гардероб"), wears,
+    h("h2", { class: "section-title" }, starSticker("#A9E7CF"), "Обустроить комнату"), roomShop,
     h("h2", { class: "section-title" }, starSticker("#AED8FF"), "Поиграть"), play, how);
 }
 /* ===================== Капсульный автомат (がちゃがちゃ) ===================== */
