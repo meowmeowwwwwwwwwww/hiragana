@@ -59,7 +59,7 @@
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 html {
-  background: var(--bg-top); overscroll-behavior-x: none; overflow-x: hidden;
+  background: var(--bg-top); overscroll-behavior: none; overflow-x: hidden;
   -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
 }
 body {
@@ -78,7 +78,7 @@ body {
   padding-inline: 16px;
   padding-block: env(safe-area-inset-top, 0px) calc(104px + env(safe-area-inset-bottom, 0px));
   -webkit-font-smoothing: antialiased;
-  overflow-x: clip;
+  overflow-x: clip; overscroll-behavior: none; touch-action: pan-y;
   /* как в приложении: без выделения текста и меню-лупы на кнопках и карточках */
   -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 }
@@ -3773,7 +3773,8 @@ var swipe = (() => {
     commitNow(); // новый жест посреди анимации — доводим прошлый сразу
     g = null;
     if (inSession || e.touches.length !== 1 || document.querySelector(".sheet-back")) return;
-    if (!e.target.closest || !e.target.closest("#app") || e.target.closest(".tabbar, input, textarea, select, canvas")) return;
+    // по всему экрану (в том числе по пустому фону под содержимым), кроме панели, окошек, полей и клетки
+    if (e.target.closest && e.target.closest(".tabbar, .sheet-back, #splash, input, textarea, select, canvas")) return;
     const t = e.touches[0];
     if (t.clientX < 16 || t.clientX > window.innerWidth - 16) return;
     g = { x0: t.clientX, y0: t.clientY, axis: "", dx: 0, peek: null, W: pager.clientWidth + 32, pts: [] };
@@ -3783,6 +3784,8 @@ var swipe = (() => {
     if (!g) return;
     const t = e.touches[0], dx = t.clientX - g.x0, dy = t.clientY - g.y0;
     if (!g.axis) {
+      // палец явно идёт вбок — не даём iOS начать прокрутку или «резинку», пока решаем
+      if (Math.abs(dx) > Math.abs(dy) && e.cancelable) e.preventDefault();
       if (Math.abs(dx) < 7 && Math.abs(dy) < 7) return;
       g.axis = Math.abs(dx) > Math.abs(dy) * 1.15 ? "x" : "y";
       if (g.axis === "y") { g = null; return; }
