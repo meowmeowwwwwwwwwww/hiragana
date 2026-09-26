@@ -2,7 +2,15 @@
    Возвращает разметку SVG строкой. */
 const Puppy = (() => {
   const O = "#2F2425";                 // контур
-  const FUR = "#FCEEDC", EAR = "#F0CB9F", EAR_IN = "#FFC6C6", BLUSH = "#FFA3B8", TONGUE = "#FF8DA8", MOUTH = "#A83F55", NOSE = "#5A3434";
+  // окрасы: обычный и три из капсульного автомата
+  const FURS = {
+    base: { fur: "#FCEEDC", ear: "#F0CB9F", earIn: "#FFC6C6" },
+    kinako: { fur: "#F3D2A2", ear: "#DCA266", earIn: "#FFC2B8" },
+    sakurairo: { fur: "#FFE3EC", ear: "#FFB5CB", earIn: "#FF8FB2" },
+    matcha: { fur: "#E4F2D0", ear: "#B3D796", earIn: "#FFC8D6" }
+  };
+  let FUR = FURS.base.fur, EAR = FURS.base.ear, EAR_IN = FURS.base.earIn;
+  const BLUSH = "#FFA3B8", TONGUE = "#FF8DA8", MOUTH = "#A83F55", NOSE = "#5A3434";
   const line = (d, w = 3.6) => `<path d="${d}" fill="none" stroke="${O}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;
   const shape = (d, fill, w = 4.4) => `<path d="${d}" fill="${fill}" stroke="${O}" stroke-width="${w}" stroke-linejoin="round"/>`;
   const star5 = (cx, cy, R, r, fill, w = 2.6) => {
@@ -33,13 +41,50 @@ const Puppy = (() => {
     boushi: () => `<ellipse cx="60" cy="37" rx="24" ry="8.4" fill="#FFB0CD" stroke="${O}" stroke-width="3.6"/><path d="M43 36 Q45 18 60 18 Q75 18 77 36 Z" fill="#FFB0CD" stroke="${O}" stroke-width="3.6" stroke-linejoin="round"/><circle cx="60" cy="15.6" r="4.6" fill="#fff" stroke="${O}" stroke-width="3"/><path d="M45 32 Q60 37 75 32" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>`,
     hana: () => { let s = ""; for (let i = 0; i < 5; i++) s += `<ellipse cx="96" cy="${36 - 5.5}" rx="4.2" ry="6" fill="#FF9EC4" stroke="${O}" stroke-width="2.2" transform="rotate(${i * 72} 96 36)"/>`; return s + `<circle cx="96" cy="36" r="3.4" fill="#FFD84D" stroke="${O}" stroke-width="2.2"/>`; },
     hoshi: () => star5(24, 38, 9.5, 4.2, "#FFE27A"),
-    megane: () => `<circle cx="${EL}" cy="${EY}" r="10.4" fill="rgba(255,255,255,.3)" stroke="${O}" stroke-width="3.2"/><circle cx="${ER}" cy="${EY}" r="10.4" fill="rgba(255,255,255,.3)" stroke="${O}" stroke-width="3.2"/><path d="M54.4 71 Q60 67 65.6 71" fill="none" stroke="${O}" stroke-width="3.2" stroke-linecap="round"/>`
+    megane: () => `<circle cx="${EL}" cy="${EY}" r="10.4" fill="rgba(255,255,255,.3)" stroke="${O}" stroke-width="3.2"/><circle cx="${ER}" cy="${EY}" r="10.4" fill="rgba(255,255,255,.3)" stroke="${O}" stroke-width="3.2"/><path d="M54.4 71 Q60 67 65.6 71" fill="none" stroke="${O}" stroke-width="3.2" stroke-linecap="round"/>`,
+    // ---- вещи из капсульного автомата ----
+    hachimaki: () => `<path d="M17 58 Q60 38 103 58 L102 66.5 Q60 46.5 18 66.5 Z" fill="#fff" stroke="${O}" stroke-width="3.2" stroke-linejoin="round"/><circle cx="60" cy="51.6" r="4.6" fill="#FF5C7C"/><path d="M101 60 L115 52 L113.4 61.6 Z M101 64 L114 72 L105 73.4 Z" fill="#fff" stroke="${O}" stroke-width="2.8" stroke-linejoin="round"/>`,
+    nekomimi: () => `<path d="M33 45 Q60 29 87 45" fill="none" stroke="${O}" stroke-width="4.6" stroke-linecap="round"/><path d="M40 41 L43 21 L55.6 35.6 Z M80 41 L77 21 L64.4 35.6 Z" fill="#433A40" stroke="${O}" stroke-width="3" stroke-linejoin="round"/><path d="M44.6 36.4 L45.6 27 L51.6 34.6 Z M75.4 36.4 L74.4 27 L68.4 34.6 Z" fill="#FFB0CD"/>`,
+    oukan: () => `<g transform="rotate(-8 60 30)"><path d="M45 39 L43 19 L52.6 28.4 L60 14 L67.4 28.4 L77 19 L75 39 Z" fill="#FFD84D" stroke="${O}" stroke-width="3.2" stroke-linejoin="round"/><path d="M46 34 L74 34" stroke="#F0B429" stroke-width="2.6"/><circle cx="60" cy="27.6" r="3.2" fill="#FF7FA8" stroke="${O}" stroke-width="1.8"/><circle cx="50" cy="31" r="2" fill="#AED8FF"/><circle cx="70" cy="31" r="2" fill="#AED8FF"/><circle cx="60" cy="14" r="2.4" fill="#fff" stroke="${O}" stroke-width="1.8"/></g>`,
+    hanakanmuri: () => {
+      let s = `<path d="M22 55 Q60 25 98 55" fill="none" stroke="#7CC67E" stroke-width="3.6" stroke-linecap="round"/>`;
+      const cols = ["#FFB0CD", "#fff", "#D8BDFF", "#FFE27A", "#FFB0CD", "#fff", "#D8BDFF"];
+      for (let i = 0; i < 7; i++) {
+        const t = i / 6, x = (1 - t) * (1 - t) * 22 + 2 * (1 - t) * t * 60 + t * t * 98, y = (1 - t) * (1 - t) * 55 + 2 * (1 - t) * t * 25 + t * t * 55;
+        for (let j = 0; j < 5; j++) { const a = (j * 72 - 90) * Math.PI / 180; s += `<circle cx="${(x + 3.4 * Math.cos(a)).toFixed(1)}" cy="${(y + 3.4 * Math.sin(a)).toFixed(1)}" r="3" fill="${cols[i]}" stroke="${O}" stroke-width="1.4"/>`; }
+        s += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="1.8" fill="#FFC94D"/>`;
+      }
+      return s;
+    },
+    tenshi: () => `<ellipse cx="60" cy="19" rx="21" ry="6" fill="none" stroke="#FFF3B0" stroke-width="9" opacity=".8"/><ellipse cx="60" cy="19" rx="21" ry="6" fill="none" stroke="#FFD84D" stroke-width="4"/><path d="M34 12 l1.6 3.4 3.4 1.6 -3.4 1.6 -1.6 3.4 -1.6 -3.4 -3.4 -1.6 3.4 -1.6z M88 10 l1.2 2.6 2.6 1.2 -2.6 1.2 -1.2 2.6 -1.2 -2.6 -2.6 -1.2 2.6 -1.2z" fill="#FFE27A"/>`,
+    sakura: () => { let s = ""; for (let i = 0; i < 5; i++) s += `<path d="M96 36 C91.6 30.6 91.8 25.4 94.8 23.4 L96 25.6 L97.2 23.4 C100.2 25.4 100.4 30.6 96 36 Z" fill="#FFCCDD" stroke="${O}" stroke-width="1.8" stroke-linejoin="round" transform="rotate(${i * 72} 96 36)"/>`; return s + `<circle cx="96" cy="36" r="2.6" fill="#FF7FA8"/>`; },
+    chouchou: () => `<g stroke="${O}" stroke-width="2" stroke-linejoin="round"><ellipse cx="17.6" cy="32.6" rx="7" ry="5.4" fill="#D8BDFF" transform="rotate(-32 17.6 32.6)"/><ellipse cx="30.4" cy="32.6" rx="7" ry="5.4" fill="#D8BDFF" transform="rotate(32 30.4 32.6)"/><ellipse cx="19.4" cy="42" rx="5" ry="4" fill="#FFB0CD" transform="rotate(24 19.4 42)"/><ellipse cx="28.6" cy="42" rx="5" ry="4" fill="#FFB0CD" transform="rotate(-24 28.6 42)"/><ellipse cx="24" cy="37.6" rx="2" ry="7" fill="${O}"/></g><path d="M23 31 Q20 25 17.6 24.4 M25 31 Q28 25 30.4 24.4" fill="none" stroke="${O}" stroke-width="1.6" stroke-linecap="round"/>`,
+    momiji: () => `<path d="M97 44 L100 51" stroke="${O}" stroke-width="2.4" stroke-linecap="round"/>` + star5(96, 36, 10.5, 5, "#FF9E5C", 2.2) + `<path d="M96 36 L96 27 M96 36 L104 33 M96 36 L88 33 M96 36 L101 43 M96 36 L91 43" stroke="#FFD2A6" stroke-width="1.3" stroke-linecap="round"/>`,
+    bansoukou: () => `<g transform="rotate(-24 89 80)"><rect x="80" y="76.2" width="18" height="7.6" rx="3.8" fill="#FFE2C0" stroke="${O}" stroke-width="2.2"/><rect x="86" y="77.4" width="6" height="5.2" rx="1.6" fill="#F4C79C"/><circle cx="83" cy="80" r=".7" fill="#D9A877"/><circle cx="95" cy="80" r=".7" fill="#D9A877"/></g>`,
+    suzu: () => `<path d="M32 92 Q60 104 88 92 L88 97.4 Q60 109.4 32 97.4 Z" fill="#FF6B81" stroke="${O}" stroke-width="3" stroke-linejoin="round"/><circle cx="60" cy="106.4" r="6.4" fill="#FFD84D" stroke="${O}" stroke-width="2.6"/><path d="M55 106 L65 106" stroke="${O}" stroke-width="1.8"/><circle cx="60" cy="109.4" r="1.2" fill="${O}"/><circle cx="57.6" cy="103.6" r="1.2" fill="#fff"/>`,
+    chomusubi: () => `<g stroke="${O}" stroke-width="2.8" stroke-linejoin="round"><path d="M57 102 L50 114 L55.6 112 L58.4 115.6 Z M63 102 L70 114 L64.4 112 L61.6 115.6 Z" fill="#FF7FA8"/><path d="M60 99 C50 87 36 91 38.6 100 C41 108.6 52 106 60 99 Z M60 99 C70 87 84 91 81.4 100 C79 108.6 68 106 60 99 Z" fill="#FF9EC0"/><circle cx="60" cy="99.4" r="4.6" fill="#FF7FA8"/></g><path d="M44 96 Q47 93 51 95 M76 96 Q73 93 69 95" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>`,
+    hoshimegane: () => star5(EL, EY, 13, 7, "rgba(255,216,77,.42)", 3) + star5(ER, EY, 13, 7, "rgba(255,216,77,.42)", 3) + `<path d="M53.6 70 Q60 66 66.4 70" fill="none" stroke="${O}" stroke-width="3" stroke-linecap="round"/>`
   };
+  // фоны за Моней (только на её «сцене», в остальных местах не рисуются)
+  const petal = (x, y, r) => `<ellipse cx="${x}" cy="${y}" rx="3.4" ry="2.2" fill="#FFC2D6" transform="rotate(${r} ${x} ${y})"/>`;
+  const tiny = (x, y, r, c) => `<path d="M${x} ${y - r}L${x + r * .3} ${y - r * .3}L${x + r} ${y}L${x + r * .3} ${y + r * .3}L${x} ${y + r}L${x - r * .3} ${y + r * .3}L${x - r} ${y}L${x - r * .3} ${y - r * .3}Z" fill="${c}"/>`;
+  const berry = (x, y) => `<path d="M${x} ${y - 4} C${x + 6} ${y - 4} ${x + 6} ${y + 2} ${x} ${y + 6} C${x - 6} ${y + 2} ${x - 6} ${y - 4} ${x} ${y - 4} Z" fill="#FF7FA3"/><path d="M${x - 3} ${y - 4.6} L${x} ${y - 2.6} L${x + 3} ${y - 4.6} L${x} ${y - 6.4} Z" fill="#7CC67E"/>`;
+  const BG = {
+    haru: () => `<circle cx="60" cy="62" r="58" fill="#DDF0FF"/>` + petal(16, 38, 30) + petal(30, 18, -20) + petal(98, 22, 60) + petal(108, 50, 10) + petal(12, 76, -40) + petal(104, 88, 35) + petal(84, 10, 80),
+    yozora: () => `<circle cx="60" cy="62" r="58" fill="#6F6CBA"/><circle cx="98" cy="28" r="9" fill="#FFE9A0"/><circle cx="102.6" cy="24.6" r="8" fill="#6F6CBA"/>` + tiny(18, 34, 4, "#FFE27A") + tiny(34, 12, 3, "#fff") + tiny(108, 58, 3.4, "#FFE27A") + tiny(10, 70, 2.6, "#fff") + tiny(82, 12, 2.4, "#fff"),
+    niji: () => `<circle cx="60" cy="62" r="58" fill="#FFF7FB"/>` + ["#FFB3C9", "#FFE08A", "#B9E6C9", "#AED8FF", "#D8BDFF"].map((c, i) => `<path d="M${8 + i * 5} 72 A${52 - i * 5} ${52 - i * 5} 0 0 1 ${112 - i * 5} 72" fill="none" stroke="${c}" stroke-width="5"/>`).join(""),
+    ichigobatake: () => `<circle cx="60" cy="62" r="58" fill="#E6F6D9"/><path d="M4 84 Q60 72 116 84 L114 96 Q60 118 6 96 Z" fill="#C9EBB3"/>` + berry(16, 70) + berry(104, 70) + berry(24, 40) + berry(98, 36) + `<circle cx="60" cy="10" r="3" fill="#fff"/><circle cx="60" cy="10" r="1.4" fill="#FFD84D"/>`
+  };
+  const NECK = ["kubiwa", "erimaki", "suzu", "chomusubi"], CHEEK = ["bansoukou"];
+  const TOPS = ["megane", "hoshimegane", "hachimaki", "boushi", "nekomimi", "oukan", "hanakanmuri", "tenshi", "hana", "hoshi", "sakura", "chouchou", "momiji"];
   // mood: normal | happy | great | sad | sleepy | eat | hungry
   function svg(mood = "normal", opts = {}) {
     const acc = opts.acc || [];
     const cls = opts.cls || "";
     let s = `<svg viewBox="0 0 120 120" class="mascot ${cls}" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">`;
+    const furId = acc.find((a) => FURS[a]) || "base";
+    ({ fur: FUR, ear: EAR, earIn: EAR_IN } = FURS[furId]);
+    if (opts.bg) { const b = acc.find((a) => BG[a]); if (b) s += BG[b](); }
     // уши чихуахуа: большие, стоячие, с закруглёнными кончиками (рисуем до головы)
     s += shape("M19 62 C12 46 10 30 13 18.6 C14.6 12.8 20 11.6 24.6 14.6 C35 21.4 43.4 30.6 49 42 Z", EAR);
     s += `<path d="M24 53 C19.6 42.6 18.6 32.6 20.4 23.4 C28.4 28.4 35 35 39.4 42.4 Z" fill="${EAR_IN}"/>`;
@@ -48,8 +93,7 @@ const Puppy = (() => {
     // голова-моти: широкая и приземистая
     s += shape("M60 36 C88 36 106 52 106 72 C106 90 88 101 60 101 C32 101 14 90 14 72 C14 52 32 36 60 36 Z", FUR);
     s += line("M55.6 37.6 C53.6 31 58 27.4 62.6 29.6", 3.2);
-    if (acc.includes("kubiwa")) s += ACC.kubiwa();
-    if (acc.includes("erimaki")) s += ACC.erimaki();
+    for (const a of NECK) if (acc.includes(a)) s += ACC[a]();
     s += blush;
     if (mood === "happy") {
       s += dot(EL) + wink(ER) + nose + openMouth(false) + burst(false);
@@ -70,13 +114,11 @@ const Puppy = (() => {
     } else {
       s += dotEyes() + nose + omega + blep;
     }
+    for (const a of CHEEK) if (acc.includes(a)) s += ACC[a]();
     // лапки спереди, как будто Моня выглядывает из-за края
     s += shape("M26 101 C26 91 46 91 46 101 C46 108 26 108 26 101 Z", FUR, 4) + shape("M74 101 C74 91 94 91 94 101 C94 108 74 108 74 101 Z", FUR, 4);
     s += line("M33 98.6 L33 103 M39 98.6 L39 103", 2.6) + line("M81 98.6 L81 103 M87 98.6 L87 103", 2.6);
-    if (acc.includes("megane")) s += ACC.megane();
-    if (acc.includes("boushi")) s += ACC.boushi();
-    if (acc.includes("hana")) s += ACC.hana();
-    if (acc.includes("hoshi")) s += ACC.hoshi();
+    for (const a of TOPS) if (acc.includes(a)) s += ACC[a]();
     return s + "</svg>";
   }
   return { svg };

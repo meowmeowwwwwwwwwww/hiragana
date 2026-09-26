@@ -196,6 +196,62 @@ body:has(input[type="text"]:focus, textarea:focus) .tabbar { display: none; }
 }
 body.in-session .star-toast { bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
 @keyframes toast { 0% { opacity: 0; transform: translate(-50%, 16px); } 12% { opacity: 1; transform: translate(-50%, 0); } 80% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -10px); } }
+.kp-pill { display: inline-flex; align-items: center; gap: 5px; padding: 6px 14px; border-radius: 999px; background: linear-gradient(180deg, #F6EDFF, #DCC6FF); border: 2px solid #fff; box-shadow: 0 3px 0 #C3A6F2; font-weight: 800; color: #5B3E8A; }
+.kp-ico { flex: none; display: inline-block; vertical-align: -3px; }
+.btn .kp-ico { margin: 0 1px; }
+.kp-toast { background: linear-gradient(180deg, #F6EDFF, #DCC6FF); color: #4E3478; box-shadow: 0 8px 20px rgb(154 107 255 / .3); display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; animation-duration: 2.4s; }
+.kp-why { font-weight: 700; opacity: .8; }
+/* Капсульный автомат */
+.g-card { display: grid; gap: 14px; margin-bottom: 26px; }
+.g-head { display: grid; grid-template-columns: 104px 1fr; gap: 14px; align-items: center; }
+.g-machine { width: 104px; height: auto; display: block; overflow: visible; }
+.g-machine.big { width: 190px; margin: 0 auto; }
+.g-info { display: grid; gap: 8px; }
+.g-info p { font-size: 14px; color: var(--ink-soft); }
+.g-handle { transform-box: fill-box; transform-origin: center; }
+.g-machine.turning .g-handle { animation: g-turn 1s ease-in-out; }
+.g-machine.turning .g-caps { animation: g-jiggle 1s ease-in-out; }
+@keyframes g-turn { to { transform: rotate(360deg); } }
+@keyframes g-jiggle { 0%, 100% { transform: none; } 20% { transform: translate(-3px, 2px); } 40% { transform: translate(3px, -2px); } 60% { transform: translate(-2px, -1px); } 80% { transform: translate(2px, 2px); } }
+.g-stage { position: relative; display: grid; justify-items: center; min-height: 250px; }
+.g-cap-btn { position: absolute; left: 50%; bottom: -10px; margin-left: 4px; background: none; border: 0; padding: 0; width: 84px; height: 84px; animation: g-drop .7s cubic-bezier(.3, 1.4, .5, 1) both; }
+.g-capsule { width: 84px; height: 84px; overflow: visible; filter: drop-shadow(0 6px 8px rgb(90 56 72 / .25)); animation: g-wobble 1.6s ease-in-out .7s infinite; }
+.g-capsule.r3 { filter: drop-shadow(0 0 10px rgb(255 216 77 / .95)) drop-shadow(0 6px 8px rgb(90 56 72 / .25)); }
+.g-capsule.r2 { filter: drop-shadow(0 0 8px rgb(174 216 255 / .95)) drop-shadow(0 6px 8px rgb(90 56 72 / .25)); }
+.g-top, .g-bot { transition: transform .5s cubic-bezier(.3, .9, .3, 1), opacity .5s; transform-box: fill-box; transform-origin: center; }
+.g-capsule.open { animation: none; }
+.g-capsule.open .g-top { transform: translate(-6px, -46px) rotate(-28deg); opacity: 0; }
+.g-capsule.open .g-bot { transform: translateY(26px); opacity: 0; }
+@keyframes g-drop { from { transform: translate(0, -70px) scale(.5); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes g-wobble { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-7deg); } 75% { transform: rotate(7deg); } }
+.g-note { text-align: center; min-height: 1.5em; }
+.g-actions { justify-content: center; }
+.g-reveal { position: relative; width: 100%; max-width: 320px; display: grid; justify-items: center; gap: 4px; padding: 16px; border-radius: 28px; border: 3px solid #fff; text-align: center; animation: g-pop .45s cubic-bezier(.3, 1.5, .5, 1); box-shadow: var(--shadow); }
+.g-reveal.r1 { background: linear-gradient(180deg, #FFF0F6, #FFE0EC); }
+.g-reveal.r2 { background: linear-gradient(180deg, #EEF7FF, #DCEBFF); }
+.g-reveal.r3 { background: linear-gradient(135deg, #FFF6C8, #FFE0F0 45%, #E6DAFF 75%, #D6F3FF); box-shadow: 0 0 0 3px #FFE27A, 0 10px 30px rgb(255 190 60 / .45); }
+@keyframes g-pop { from { transform: scale(.6); opacity: 0; } to { transform: none; opacity: 1; } }
+.g-rarity { font-weight: 800; font-size: 14px; color: var(--primary-deep); letter-spacing: .04em; }
+.g-reveal.r3 .g-rarity { color: #C27A00; }
+.g-reveal-pet .mascot { width: 150px; height: 150px; }
+.g-reveal-w { font-size: 30px; color: var(--ink); }
+.g-reveal-r { font-weight: 700; color: var(--ink-soft); }
+.g-new { font-weight: 800; color: var(--ok); }
+.g-dup { font-weight: 800; color: #5B3E8A; display: inline-flex; align-items: center; gap: 4px; }
+.g-album-head { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.g-album { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; }
+.g-slot { display: grid; justify-items: center; align-content: start; gap: 1px; padding: 8px 4px 8px; border-radius: 20px; border: 3px solid #fff; background: rgb(255 255 255 / .6); text-align: center; min-height: 128px; box-shadow: 0 3px 0 var(--line); }
+.g-slot:not(.own) { border-style: dashed; border-color: var(--grid-faint); box-shadow: none; align-content: center; }
+.g-slot.own .mascot { width: 72px; height: 72px; }
+.g-slot.own:active { transform: translateY(2px); }
+.g-slot.worn { box-shadow: 0 0 0 3px var(--primary), 0 3px 0 var(--line); }
+.g-slot.r3.own { background: linear-gradient(160deg, #FFF8D6, #FFEAF4 60%, #EFE6FF); }
+.g-slot.r2.own { background: linear-gradient(160deg, #F1F8FF, #FFF); }
+.g-q { font-size: 34px; font-weight: 800; color: var(--grid-faint); line-height: 1.2; }
+.g-name { font-size: 15px; line-height: 1.2; }
+.g-ru { font-size: 11px; color: var(--muted); font-weight: 700; line-height: 1.2; }
+.g-stars { font-size: 11px; font-weight: 800; color: #E0A800; }
+.g-slot.worn .g-stars { color: var(--primary); }
 .gain { font-size: 13px; font-weight: 800; color: #7A5A12; background: #FFE9A0; border-radius: 999px; padding: 2px 9px; }
 .pet-hero { display: grid; gap: 12px; margin-bottom: 26px; }
 .pet-top { display: flex; align-items: center; gap: 10px; }
@@ -482,6 +538,7 @@ html.sheet-open, html.sheet-open body { overflow: hidden; }
   .mascot.bounce, .float { animation: none; }
   .confetti, .pat-heart { display: none; }
   .star-toast, .fetch-ball { animation: none; }
+  .g-machine.turning .g-handle, .g-machine.turning .g-caps, .g-cap-btn, .g-capsule, .g-reveal { animation: none; }
 }
 </style>
 
@@ -774,11 +831,12 @@ const readingLine = (k) => `${INFO[k][0]} · ${INFO[k][1]}`;
 const LS_KEY = "hiragana-notebook-v1";
 const DAY = 86400000;
 const INTERVALS = [0, 1, 2, 4, 8, 16];
-function defPet() { return { name: "Моня", food: 85, joy: 85, last: 0, stars: 0, owned: [], wear: [], game: { day: "", stars: 0 }, pat: 0 }; }
+function defPet() { return { name: "Моня", food: 85, joy: 85, last: 0, stars: 0, owned: [], wear: [], game: { day: "", stars: 0 }, pat: 0, kp: 0, gacha: { n: 0, pity: 0 }, kpDay: "", kpStreak: "" }; }
 function defState() { return { v: 1, updatedAt: 0, lessons: {}, cards: {}, notes: {}, days: [], lenient: false, pet: defPet() }; }
 function ensurePet() {
   S.pet = Object.assign(defPet(), S.pet || {});
   if (!S.pet.game) S.pet.game = { day: "", stars: 0 };
+  if (!S.pet.gacha) S.pet.gacha = { n: 0, pity: 0 };
   if (!S.pet.last) S.pet.last = Date.now();
   if (S.pet.name === "Кинако") S.pet.name = "Моня"; // прежнее имя по умолчанию
 }
@@ -811,7 +869,11 @@ function dayKey(t = Date.now()) {
 function startOfDay(t = Date.now()) { const d = new Date(t); d.setHours(0, 0, 0, 0); return d.getTime(); }
 function save() {
   const today = dayKey();
-  if (!S.days.includes(today)) { S.days.push(today); if (S.days.length > 400) S.days = S.days.slice(-400); }
+  if (!S.days.includes(today)) {
+    S.days.push(today); if (S.days.length > 400) S.days = S.days.slice(-400);
+    const st = streak();
+    if (S.pet && st >= 7 && st % 7 === 0 && S.pet.kpStreak !== today) { S.pet.kpStreak = today; S.pet.kp = (S.pet.kp || 0) + 2; toastKp(2, `${st} дней подряд!`, 1200); }
+  }
   S.updatedAt = Date.now();
   lsWrite();
   if (remoteRef) { clearTimeout(remoteTimer); remoteTimer = setTimeout(pushRemote, 1200); }
@@ -864,9 +926,11 @@ function learn(k) {
   for (const sk of ["w", "r"]) if (!c[sk].b) { c[sk].b = 1; c[sk].due = startOfDay() + DAY; }
 }
 function grade(k, sk, ok) {
+  const before = level(k);
   const c = card(k)[sk];
   c.b = ok ? Math.min(5, (c.b || 0) + 1) : 1;
   c.due = startOfDay() + INTERVALS[c.b] * DAY;
+  if (before < 5 && level(k) === 5) awardKp(1, `${k} выучен на 5-й уровень!`, 1000);
 }
 const level = (k) => { const c = S.cards[k]; return c ? Math.min(c.w.b || 0, c.r.b || 0) : 0; };
 const learned = () => ALL_KANA.filter((k) => S.cards[k] && (S.cards[k].w.b || S.cards[k].r.b));
@@ -955,9 +1019,9 @@ function sparkle(cls) {
   s.append(sv("path", { d: "M12 0C13 7 17 11 24 12C17 13 13 17 12 24C11 17 7 13 0 12C7 11 11 7 12 0Z", fill: "currentColor" }));
   return s;
 }
-function mascot(mood = "normal", bounce = false, acc) {
+function mascot(mood = "normal", bounce = false, acc, bg = false) {
   const wear = acc || (S.pet ? S.pet.wear : []);
-  return svgNode(Puppy.svg(mood, { acc: wear, cls: bounce ? "bounce" : "" }));
+  return svgNode(Puppy.svg(mood, { acc: wear, cls: bounce ? "bounce" : "", bg }));
 }
 const STAR_COLORS = ["#FFB0CD", "#FFE27A", "#AED8FF", "#D8BDFF", "#A9E7CF"];
 function starSticker(color = "#FFE27A", face = true, cls = "") {
@@ -1646,6 +1710,7 @@ function startLesson(li) {
     S.lessons[li + 1] = { done: true, at: Date.now() };
     save();
     award(firstTime ? 10 : 3);
+    if (firstTime) awardKp(3, "за новый урок", 1100);
     const pct = (a, b) => (b ? Math.round((100 * a) / b) + "%" : "—");
     const nxt = nextLessonIndex();
     sh.set(h("div", { class: "summary" },
@@ -1689,6 +1754,7 @@ function startReview(items, graded) {
   function finish() {
     sh.progress(1); sh.stage("готово"); sh.count("");
     if (graded) award(5);
+    if (graded && S.pet.kpDay !== dayKey()) { S.pet.kpDay = dayKey(); awardKp(1, "за повторение", 1100); }
     const nd = nextDue();
     sh.set(h("div", { class: "summary" },
       h("div", { class: "say-row" }, mascot("happy", true), bubble("yay", ok1 === total ? "Всё с первой попытки!" : "Готово!")),
@@ -1805,6 +1871,25 @@ function toastStars(n, text) {
   document.body.append(t);
   setTimeout(() => t.remove(), 1900);
 }
+/* Конпэйто — редкая валюта для капсульного автомата */
+function kpIcon(size = 18) {
+  let d = "";
+  for (let i = 0; i < 24; i++) { const a = (i * Math.PI) / 12, r = i % 2 ? 8.2 : 10.4; d += (i ? "L" : "M") + (12 + r * Math.cos(a)).toFixed(2) + " " + (12 + r * Math.sin(a)).toFixed(2); }
+  return svgNode(`<svg viewBox="0 0 24 24" width="${size}" height="${size}" class="kp-ico" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="${d}Z" fill="#FFC4DD" stroke="#5A3848" stroke-width="1.8" stroke-linejoin="round"/><ellipse cx="9" cy="8.6" rx="2.6" ry="1.6" fill="#fff" opacity=".85" transform="rotate(-30 9 8.6)"/></svg>`);
+}
+function toastKp(n, why, delay = 0) {
+  setTimeout(() => {
+    const t = h("div", { class: "star-toast kp-toast", role: "status" }, kpIcon(20), ` +${n} конпэйто`, why ? h("span", { class: "kp-why" }, " · " + why) : null);
+    document.body.append(t);
+    setTimeout(() => t.remove(), 2400);
+  }, delay);
+}
+function awardKp(n, why, delay) {
+  if (!n) return;
+  S.pet.kp = (S.pet.kp || 0) + n;
+  save();
+  toastKp(n, why, delay);
+}
 function award(n, text) {
   if (!n) return;
   petCommit(0, 0);
@@ -1861,6 +1946,55 @@ const WEARS = [
   { id: "boushi", w: "ぼうし", cyr: "бо:си", lat: "bōshi", ru: "шапочка", cost: 25 },
   { id: "megane", w: "めがね", cyr: "мэганэ", lat: "megane", ru: "очки", cost: 30 }
 ];
+// Капсульный автомат: r — редкость (1 обычная, 2 редкая, 3 особая), slot — куда надевается
+const GACHA = [
+  { id: "hachimaki", w: "はちまき", cyr: "хатимаки", ru: "повязка-хатимаки", r: 1, slot: "head" },
+  { id: "sakura", w: "さくら", cyr: "сакура", ru: "цветок сакуры", r: 1, slot: "earR" },
+  { id: "chouchou", w: "ちょうちょ", cyr: "тё:тё", ru: "бабочка", r: 1, slot: "earL" },
+  { id: "momiji", w: "もみじ", cyr: "момидзи", ru: "кленовый листик", r: 1, slot: "earR" },
+  { id: "bansoukou", w: "ばんそうこう", cyr: "бансо:ко:", ru: "пластырь на щёчку", r: 1, slot: "cheek" },
+  { id: "suzu", w: "すず", cyr: "судзу", ru: "колокольчик", r: 1, slot: "neck" },
+  { id: "nekomimi", w: "ねこみみ", cyr: "нэкомими", ru: "кошачьи ушки", r: 2, slot: "head" },
+  { id: "oukan", w: "おうかん", cyr: "о:кан", ru: "корона", r: 2, slot: "head" },
+  { id: "hanakanmuri", w: "はなかんむり", cyr: "ханаканмури", ru: "цветочный венок", r: 2, slot: "head" },
+  { id: "chomusubi", w: "ちょうむすび", cyr: "тё:мусуби", ru: "бант", r: 2, slot: "neck" },
+  { id: "hoshimegane", w: "ほしの めがね", cyr: "хоси но мэганэ", ru: "очки-звёздочки", r: 2, slot: "face" },
+  { id: "kinako", w: "きなこ", cyr: "кинако", ru: "окрас «кинако»", r: 2, slot: "fur" },
+  { id: "haru", w: "はるの そら", cyr: "хару но сора", ru: "фон «весеннее небо»", r: 2, slot: "bg" },
+  { id: "yozora", w: "よぞら", cyr: "ёдзора", ru: "фон «ночное небо»", r: 2, slot: "bg" },
+  { id: "sakurairo", w: "さくらいろ", cyr: "сакураиро", ru: "окрас «цвет сакуры»", r: 3, slot: "fur" },
+  { id: "matcha", w: "まっちゃ", cyr: "маття", ru: "окрас «маття»", r: 3, slot: "fur" },
+  { id: "tenshi", w: "てんしの わ", cyr: "тэнси но ва", ru: "нимб", r: 3, slot: "head" },
+  { id: "niji", w: "にじ", cyr: "нидзи", ru: "фон «радуга»", r: 3, slot: "bg" },
+  { id: "ichigobatake", w: "いちごばたけ", cyr: "итигобатакэ", ru: "фон «клубничная грядка»", r: 3, slot: "bg" }
+];
+const GACHA_COST = 3, GACHA_PITY = 12, KP_RATE = 25;
+const RARITY = { 1: { name: "обычная", stars: "★" }, 2: { name: "редкая", stars: "★★" }, 3: { name: "особая", stars: "★★★" } };
+const SLOT_OF = Object.assign({ boushi: "head", hoshi: "earL", hana: "earR", megane: "face", kubiwa: "neck", erimaki: "neck" },
+  Object.fromEntries(GACHA.map((g) => [g.id, g.slot])));
+// Надеть или снять вещь; на одно место — одна вещь
+function toggleWear(id) {
+  if (S.pet.wear.includes(id)) S.pet.wear = S.pet.wear.filter((x) => x !== id);
+  else S.pet.wear = S.pet.wear.filter((x) => SLOT_OF[x] !== SLOT_OF[id]).concat(id);
+  save();
+}
+function rollGacha() {
+  const g = S.pet.gacha;
+  S.pet.kp -= GACHA_COST;
+  g.n++; g.pity++;
+  const x = Math.random();
+  let r = x < 0.08 ? 3 : x < 0.38 ? 2 : 1;
+  if (g.pity >= GACHA_PITY) r = 3;
+  if (r === 3) g.pity = 0;
+  const pool = GACHA.filter((it) => it.r === r);
+  const fresh = pool.filter((it) => !S.pet.owned.includes(it.id));
+  const from = fresh.length && Math.random() < 0.6 ? fresh : pool; // новые вещи выпадают чаще повторов
+  const item = from[Math.floor(Math.random() * from.length)];
+  const dup = S.pet.owned.includes(item.id);
+  if (dup) S.pet.kp += 1; else S.pet.owned.push(item.id);
+  save();
+  return { item, dup };
+}
 const known = (c) => !!(S.cards[c] && (S.cards[c].w.b || S.cards[c].r.b));
 const missingKana = (w) => [...w].filter((c) => !known(c));
 const FO = "#5A3848";
@@ -1896,7 +2030,7 @@ function petStageEl(size = 180, onPat) {
   const st = stageInfo();
   const wrap = h("button", { class: "pet-stage", type: "button", "aria-label": `Погладить ${petCase("acc")}` });
   const svgBox = h("span", { class: "pet-svg" });
-  const draw = (mood) => { svgBox.replaceChildren(mascot(mood, true)); };
+  const draw = (mood) => { svgBox.replaceChildren(mascot(mood, true, undefined, true)); };
   draw(petMood());
   svgBox.style.width = svgBox.style.height = Math.round(size * st.scale) + "px";
   wrap.append(svgBox);
@@ -1923,6 +2057,7 @@ function petCardMini() {
     h("div", { class: "pet-mini-bars" }, bar("Сытость", n.food, "food"), bar("Настроение", n.joy, "joy")),
     h("div", { class: "row" },
       h("span", { class: "stars-pill num" }, "★ ", String(S.pet.stars)),
+      h("span", { class: "kp-pill num" }, kpIcon(), String(S.pet.kp || 0)),
       h("button", { class: "btn", type: "button", onclick: () => goTab("pet") }, `К ${petCase("dat")}`)));
 }
 /* Диалог: прочитать название, чтобы купить или покормить */
@@ -1975,14 +2110,13 @@ function itemCard(item, kind) {
   btn.addEventListener("click", () => {
     if (locked) return;
     if (owned) {
-      S.pet.wear = worn ? S.pet.wear.filter((x) => x !== item.id) : S.pet.wear.concat(item.id);
-      save(); render(); return;
+      toggleWear(item.id); render(); return;
     }
     if (S.pet.stars < item.cost) { toastStars(0, `Нужно ${item.cost} ★, а у тебя ${S.pet.stars}. Позанимайся!`); return; }
     openReadDialog(item, kind, () => {
       S.pet.stars -= item.cost;
       if (kind === "food") petCommit(item.food, item.joy);
-      else { petCommit(0, 10); S.pet.owned.push(item.id); S.pet.wear.push(item.id); }
+      else { petCommit(0, 10); S.pet.owned.push(item.id); if (!S.pet.wear.includes(item.id)) toggleWear(item.id); }
       save();
     });
   });
@@ -2008,7 +2142,7 @@ function petView() {
     h("div", { class: "pet-top" }, stageEl, bub),
     nameRow,
     h("div", { class: "pet-bars" }, bar("Сытость", n.food, "food"), bar("Настроение", n.joy, "joy")),
-    h("div", { class: "row" }, h("span", { class: "stars-pill num" }, "★ ", String(S.pet.stars), " звёздочек"),
+    h("div", { class: "row" }, h("span", { class: "stars-pill num" }, "★ ", String(S.pet.stars), " звёздочек"), h("span", { class: "kp-pill num" }, kpIcon(), String(S.pet.kp || 0), " конпэйто"),
       h("span", { class: "muted", style: "font-size:14px" }, st.left ? `До ступени «${STAGES[st.i + 1].ru}»: ещё ${nZnak(st.left)}` : "Высшая ступень! おめでとう！")),
     h("p", { class: "muted", style: "font-size:14px" }, "Нажми на щенка, чтобы погладить."));
   const canPlay = learned().length >= 4;
@@ -2024,12 +2158,130 @@ function petView() {
       h("p", {}, "Звёздочки дают только за учёбу: +1 за верный ответ с первой попытки, +2 за идеальный знак, +10 за пройденный урок, +5 за повторение по расписанию."),
       h("p", {}, "Еду и вещи можно купить, только когда выучены все знаки в их названии, и только если прочитать название вслух… то есть вписать чтение."),
       h("p", {}, `Сытость и настроение понемногу убывают. Если долго не заниматься, ${S.pet.name} загрустит, но никуда не денется: достаточно позаниматься и покормить.`),
-      h("p", {}, "Щенок растёт вместе с тобой: малыш → щенок (10 знаков) → пёсик (25) → сэнсэй (все 46 основных).")));
+      h("p", {}, "Щенок растёт вместе с тобой: малыш → щенок (10 знаков) → пёсик (25) → сэнсэй (все 46 основных)."),
+      h("p", {}, `Конпэйто — редкие леденцы для капсульного автомата: +3 за новый урок, +1 за повторение по расписанию (раз в день), +1 когда знак доходит до 5-го уровня, +2 за каждые 7 дней подряд. Ещё можно обменять ${KP_RATE} ★ на 1 конпэйто.`),
+      h("p", {}, `Капсула стоит ${GACHA_COST} конпэйто. Особая вещь ★★★ выпадает не позже чем на ${GACHA_PITY}-й капсуле. Если выпала вещь, которая уже есть, вернётся 1 конпэйто.`)));
   return h("div", {}, hero,
+    h("h2", { class: "section-title" }, starSticker("#D8BDFF"), "Капсульный автомат"), gachaCard(),
     h("h2", { class: "section-title" }, starSticker("#FFE27A"), "Покормить"), foods,
     h("h2", { class: "section-title" }, heartSticker("#FFB0CD"), "Гардероб"), wears,
     h("h2", { class: "section-title" }, starSticker("#AED8FF"), "Поиграть"), play, how);
 }
+/* ===================== Капсульный автомат (がちゃがちゃ) ===================== */
+const CAP_COL = { 1: ["#FFB0CD", "#AED8FF", "#A9E7CF"], 2: ["#AED8FF", "#D8BDFF"], 3: ["#FFD84D"] };
+function gachaMachine(big) {
+  const caps = [[70, 70, "#FFB0CD"], [100, 62, "#AED8FF"], [130, 72, "#FFE27A"], [82, 100, "#D8BDFF"], [114, 100, "#A9E7CF"], [58, 104, "#FFE27A"], [142, 104, "#FFB0CD"], [98, 126, "#FFB0CD"], [126, 128, "#AED8FF"], [72, 128, "#A9E7CF"]];
+  const cap = ([x, y, c]) => `<g><circle cx="${x}" cy="${y}" r="13" fill="#fff" stroke="#5A3848" stroke-width="3"/><path d="M${x - 13} ${y} A13 13 0 0 1 ${x + 13} ${y} Z" fill="${c}" stroke="#5A3848" stroke-width="3" stroke-linejoin="round"/><ellipse cx="${x - 5}" cy="${y - 6}" rx="3.4" ry="2" fill="#fff" opacity=".8"/></g>`;
+  return svgNode(`<svg viewBox="0 0 200 250" class="g-machine${big ? " big" : ""}" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <path d="M78 24 Q100 6 122 24 Z" fill="#FF9EC0" stroke="#5A3848" stroke-width="4" stroke-linejoin="round"/><path d="M100 4 c-4-6-12-3-10 3 1 4 10 9 10 9s9-5 10-9c2-6-6-9-10-3z" fill="#FF7FA8" stroke="#5A3848" stroke-width="2.4"/>
+    <circle cx="100" cy="94" r="74" fill="#EAF6FF" stroke="#5A3848" stroke-width="5"/>
+    <g class="g-caps">${caps.map(cap).join("")}</g>
+    <path d="M52 52 Q70 30 96 26" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" opacity=".8"/>
+    <rect x="30" y="150" width="140" height="94" rx="24" fill="#FF9EC0" stroke="#5A3848" stroke-width="5"/>
+    <text x="100" y="178" text-anchor="middle" font-family="Klee One, serif" font-weight="600" font-size="19" fill="#fff" stroke="#E0558A" stroke-width="3" paint-order="stroke">がちゃがちゃ</text>
+    <g class="g-handle"><circle cx="80" cy="212" r="20" fill="#fff" stroke="#5A3848" stroke-width="4"/><rect x="74" y="195" width="12" height="34" rx="6" fill="#FFE27A" stroke="#5A3848" stroke-width="3"/></g>
+    <rect x="124" y="198" width="30" height="30" rx="9" fill="#5A3848"/><rect x="128" y="202" width="22" height="10" rx="4" fill="#7A4E66"/>
+  </svg>`);
+}
+function capsuleEl(r) {
+  const cols = CAP_COL[r], c = cols[Math.floor(Math.random() * cols.length)];
+  return svgNode(`<svg viewBox="0 0 80 80" class="g-capsule r${r}" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <g class="g-bot"><path d="M8 40 A32 32 0 0 0 72 40 Z" fill="#fff" stroke="#5A3848" stroke-width="4" stroke-linejoin="round"/></g>
+    <g class="g-top"><path d="M8 40 A32 32 0 0 1 72 40 Z" fill="${c}" stroke="#5A3848" stroke-width="4" stroke-linejoin="round"/><ellipse cx="28" cy="22" rx="8" ry="4.6" fill="#fff" opacity=".8" transform="rotate(-25 28 22)"/>${r === 3 ? `<path d="M52 16 l2 4.4 4.4 2 -4.4 2 -2 4.4 -2 -4.4 -4.4 -2 4.4 -2z" fill="#fff"/>` : ""}</g>
+  </svg>`);
+}
+function gachaPreview(id, mood = "normal") {
+  const g = GACHA.find((x) => x.id === id);
+  return mascot(mood, false, [id], g && g.slot === "bg");
+}
+function gachaCard() {
+  const kp = S.pet.kp || 0, have = GACHA.filter((g) => S.pet.owned.includes(g.id)).length;
+  const spin = h("button", { class: "btn primary", type: "button", onclick: () => openGacha() }, "Крутить · ", kpIcon(), ` ${GACHA_COST}`);
+  const swap = h("button", { class: "btn", type: "button", disabled: S.pet.stars < KP_RATE }, `${KP_RATE} ★ → 1 `, kpIcon());
+  swap.addEventListener("click", () => {
+    if (S.pet.stars < KP_RATE) return;
+    S.pet.stars -= KP_RATE; S.pet.kp = (S.pet.kp || 0) + 1; save(); toastKp(1, `обмен на ${KP_RATE} ★`); render();
+  });
+  const album = h("div", { class: "g-album" }, GACHA.map((g) => {
+    const own = S.pet.owned.includes(g.id), worn = own && S.pet.wear.includes(g.id);
+    if (!own) return h("div", { class: "g-slot r" + g.r, "aria-label": `Ещё не выпало, ${RARITY[g.r].name}` }, h("span", { class: "g-q" }, "?"), h("span", { class: "g-stars" }, RARITY[g.r].stars));
+    const b = h("button", { class: "g-slot own r" + g.r + (worn ? " worn" : ""), type: "button", "aria-label": `${g.ru}, ${worn ? "снять" : "надеть"}` },
+      gachaPreview(g.id), h("span", { class: "g-name ja", lang: "ja" }, g.w), h("span", { class: "g-ru" }, g.ru), h("span", { class: "g-stars" }, worn ? "надето" : RARITY[g.r].stars));
+    b.addEventListener("click", () => { toggleWear(g.id); render(); });
+    return b;
+  }));
+  return h("section", { class: "panel g-card" },
+    h("div", { class: "g-head" }, gachaMachine(false),
+      h("div", { class: "g-info" },
+        h("p", {}, `Капсулы с вещами для ${petCase("gen")}. Одна капсула — ${GACHA_COST} конпэйто.`),
+        h("div", { class: "row" }, h("span", { class: "kp-pill num" }, kpIcon(), String(kp))),
+        h("div", { class: "row" }, spin, swap))),
+    h("div", { class: "g-album-head" }, h("b", {}, "Коллекция"), h("span", { class: "muted num" }, `${have} из ${GACHA.length}`),
+      S.pet.gacha.pity ? h("span", { class: "muted", style: "font-size:13px" }, `★★★ не позже чем через ${GACHA_PITY - S.pet.gacha.pity}`) : null),
+    album);
+}
+function openGacha() {
+  const slow = !reducedMotion();
+  let busy = false;
+  const stage = h("div", { class: "g-stage" });
+  const kpLine = h("span", { class: "kp-pill num" });
+  const note = h("p", { class: "muted g-note" });
+  const actions = h("div", { class: "row g-actions" });
+  const setKp = () => kpLine.replaceChildren(kpIcon(), String(S.pet.kp || 0));
+  const ui = openSheet("Капсульный автомат", (close) => [
+    h("div", { class: "sheet-head" }, h("div", {}, h("div", { class: "eyebrow" }, "がちゃがちゃ"), h("h2", {}, "Капсульный автомат")),
+      h("button", { class: "icon-btn", type: "button", "aria-label": "Закрыть", onclick: () => { close(); render(); } }, icon("close"))),
+    h("div", { class: "row", style: "justify-content:center" }, kpLine), stage, note, actions]);
+  ui.back.addEventListener("click", (e) => { if (e.target === ui.back) render(); });
+  function idle() {
+    setKp();
+    stage.replaceChildren(gachaMachine(true));
+    const can = (S.pet.kp || 0) >= GACHA_COST;
+    note.textContent = can ? "Поверни ручку!" : `Нужно ${GACHA_COST} конпэйто, а у тебя ${S.pet.kp || 0}. Их дают за уроки, повторения и серию дней.`;
+    actions.replaceChildren(h("button", { class: "btn primary", type: "button", disabled: !can, onclick: spin }, "Крутить · ", kpIcon(), ` ${GACHA_COST}`));
+  }
+  function spin() {
+    if (busy || (S.pet.kp || 0) < GACHA_COST) return;
+    busy = true;
+    const res = rollGacha();
+    setKp();
+    const m = stage.querySelector(".g-machine");
+    m.classList.add("turning");
+    note.textContent = "がらがら…";
+    actions.replaceChildren();
+    setTimeout(() => {
+      const cap = capsuleEl(res.item.r);
+      const btn = h("button", { class: "g-cap-btn", type: "button", "aria-label": "Открыть капсулу" }, cap);
+      stage.append(btn);
+      note.textContent = "Нажми на капсулу, чтобы открыть";
+      btn.addEventListener("click", () => {
+        btn.disabled = true;
+        cap.classList.add("open");
+        setTimeout(() => reveal(res), slow ? 650 : 0);
+      }, { once: true });
+      busy = false;
+    }, slow ? 1150 : 0);
+  }
+  function reveal({ item, dup }) {
+    const worn = S.pet.wear.includes(item.id);
+    const card = h("div", { class: "g-reveal r" + item.r },
+      h("div", { class: "g-rarity" }, RARITY[item.r].stars, " ", RARITY[item.r].name),
+      h("div", { class: "g-reveal-pet" }, gachaPreview(item.id, "great")),
+      h("div", { class: "g-reveal-w ja", lang: "ja" }, item.w),
+      h("div", { class: "g-reveal-r" }, `«${item.cyr}» — ${item.ru}`),
+      dup ? h("div", { class: "g-dup" }, "Такая уже есть — вернули 1 ", kpIcon(16)) : h("div", { class: "g-new" }, "Новое в коллекции!"));
+    stage.replaceChildren(card);
+    if (item.r >= 2) petalBurst(card);
+    note.textContent = "";
+    const wearBtn = h("button", { class: "btn" + (worn ? "" : " primary"), type: "button" }, worn ? "Надето ♡" : "Надеть");
+    wearBtn.addEventListener("click", () => { if (!S.pet.wear.includes(item.id)) toggleWear(item.id); wearBtn.textContent = "Надето ♡"; wearBtn.className = "btn"; });
+    const again = h("button", { class: "btn" + (worn ? " primary" : ""), type: "button", disabled: (S.pet.kp || 0) < GACHA_COST, onclick: idle }, "Ещё · ", kpIcon(), ` ${GACHA_COST}`);
+    setKp();
+    actions.replaceChildren(wearBtn, again);
+  }
+  idle();
+}
+
 /* Игра «Апорт»: чтение знаков */
 function startFetch() {
   const pool = learned();
