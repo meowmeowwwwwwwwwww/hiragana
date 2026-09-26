@@ -837,6 +837,8 @@ function ensurePet() {
   S.pet = Object.assign(defPet(), S.pet || {});
   if (!S.pet.game) S.pet.game = { day: "", stars: 0 };
   if (!S.pet.gacha) S.pet.gacha = { n: 0, pity: 0 };
+  // нимб убран из автомата
+  S.pet.owned = S.pet.owned.filter((x) => x !== "tenshi"); S.pet.wear = S.pet.wear.filter((x) => x !== "tenshi");
   if (!S.pet.last) S.pet.last = Date.now();
   if (S.pet.name === "Кинако") S.pet.name = "Моня"; // прежнее имя по умолчанию
 }
@@ -1964,11 +1966,10 @@ const GACHA = [
   { id: "yozora", w: "よぞら", cyr: "ёдзора", ru: "фон «ночное небо»", r: 2, slot: "bg" },
   { id: "sakurairo", w: "さくらいろ", cyr: "сакураиро", ru: "окрас «цвет сакуры»", r: 3, slot: "fur" },
   { id: "matcha", w: "まっちゃ", cyr: "маття", ru: "окрас «маття»", r: 3, slot: "fur" },
-  { id: "tenshi", w: "てんしの わ", cyr: "тэнси но ва", ru: "нимб", r: 3, slot: "head" },
   { id: "niji", w: "にじ", cyr: "нидзи", ru: "фон «радуга»", r: 3, slot: "bg" },
   { id: "ichigobatake", w: "いちごばたけ", cyr: "итигобатакэ", ru: "фон «клубничная грядка»", r: 3, slot: "bg" }
 ];
-const GACHA_COST = 3, GACHA_PITY = 12, KP_RATE = 25;
+const GACHA_COST = 3, GACHA_PITY = 12, KP_RATE = 50;
 const RARITY = { 1: { name: "обычная", stars: "★" }, 2: { name: "редкая", stars: "★★" }, 3: { name: "особая", stars: "★★★" } };
 const SLOT_OF = Object.assign({ boushi: "head", hoshi: "earL", hana: "earR", megane: "face", kubiwa: "neck", erimaki: "neck" },
   Object.fromEntries(GACHA.map((g) => [g.id, g.slot])));

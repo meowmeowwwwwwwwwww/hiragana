@@ -56,7 +56,6 @@ const Puppy = (() => {
       }
       return s;
     },
-    tenshi: () => `<ellipse cx="60" cy="19" rx="21" ry="6" fill="none" stroke="#FFF3B0" stroke-width="9" opacity=".8"/><ellipse cx="60" cy="19" rx="21" ry="6" fill="none" stroke="#FFD84D" stroke-width="4"/><path d="M34 12 l1.6 3.4 3.4 1.6 -3.4 1.6 -1.6 3.4 -1.6 -3.4 -3.4 -1.6 3.4 -1.6z M88 10 l1.2 2.6 2.6 1.2 -2.6 1.2 -1.2 2.6 -1.2 -2.6 -2.6 -1.2 2.6 -1.2z" fill="#FFE27A"/>`,
     sakura: () => { let s = ""; for (let i = 0; i < 5; i++) s += `<path d="M96 36 C91.6 30.6 91.8 25.4 94.8 23.4 L96 25.6 L97.2 23.4 C100.2 25.4 100.4 30.6 96 36 Z" fill="#FFCCDD" stroke="${O}" stroke-width="1.8" stroke-linejoin="round" transform="rotate(${i * 72} 96 36)"/>`; return s + `<circle cx="96" cy="36" r="2.6" fill="#FF7FA8"/>`; },
     chouchou: () => `<g stroke="${O}" stroke-width="2" stroke-linejoin="round"><ellipse cx="17.6" cy="32.6" rx="7" ry="5.4" fill="#D8BDFF" transform="rotate(-32 17.6 32.6)"/><ellipse cx="30.4" cy="32.6" rx="7" ry="5.4" fill="#D8BDFF" transform="rotate(32 30.4 32.6)"/><ellipse cx="19.4" cy="42" rx="5" ry="4" fill="#FFB0CD" transform="rotate(24 19.4 42)"/><ellipse cx="28.6" cy="42" rx="5" ry="4" fill="#FFB0CD" transform="rotate(-24 28.6 42)"/><ellipse cx="24" cy="37.6" rx="2" ry="7" fill="${O}"/></g><path d="M23 31 Q20 25 17.6 24.4 M25 31 Q28 25 30.4 24.4" fill="none" stroke="${O}" stroke-width="1.6" stroke-linecap="round"/>`,
     momiji: () => `<path d="M97 44 L100 51" stroke="${O}" stroke-width="2.4" stroke-linecap="round"/>` + star5(96, 36, 10.5, 5, "#FF9E5C", 2.2) + `<path d="M96 36 L96 27 M96 36 L104 33 M96 36 L88 33 M96 36 L101 43 M96 36 L91 43" stroke="#FFD2A6" stroke-width="1.3" stroke-linecap="round"/>`,
@@ -76,7 +75,7 @@ const Puppy = (() => {
     ichigobatake: () => `<circle cx="60" cy="62" r="58" fill="#E6F6D9"/><path d="M4 84 Q60 72 116 84 L114 96 Q60 118 6 96 Z" fill="#C9EBB3"/>` + berry(16, 70) + berry(104, 70) + berry(24, 40) + berry(98, 36) + `<circle cx="60" cy="10" r="3" fill="#fff"/><circle cx="60" cy="10" r="1.4" fill="#FFD84D"/>`
   };
   const NECK = ["kubiwa", "erimaki", "suzu", "chomusubi"], CHEEK = ["bansoukou"];
-  const TOPS = ["megane", "hoshimegane", "hachimaki", "boushi", "nekomimi", "oukan", "hanakanmuri", "tenshi", "hana", "hoshi", "sakura", "chouchou", "momiji"];
+  const TOPS = ["megane", "hoshimegane", "hachimaki", "boushi", "nekomimi", "oukan", "hanakanmuri", "hana", "hoshi", "sakura", "chouchou", "momiji"];
   // mood: normal | happy | great | sad | sleepy | eat | hungry
   function svg(mood = "normal", opts = {}) {
     const acc = opts.acc || [];
