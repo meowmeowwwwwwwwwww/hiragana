@@ -479,7 +479,14 @@ details.how .how-body { display: grid; gap: 10px; margin-top: 12px; max-width: 6
   12% { opacity: 1; transform: translate(0, 20px) rotate(20deg) scale(1); }
   100% { transform: translate(var(--dx, 30px), 460px) rotate(var(--rot, 300deg)) scale(.9); opacity: 0; }
 }
-.tools { display: grid; grid-template-columns: 1fr 1fr 1.4fr; gap: 8px; width: 100%; }
+.tools { display: flex; align-items: center; gap: 8px; width: 100%; }
+.tools .btn.primary { flex: 1; min-height: 52px; font-size: 17px; }
+.tool-btn {
+  flex: none; width: 52px; height: 52px; display: grid; place-items: center; padding: 0; border-radius: 18px; border: 2px solid #fff;
+  background: linear-gradient(180deg, #FFFFFF, var(--surface-2)); color: var(--ink-soft); box-shadow: 0 3px 0 var(--line); transition: transform .08s ease, box-shadow .08s ease;
+}
+.tool-btn svg { width: 24px; height: 24px; }
+.tool-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--line); }
 /* Панель действий задания: прилипает к низу экрана, чтобы «Проверить» и «Дальше» не приходилось искать прокруткой */
 .act-bar {
   position: sticky; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); z-index: 4;
@@ -1823,7 +1830,10 @@ function icon(name) {
     speaker: "M4 9v6h4l5 4V5L8 9H4zm12.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z",
     back: "M15.4 5.4 14 4l-8 8 8 8 1.4-1.4L8.8 12z",
     close: "M18.3 5.7 16.9 4.3 12 9.2 7.1 4.3 5.7 5.7 10.6 12l-4.9 4.9 1.4 1.4 4.9-4.9 4.9 4.9 1.4-1.4-4.9-4.9z",
-    replay: "M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"
+    replay: "M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z",
+    undo: "M12.5 8c-2.65 0-5.05 1-6.9 2.6L2 7v9h9l-3.62-3.62A7.95 7.95 0 0 1 12.5 10.5c3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z",
+    erase: "M16.24 3.56l4.95 4.94c.78.79.78 2.05 0 2.84L12 20.53a4.01 4.01 0 0 1-5.66 0L2.81 17c-.78-.79-.78-2.05 0-2.84l10.6-10.6c.79-.78 2.05-.78 2.83 0M4.22 15.58l3.54 3.53c.78.79 2.04.79 2.83 0l3.53-3.53-4.95-4.95-4.95 4.95z",
+    hint: "M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"
   };
   const s = sv("svg", { viewBox: "0 0 24 24", "aria-hidden": "true" });
   s.append(sv("path", { d: paths[name], fill: "currentColor" }));
@@ -2280,9 +2290,12 @@ function writeTask(opts) {
     onReset: () => { fb.replaceChildren(); checkBtn.disabled = true; checkBtn.classList.remove("ready"); showTools(); },
     onStroke: (n) => { checkBtn.disabled = n === 0; checkBtn.classList.toggle("ready", n >= KANA[k].length); }
   });
-  const undoBtn = h("button", { class: "btn", type: "button", onclick: () => pad.undo() }, "Отменить черту");
-  const clearBtn = h("button", { class: "btn", type: "button", onclick: () => { pad.clear(); fb.replaceChildren(); } }, "Стереть");
-  const tools = h("div", { class: "tools" }, undoBtn, clearBtn, checkBtn);
+  // компактные иконки слева, одна большая «Проверить» справа
+  const toolBtn = (ico, label, fn) => h("button", { class: "tool-btn", type: "button", "aria-label": label, title: label, onclick: fn }, icon(ico));
+  const undoBtn = toolBtn("undo", "Отменить черту (или тап двумя пальцами)", () => pad.undo());
+  const clearBtn = toolBtn("erase", "Стереть всё", () => { pad.clear(); fb.replaceChildren(); });
+  const hintBtn = !trace && opts.allowForgot !== false ? toolBtn("hint", "Не помню, покажи", () => { if (firstOk === null) firstOk = false; showHelp(); }) : null;
+  const tools = h("div", { class: "tools" }, undoBtn, clearBtn, hintBtn, checkBtn);
   function showTools() { if (!finished && !bar.contains(tools)) bar.replaceChildren(tools); }
   const hint = HINT[k] ? h("span", { class: "hint-chip" }, HINT[k]) : null;
   const head = h("div", { class: "task-head" },
@@ -2342,11 +2355,7 @@ function writeTask(opts) {
   }
   checkBtn.addEventListener("click", check);
   bar.append(tools);
-  const extra = [];
-  if (!trace && opts.allowForgot !== false) {
-    extra.push(h("button", { class: "btn quiet", type: "button", onclick: () => { if (firstOk === null) firstOk = false; showHelp(); } }, "Не помню, покажи"));
-  }
-  return h("div", { class: "task" }, head, pad.el, bar, h("div", { class: "row", style: "justify-content:center" }, extra), fb);
+  return h("div", { class: "task" }, head, pad.el, bar, fb);
 }
 
 /* ===================== Задание: прочитать ===================== */
@@ -2693,7 +2702,7 @@ function startReview(items, graded) {
   let done = 0, ok1 = 0;
   const serve = () => {
     sh.progress(done / total);
-    sh.stage(graded ? "по расписанию" : "без влияния на расписание");
+    sh.stage(graded ? "по расписанию" : "вне расписания");
     sh.count(`${done} / ${total}`);
     if (!queue.length) return finish();
     const it = queue.shift();
