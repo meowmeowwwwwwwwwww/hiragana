@@ -138,7 +138,9 @@ p { margin: 0; }
 .tab-ico { position: relative; display: block; width: 26px; height: 26px; transition: transform .15s ease; }
 .tab-ico svg { width: 26px; height: 26px; display: block; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
 .tab-t { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.tab[aria-selected="true"] { color: var(--primary-deep); background: rgb(255 111 159 / .15); }
+.tab[aria-selected="true"] { color: var(--primary-deep); }
+.tab { position: relative; z-index: 1; }
+.tab-pill { position: absolute; left: 5px; top: 5px; bottom: 5px; width: calc((100% - 10px) / 4); border-radius: 999px; background: rgb(255 111 159 / .16); transition: transform .32s cubic-bezier(.22, .9, .3, 1); will-change: transform; }
 .tab[aria-selected="true"] .fillme { fill: var(--primary-2); }
 .tab:active .tab-ico { transform: scale(.86); }
 .badge {
@@ -149,7 +151,9 @@ p { margin: 0; }
 html { scroll-padding-bottom: calc(110px + env(safe-area-inset-bottom, 0px)); }
 /* пока открыта клавиатура, панель вкладок не висит над ней */
 body:has(input[type="text"]:focus, textarea:focus) .tabbar { display: none; }
-.peek { position: absolute; top: 0; left: 0; width: 100%; pointer-events: none; }
+.peeks { position: absolute; top: 0; left: 0; width: 100%; height: 0; overflow: clip; pointer-events: none; }
+.peeks.live { overflow: visible; }
+.peek { position: absolute; top: 0; left: 0; width: 100%; pointer-events: none; will-change: transform; }
 
 /* Желейные кнопки */
 .btn {
@@ -3520,6 +3524,7 @@ function renderChrome() {
   const bm = document.getElementById("brand-mascot"); if (bm) bm.replaceChildren(mascot(petMood()));
   document.querySelectorAll(".tab").forEach((t) => t.setAttribute("aria-selected", String(t.dataset.tab === tab)));
   updateBadge();
+  if (typeof swipe !== "undefined") { swipe.pillAt(TAB_ORDER.indexOf(tab)); if (!inSession) swipe.warm(); }
 }
 function render() {
   renderChrome();
@@ -3694,80 +3699,130 @@ document.getElementById("tabs").addEventListener("click", (e) => {
   if (b) goTab(b.dataset.tab);
 });
 
-// Листание вкладок пальцем: страница идёт за пальцем, соседняя вкладка видна сбоку,
-// быстрый бросок перелистывает, на краях — «резинка». В занятиях, окошках, полях ввода и у краёв экрана выключено.
-(() => {
+// Листание вкладок пальцем, как в iOS: страница идёт за пальцем, соседняя вкладка видна сбоку (заготовлена заранее),
+// капсула в нижней панели едет вместе с пальцем, бросок перелистывает, на краях «резинка», новый свайп можно начинать сразу.
+// Пока идёт свайп вбок, страница не прокручивается вверх-вниз. В занятиях, окошках, полях ввода и у краёв экрана выключено.
+var swipe = (() => {
   const pager = document.getElementById("pager"), main = document.getElementById("main");
-  const EASE = "cubic-bezier(.2, .9, .25, 1)";
-  let g = null, busy = false;
+  const shelf = h("div", { class: "peeks", "aria-hidden": "true" });
+  pager.append(shelf);
+  const EASE = "cubic-bezier(.22, .9, .3, 1)";
+  const pill = h("span", { class: "tab-pill", "aria-hidden": "true" });
+  document.getElementById("tabs").prepend(pill);
+  let g = null, settle = null, raf = 0, warmT = 0, cache = {};
   const put = (el, x, y, ms) => {
     el.style.transition = ms ? `transform ${ms}ms ${EASE}` : "none";
     el.style.transform = x || y ? `translate3d(${x}px, ${y}px, 0)` : "";
   };
-  const makePeek = (dir) => {
-    const i = TAB_ORDER.indexOf(tab) + dir;
-    if (i < 0 || i >= TAB_ORDER.length) return null;
-    const t = TAB_ORDER[i], y = tabScrollTarget(t);
-    const el = h("div", { class: "peek", "aria-hidden": "true" }, viewFor(t));
-    pager.append(el);
-    return { el, t, y, dir };
+  const pillAt = (pos, ms) => { pill.style.transition = ms == null ? "" : ms ? `transform ${ms}ms ${EASE}` : "none"; pill.style.transform = `translateX(${pos * 100}%)`; };
+  // соседние вкладки собираются заранее, в фоне, чтобы в начале жеста не было рывка
+  function warm() {
+    clearTimeout(warmT);
+    warmT = setTimeout(() => {
+      if (g || settle || inSession) return;
+      shelf.replaceChildren(); cache = {};
+      const i = TAB_ORDER.indexOf(tab);
+      for (const dir of [-1, 1]) {
+        const t = TAB_ORDER[i + dir];
+        if (!t) continue;
+        const el = h("div", { class: "peek" }, viewFor(t));
+        el.style.transform = `translate3d(${dir * 200}%, 0, 0)`;
+        shelf.append(el); cache[dir] = { el, t, dir };
+      }
+    }, 160);
+  }
+  const peekFor = (dir) => {
+    let p = cache[dir];
+    if (!p) {
+      const t = TAB_ORDER[TAB_ORDER.indexOf(tab) + dir];
+      if (!t) return null;
+      p = cache[dir] = { el: h("div", { class: "peek" }, viewFor(t)), t, dir };
+      shelf.append(p.el);
+    }
+    p.y = tabScrollTarget(p.t);
+    return p;
   };
-  const dropPeek = () => { if (g && g.peek) { g.peek.el.remove(); g.peek = null; } };
+  function frame() {
+    raf = 0;
+    if (!g || g.axis !== "x") return;
+    const d = g.dx, dir = d < 0 ? 1 : -1, W = g.W, idx = TAB_ORDER.indexOf(tab);
+    const p = d ? peekFor(dir) : null;
+    if (g.peek && g.peek !== p) put(g.peek.el, g.peek.dir * 2 * W, 0, 0);
+    g.peek = p;
+    if (p) {
+      put(main, d, 0, 0);
+      put(p.el, d + dir * W, window.scrollY - p.y, 0);
+      pillAt(idx + Math.max(-1, Math.min(1, -d / W)), 0);
+    } else {
+      const r = d / (1 + Math.abs(d) / 110); // «резинка» на первой и последней вкладке
+      put(main, r, 0, 0);
+      pillAt(idx - r / W / 3, 0);
+    }
+  }
+  function commitNow() { if (settle) { const f = settle; settle = null; clearTimeout(f.t); f.done(); } }
   document.addEventListener("touchstart", (e) => {
+    commitNow(); // новый жест посреди анимации — доводим прошлый сразу
     g = null;
-    if (busy || inSession || e.touches.length !== 1 || document.querySelector(".sheet-back")) return;
+    if (inSession || e.touches.length !== 1 || document.querySelector(".sheet-back")) return;
     if (!e.target.closest || !e.target.closest("#app") || e.target.closest(".tabbar, input, textarea, select, canvas")) return;
     const t = e.touches[0];
-    if (t.clientX < 20 || t.clientX > window.innerWidth - 20) return;
+    if (t.clientX < 16 || t.clientX > window.innerWidth - 16) return;
     g = { x0: t.clientX, y0: t.clientY, axis: "", dx: 0, peek: null, W: pager.clientWidth + 32, pts: [] };
   }, { passive: true });
+  // не пассивный: пока свайп вбок, отменяем вертикальную прокрутку страницы
   document.addEventListener("touchmove", (e) => {
     if (!g) return;
     const t = e.touches[0], dx = t.clientX - g.x0, dy = t.clientY - g.y0;
     if (!g.axis) {
-      if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
-      g.axis = Math.abs(dx) > Math.abs(dy) * 1.2 ? "x" : "y";
+      if (Math.abs(dx) < 7 && Math.abs(dy) < 7) return;
+      g.axis = Math.abs(dx) > Math.abs(dy) * 1.15 ? "x" : "y";
       if (g.axis === "y") { g = null; return; }
-      g.x0 = t.clientX; // без рывка на пороге
-      main.style.willChange = "transform";
+      g.x0 = t.clientX;
+      main.style.willChange = "transform"; shelf.classList.add("live");
     }
-    const d = t.clientX - g.x0, dir = d < 0 ? 1 : -1, now = performance.now();
-    g.dx = d; g.pts.push([now, t.clientX]); while (g.pts.length > 2 && now - g.pts[0][0] > 100) g.pts.shift();
-    if (d !== 0 && (!g.peek || g.peek.dir !== dir)) { dropPeek(); g.peek = makePeek(dir); }
-    if (g.peek) {
-      put(main, d, 0, 0);
-      put(g.peek.el, d + dir * g.W, window.scrollY - g.peek.y, 0);
-    } else put(main, d / (1 + Math.abs(d) / 110), 0, 0); // «резинка» на первой и последней вкладке
-  }, { passive: true });
+    if (e.cancelable) e.preventDefault();
+    const now = performance.now();
+    g.dx = t.clientX - g.x0; g.pts.push([now, t.clientX]); while (g.pts.length > 2 && now - g.pts[0][0] > 90) g.pts.shift();
+    if (!raf) raf = requestAnimationFrame(frame);
+  }, { passive: false });
   const finish = (e) => {
     if (!g || g.axis !== "x") { g = null; return; }
+    if (raf) { cancelAnimationFrame(raf); raf = 0; frame(); }
     const cur = g; g = null;
     const pts = cur.pts, v = pts.length > 1 ? (pts[pts.length - 1][1] - pts[0][1]) / Math.max(1, pts[pts.length - 1][0] - pts[0][0]) : 0;
-    const p = cur.peek, d = cur.dx;
-    const go = p && e.type === "touchend" && (Math.abs(d) > cur.W * 0.32 || (Math.abs(v) > 0.3 && Math.sign(v) === Math.sign(d)));
-    busy = true;
+    const p = cur.peek, d = cur.dx, idx = TAB_ORDER.indexOf(tab);
+    const go = p && e.type === "touchend" && (Math.abs(d) > cur.W * 0.3 || (Math.abs(v) > 0.25 && Math.sign(v) === Math.sign(d)));
+    const done = go ? () => {
+      scrollMem[tab] = window.scrollY;
+      tab = p.t;
+      const node = p.el.firstChild;
+      p.el.remove(); cache = {}; shelf.replaceChildren(); shelf.classList.remove("live");
+      put(main, 0, 0, 0); main.style.willChange = "";
+      main.replaceChildren(node);
+      renderChrome();
+      window.scrollTo(0, p.y);
+      warm();
+    } : () => {
+      put(main, 0, 0, 0); main.style.willChange = "";
+      if (p) put(p.el, p.dir * 2 * cur.W, 0, 0);
+      shelf.classList.remove("live");
+    };
     if (go) {
-      const rest = cur.W - Math.abs(d), ms = Math.round(Math.min(380, Math.max(200, rest / Math.max(Math.abs(v), 1.1))));
+      const rest = cur.W - Math.abs(d), ms = Math.round(Math.min(360, Math.max(170, rest / Math.max(Math.abs(v), 1.2))));
       put(main, -p.dir * cur.W, 0, ms);
       put(p.el, 0, window.scrollY - p.y, ms);
-      setTimeout(() => {
-        scrollMem[tab] = window.scrollY;
-        tab = p.t; renderChrome();
-        const node = p.el.firstChild;
-        p.el.remove();
-        put(main, 0, 0, 0); main.style.willChange = "";
-        main.replaceChildren(node);
-        window.scrollTo(0, p.y);
-        busy = false;
-      }, ms + 20);
+      pillAt(idx + p.dir, ms);
+      settle = { done, t: setTimeout(() => { if (settle) { settle = null; done(); } }, ms + 16) };
     } else {
-      put(main, 0, 0, 300);
-      if (p) put(p.el, p.dir * cur.W, window.scrollY - p.y, 300);
-      setTimeout(() => { if (p) p.el.remove(); put(main, 0, 0, 0); main.style.willChange = ""; busy = false; }, 320);
+      put(main, 0, 0, 280);
+      if (p) put(p.el, p.dir * cur.W, window.scrollY - p.y, 280);
+      pillAt(idx, 280);
+      settle = { done, t: setTimeout(() => { if (settle) { settle = null; done(); } }, 296) };
     }
   };
   document.addEventListener("touchend", finish, { passive: true });
   document.addEventListener("touchcancel", finish, { passive: true });
+  return { warm, pillAt, reset() { commitNow(); } };
 })();
 
 
