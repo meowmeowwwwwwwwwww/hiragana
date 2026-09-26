@@ -197,6 +197,32 @@ body:has(input[type="text"]:focus, textarea:focus) .tabbar { display: none; }
 .pbar-t { height: 14px; border-radius: 999px; background: #fff; box-shadow: inset 0 0 0 2px var(--line); overflow: hidden; }
 .pbar-t i { display: block; height: 100%; border-radius: 999px; }
 .pbar.food .pbar-t i { background: linear-gradient(90deg, #FFCF6B, #FFB347); }
+/* Приветственный экран */
+.splash {
+  position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: env(safe-area-inset-top, 0px) 20px env(safe-area-inset-bottom, 0px);
+  background: radial-gradient(circle at 50% 38%, #fff 0, rgb(255 255 255 / 0) 42%), linear-gradient(180deg, var(--bg-top), var(--bg-mid) 55%, var(--bg-bottom));
+  transition: opacity .45s ease, transform .45s ease; cursor: pointer;
+}
+.splash.out { opacity: 0; transform: scale(1.06); pointer-events: none; }
+.sp-in { display: grid; justify-items: center; gap: 6px; text-align: center; }
+.sp-stage { position: relative; width: 200px; height: 200px; display: grid; place-items: center; margin-bottom: 8px; }
+.sp-stage::before { content: ""; position: absolute; inset: 6px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 8px rgb(255 255 255 / .55), 0 16px 40px rgb(234 79 135 / .28); animation: sp-ring .7s cubic-bezier(.3, 1.5, .5, 1) both; }
+.sp-pet { position: relative; width: 170px; height: 170px; animation: sp-pop .8s cubic-bezier(.3, 1.6, .5, 1) .12s both; }
+.sp-pet .mascot { width: 100%; height: 100%; }
+.sp-deco { position: absolute; left: 50%; top: 50%; margin: -15px 0 0 -15px; overflow: visible; animation: sp-fly .7s cubic-bezier(.3, 1.4, .5, 1) both, sp-bob 2.6s ease-in-out 1.1s infinite; }
+@keyframes sp-bob { 0%, 100% { transform: translate(var(--x), var(--y)); } 50% { transform: translate(var(--x), calc(var(--y) - 6px)) rotate(8deg); } }
+.sp-hello { font-family: var(--kana); font-weight: 600; font-size: 40px; line-height: 1.2; color: var(--primary); text-shadow: 0 3px 0 #fff, 3px 0 0 #fff, -3px 0 0 #fff, 0 -3px 0 #fff; }
+.sp-hello span { display: inline-block; animation: sp-letter .45s cubic-bezier(.3, 1.6, .5, 1) both; }
+.sp-read { font-weight: 800; color: var(--ink-soft); animation: sp-fade .5s ease 1.1s both; }
+.sp-sub { margin-top: 6px; padding: 8px 16px; border-radius: 999px; background: rgb(255 255 255 / .9); box-shadow: var(--shadow); font-weight: 800; color: var(--ink); animation: sp-fade .5s ease 1.35s both; }
+.sp-title { position: absolute; left: 0; right: 0; bottom: calc(64px + env(safe-area-inset-bottom, 0px)); text-align: center; font-weight: 800; font-size: 18px; color: var(--primary); animation: sp-fade .6s ease .6s both; }
+.sp-tap { position: absolute; left: 0; right: 0; bottom: calc(36px + env(safe-area-inset-bottom, 0px)); text-align: center; font-size: 13px; font-weight: 700; color: var(--muted); animation: sp-fade .5s ease 1.6s both; }
+@keyframes sp-ring { from { transform: scale(.3); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes sp-pop { 0% { transform: translateY(50px) scale(.3); opacity: 0; } 100% { transform: none; opacity: 1; } }
+@keyframes sp-fly { from { transform: translate(0, 0) scale(.2); opacity: 0; } to { transform: translate(var(--x), var(--y)) scale(1); opacity: 1; } }
+@keyframes sp-letter { from { transform: translateY(18px) scale(.6); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes sp-fade { from { transform: translateY(8px); opacity: 0; } to { transform: none; opacity: 1; } }
+
 /* Тамагочи-приставка */
 .device {
   position: relative; max-width: 460px; margin: 22px auto 0; padding: 16px 14px 18px; display: grid; gap: 10px;
@@ -622,6 +648,8 @@ html.sheet-open, html.sheet-open body { overflow: hidden; }
   .mascot.bounce, .float { animation: none; }
   .confetti, .pat-heart { display: none; }
   .star-toast, .fetch-ball, .dev-dot, .tools .btn.primary.ready { animation: none; }
+  .sp-stage::before, .sp-pet, .sp-hello span, .sp-read, .sp-sub, .sp-title, .sp-tap { animation: none; }
+  .sp-deco { animation: none; transform: translate(var(--x), var(--y)); }
   .g-machine.turning .g-handle, .g-machine.turning .g-caps, .g-cap-btn, .g-capsule, .g-reveal { animation: none; }
 }
 </style>
@@ -630,6 +658,16 @@ html.sheet-open, html.sheet-open body { overflow: hidden; }
 </head>
 <body>
 <div class="wrap" id="app">
+  <div class="splash" id="splash" role="presentation">
+    <div class="sp-in">
+      <div class="sp-stage" id="sp-stage"><div class="sp-pet" id="sp-pet"></div></div>
+      <div class="sp-hello" id="sp-hello" lang="ja"></div>
+      <div class="sp-read" id="sp-read"></div>
+      <div class="sp-sub" id="sp-sub"></div>
+    </div>
+    <div class="sp-title">Тетрадь хираганы <span class="kao">(&gt;ᴗ&lt;)♡</span></div>
+    <div class="sp-tap">нажми, чтобы начать</div>
+  </div>
   <header class="top" id="top">
     <div class="top-deco" id="top-deco" aria-hidden="true"></div>
     <div class="brand">
@@ -3747,6 +3785,28 @@ lsLoad();
 ensurePet();
 Recog.setLenient(!!S.lenient);
 render();
+// Приветственный экран при запуске: Моня выпрыгивает, приветствие по времени суток, затем экран растворяется
+(() => {
+  const sp = document.getElementById("splash");
+  if (!sp) return;
+  const hr = new Date().getHours();
+  const [jp, rd, ru] = hr >= 5 && hr < 11 ? ["おはよう！", "охаё:", "доброе утро"] : hr >= 11 && hr < 18 ? ["こんにちは！", "коннитива", "добрый день"] : ["こんばんは！", "комбанва", "добрый вечер"];
+  const mood = isNight() ? "sleepy" : "great";
+  document.getElementById("sp-pet").append(mascot(mood, false, undefined, true));
+  const stage = document.getElementById("sp-stage");
+  const deco = [[starSticker("#FFE27A", true), -118, -70, 40], [heartSticker("#FFB0CD"), 112, -86, 32], [starSticker("#AED8FF", false), 128, 30, 26], [starSticker("#D8BDFF", true), -130, 44, 30], [heartSticker("#FF9EC0"), -70, -122, 24], [starSticker("#A9E7CF", false), 70, -128, 22]];
+  deco.forEach(([el, x, y, sz], i) => { el.classList.add("sp-deco"); el.style.cssText = `--x:${x}px;--y:${y}px;width:${sz}px;height:${sz}px;animation-delay:${0.25 + i * 0.07}s`; stage.append(el); });
+  const hello = document.getElementById("sp-hello");
+  [...jp].forEach((ch, i) => hello.append(h("span", { style: `animation-delay:${0.5 + i * 0.09}s` }, ch)));
+  document.getElementById("sp-read").textContent = `«${rd}» — ${ru}`;
+  const due = dueItems().length, nm = S.pet.name;
+  document.getElementById("sp-sub").textContent = !learned().length ? `${nm} ждёт первый урок ♡` : due ? `Сегодня ждут ${due} ${plural(due, "повторение", "повторения", "повторений")}` : `С возвращением! ${nm} ${isNight() ? "уже спит" : "рад тебя видеть"} ♡`;
+  let gone = false;
+  const hide = () => { if (gone) return; gone = true; sp.classList.add("out"); setTimeout(() => sp.remove(), 500); };
+  const t0 = Date.now();
+  sp.addEventListener("click", () => { if (Date.now() - t0 > 250) hide(); });
+  setTimeout(hide, reducedMotion() ? 900 : 2600);
+})();
 if (IS_PWA) {
   if ("serviceWorker" in navigator) window.addEventListener("load", () => { navigator.serviceWorker.register("sw.js").catch((e) => console.warn(e)); });
   try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
