@@ -3635,7 +3635,12 @@ function reviewView() {
     h("p", { class: "muted" }, "10 самых слабых знаков. На расписание не влияет."),
     h("div", { class: "row" },
       h("button", { class: "btn", type: "button", disabled: pool.length === 0, onclick: () => startReview(weakest(pool, "w"), false) }, "Писать"),
-      h("button", { class: "btn", type: "button", disabled: pool.length === 0, onclick: () => startReview(weakest(pool, "r"), false) }, "Читать")));
+      h("button", { class: "btn", type: "button", disabled: pool.length === 0, onclick: () => startReview(weakest(pool, "r"), false) }, "Читать")),
+    h("h2", { class: "section-title", style: "margin-top:10px" }, "Всё пройденное"),
+    h("p", { class: "muted" }, pool.length ? `Все ${nZnak(pool.length)} по одному разу, вперемешку: где-то прочитать, где-то написать. На расписание не влияет.` : "Появится после первого урока."),
+    h("div", { class: "row" },
+      h("button", { class: "btn primary", type: "button", disabled: pool.length === 0, onclick: () => startReview(shuffle(pool.map((k) => ({ k, sk: Math.random() < 0.5 ? "w" : "r" }))), false) }, "Повторить всё"),
+      h("button", { class: "btn", type: "button", disabled: pool.length === 0, onclick: () => startReview(shuffle(pool.map((k) => ({ k, sk: "w" }))), false) }, "Только письмо")));
   return h("div", {}, box, extra);
 }
 function weakest(pool, sk) {
