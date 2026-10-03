@@ -369,7 +369,7 @@ body.in-session .star-toast { bottom: calc(24px + env(safe-area-inset-bottom, 0p
 .panel { position: relative; background: rgb(255 255 255 / .92); border: 3px solid #fff; border-radius: 28px; padding: 20px; box-shadow: var(--shadow); }
 .panel.bowed::before { content: ""; position: absolute; top: -18px; right: 22px; width: 58px; height: 36px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 40'%3E%3Cpath fill='%23FF9EC0' stroke='%23fff' stroke-width='3' stroke-linejoin='round' d='M32 20C24 8 8 2 6 12c-2 10 14 14 26 8zM32 20c8-12 24-18 26-8 2 10-14 14-26 8z'/%3E%3Cpath fill='%23FF9EC0' stroke='%23fff' stroke-width='3' stroke-linejoin='round' d='M28 22l-8 16 8-3 4 4 2-16zM36 22l8 16-8-3-4 4-2-16z'/%3E%3Ccircle fill='%23FF7FA8' stroke='%23fff' stroke-width='3' cx='32' cy='20' r='6'/%3E%3Cpath fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' opacity='.7' d='M12 10c3-2 8-1 12 3M52 10c-3-2-8-1-12 3'/%3E%3C/svg%3E") center / contain no-repeat; transform: rotate(8deg); filter: drop-shadow(0 3px 3px rgb(255 111 159 / .3)); }
 .today { display: grid; gap: 14px; margin-bottom: 28px; }
-.today.compact { gap: 10px; margin-bottom: 18px; padding: 16px 18px; }
+.today.compact { gap: 8px; margin-bottom: 14px; padding: 14px 18px; }
 .today.compact h2 { font-size: 20px; }
 .today-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
 .link-btn { background: none; border: 0; padding: 0; font-size: 13px; font-weight: 800; color: var(--primary-deep); text-decoration: underline; text-underline-offset: 3px; }
@@ -379,13 +379,13 @@ body.in-session .star-toast { bottom: calc(24px + env(safe-area-inset-bottom, 0p
 .pet-strip-bars { flex: 1; display: grid; gap: 4px; min-width: 0; }
 .pet-strip .dev-meter { background: none; padding: 0; }
 .pet-strip .stars-pill { padding: 3px 10px; font-size: 14px; }
-.path { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-bottom: 8px; }
-.path-tile { position: relative; display: grid; justify-items: center; align-content: center; gap: 0; min-height: 80px; padding: 8px 4px 6px; border-radius: 20px; border: 3px solid #fff; background: rgb(255 255 255 / .92); box-shadow: 0 3px 0 var(--line); min-width: 0; }
+.path { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 7px; margin-bottom: 2px; }
+.path-tile { position: relative; display: grid; justify-items: center; align-content: center; gap: 0; min-height: 70px; padding: 8px 4px 6px; border-radius: 20px; border: 3px solid #fff; background: rgb(255 255 255 / .92); box-shadow: 0 3px 0 var(--line); min-width: 0; }
 .path-tile:active { transform: translateY(2px); }
 .path-tile.done { background: linear-gradient(180deg, #FFF7FA, #FFE3EE); }
 .path-tile.next { box-shadow: 0 0 0 3px var(--primary), 0 3px 0 var(--line); }
 .path-no { font-size: 12px; font-weight: 800; color: var(--primary); }
-.path-kana { font-family: var(--kana); font-weight: 600; font-size: 19px; line-height: 1.25; color: var(--ink); white-space: nowrap; }
+.path-kana { font-family: var(--kana); font-weight: 600; font-size: 16px; line-height: 1.25; color: var(--ink); white-space: nowrap; }
 .path-t { max-width: 100%; font-size: 10px; font-weight: 700; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .path-badge { position: absolute; top: -8px; right: -6px; width: 26px; height: 26px; }
 @media (max-height: 900px) { .path-tile { min-height: 62px; padding: 5px 4px; } .path-t { display: none; } .pet-strip-pic .mascot { width: 42px; height: 42px; } }
@@ -575,6 +575,20 @@ details.how .how-body { display: grid; gap: 10px; margin-top: 12px; max-width: 6
 .slot { width: 56px; height: 56px; display: grid; place-items: center; border: 3px solid #fff; border-radius: 18px; background: #fff; box-shadow: 0 0 0 2px var(--grid-faint); font-family: var(--kana); font-weight: 600; font-size: 34px; color: var(--ink); }
 .slot.cur { box-shadow: 0 0 0 3px var(--primary); }
 .slot.empty { color: transparent; }
+.slot.small { font-size: 22px; align-items: end; padding-bottom: 6px; }
+.num-table { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.num-cell { display: grid; justify-items: center; gap: 0; padding: 6px 2px; border-radius: 16px; background: #fff; border: 3px solid #fff; box-shadow: 0 3px 0 var(--line); }
+.num-cell b { font-size: 18px; color: var(--primary); }
+.num-cell .ja { font-size: 19px; line-height: 1.3; }
+.num-cell small { font-size: 11px; font-weight: 700; color: var(--muted); }
+.task-big.num { font-variant-numeric: tabular-nums; }
+.num-slots { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; min-height: 58px; }
+.num-slot { min-width: 72px; height: 56px; padding: 0 10px; border-radius: 18px; border: 3px dashed var(--grid-faint); background: rgb(255 255 255 / .6); font-family: var(--kana); font-weight: 600; font-size: 24px; color: var(--ink); }
+.num-slot.full { border-style: solid; border-color: #fff; background: #fff; box-shadow: 0 0 0 2px var(--primary-2); }
+.num-tiles { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.num-tile { min-width: 72px; height: 52px; padding: 0 12px; border-radius: 18px; border: 3px solid #fff; background: linear-gradient(180deg, #fff, var(--surface-2)); box-shadow: 0 3px 0 var(--line); font-family: var(--kana); font-weight: 600; font-size: 22px; color: var(--ink); }
+.num-tile:disabled { opacity: .35; }
+.num-tile:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 1px 0 var(--line); }
 
 /* Таблица */
 .gojuon { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 7px; max-width: 460px; }
@@ -673,7 +687,7 @@ html.sheet-open, html.sheet-open body { overflow: hidden; }
       <span id="brand-mascot"></span>
       <div>
         <h1>Тетрадь хираганы</h1>
-        <p>12 уроков с <span id="brand-pet">Моней</span> <span class="kao">(&gt;ᴗ&lt;)♡</span></p>
+        <p><span id="brand-n">13</span> уроков с <span id="brand-pet">Моней</span> <span class="kao">(&gt;ᴗ&lt;)♡</span></p>
       </div>
     </div>
   </header>
@@ -882,8 +896,26 @@ const LESSONS = [
     words: [["まど","мадо","mado","окно"],["ともだち","томодати","tomodachi","друг"],["どこ","доко","doko","где"],["かばん","кабан","kaban","сумка"],["ことば","котоба","kotoba","слово"],["えんぴつ","эмпицу","enpitsu","карандаш"],["さんぽ","сампо","sanpo","прогулка"]] },
   { title: "Слияния, маленькая っ и итоговая проверка", kana: "", kind: "yoon",
     tip: "Маленькие ゃ ゅ ょ сливаются с предыдущим знаком, маленькая っ удваивает согласный. В конце — 15 случайных знаков по памяти.",
-    words: [["きょう","кё:","kyō","сегодня"],["おちゃ","отя","ocha","чай"],["しゃしん","сясин","shashin","фотография"],["でんしゃ","дэнся","densha","электричка"],["ひゃく","хяку","hyaku","сто"],["きって","киттэ","kitte","почтовая марка"],["ざっし","дзасси","zasshi","журнал"],["がっこう","гакко:","gakkō","школа"],["ちょっと","тётто","chotto","немного"],["りょこう","рёко:","ryokō","путешествие"]] }
+    words: [["きょう","кё:","kyō","сегодня"],["おちゃ","отя","ocha","чай"],["しゃしん","сясин","shashin","фотография"],["でんしゃ","дэнся","densha","электричка"],["ひゃく","хяку","hyaku","сто"],["きって","киттэ","kitte","почтовая марка"],["ざっし","дзасси","zasshi","журнал"],["がっこう","гакко:","gakkō","школа"],["ちょっと","тётто","chotto","немного"],["りょこう","рёко:","ryokō","путешествие"]] },
+  { title: "Цифры", kana: "", kind: "numbers",
+    tip: "Числа от 1 до 10, сто, тысяча и десять тысяч. Читаешь, пишешь от руки и собираешь составные числа вроде 24 или 300.",
+    words: [] }
 ];
+// Числа: [цифры, хирагана, чтение кириллицей, латиницей, другие чтения]
+const NUMS = [
+  ["1", "いち", "ити", "ichi"], ["2", "に", "ни", "ni"], ["3", "さん", "сан", "san"], ["4", "よん", "ён", "yon", "し «си» — реже"],
+  ["5", "ご", "го", "go"], ["6", "ろく", "року", "roku"], ["7", "なな", "нана", "nana", "しち «сити» — тоже можно"], ["8", "はち", "хати", "hachi"],
+  ["9", "きゅう", "кю:", "kyū", "く «ку» — реже"], ["10", "じゅう", "дзю:", "jū"], ["100", "ひゃく", "хяку", "hyaku"], ["1000", "せん", "сэн", "sen"], ["10000", "まん", "ман", "man"]
+];
+// Составные числа: [цифры, части (токены), чтение кириллицей, подсказка]
+const NUM_COMBOS = [
+  ["11", ["じゅう", "いち"], "дзю:ити", "10 + 1"], ["15", ["じゅう", "ご"], "дзю:го", "10 + 5"], ["20", ["に", "じゅう"], "нидзю:", "2 × 10"],
+  ["24", ["に", "じゅう", "よん"], "нидзю:ён", "2 × 10 + 4"], ["99", ["きゅう", "じゅう", "きゅう"], "кю:дзю:кю:", "9 × 10 + 9"],
+  ["300", ["さん", "びゃく"], "самбяку", "ひゃく после さん звонкое: びゃく"], ["600", ["ろっ", "ぴゃく"], "роппяку", "ろく + ひゃく = ろっぴゃく"],
+  ["800", ["はっ", "ぴゃく"], "хаппяку", "はち + ひゃく = はっぴゃく"], ["3000", ["さん", "ぜん"], "сандзэн", "せん после さん звонкое: ぜん"],
+  ["8000", ["はっ", "せん"], "хассэн", "はち + せん = はっせん"], ["2026", ["に", "せん", "に", "じゅう", "ろく"], "нисэн нидзю: року", "2 × 1000 + 2 × 10 + 6"]
+];
+const NUM_DECOYS = ["ひゃく", "びゃく", "ぴゃく", "せん", "ぜん", "しち", "なな", "ろく", "はち", "さん", "よん"];
 const YOON = ["きゃ","きゅ","きょ","しゃ","しゅ","しょ","ちゃ","ちゅ","ちょ","にゃ","にゅ","にょ","ひゃ","ひゅ","ひょ","みゃ","みゅ","みょ","りゃ","りゅ","りょ","ぎゃ","ぎゅ","ぎょ","じゃ","じゅ","じょ","びゃ","びゅ","びょ","ぴゃ","ぴゅ","ぴょ"];
 const GOJUON = [
   ["あ","い","う","え","お"],["か","き","く","け","こ"],["さ","し","す","せ","そ"],["た","ち","つ","て","と"],
@@ -894,6 +926,32 @@ const DAKUTEN = [
   ["が","ぎ","ぐ","げ","ご"],["ざ","じ","ず","ぜ","ぞ"],["だ","ぢ","づ","で","ど"],["ば","び","ぶ","べ","ぼ"],["ぱ","ぴ","ぷ","ぺ","ぽ"]
 ];
 const ALL_KANA = Object.keys(KANA);
+// Маленькие ゃゅょっ: эталон — обычный знак, уменьшенный и опущенный вниз клетки, как пишут в японских тетрадях.
+// Добавляются в KANA после ALL_KANA, поэтому в таблицу и счётчики знаков не попадают.
+const SMALL = { "ゃ": "や", "ゅ": "ゆ", "ょ": "よ", "っ": "つ" };
+(() => {
+  const S0 = 0.62, DX = -6, DY = 15, C = 54.5;
+  const tp = ([x, y]) => [+(C + S0 * (x - C) + DX).toFixed(1), +(C + S0 * (y - C) + DY).toFixed(1)];
+  const K = 1024 / 109, C2 = C * K, DX2 = DX * K, DY2 = DY * K;
+  const tx = (x) => (C2 + S0 * (x - C2) + DX2).toFixed(0), ty = (y) => (C2 + S0 * (y - C2) + DY2).toFixed(0);
+  const tpath = (d) => {
+    const tok = d.match(/[A-Za-z]|-?\d*\.?\d+/g); let out = "", cmd = "", i = 0;
+    while (i < tok.length) {
+      if (/[A-Za-z]/.test(tok[i])) { cmd = tok[i++]; out += cmd; if (cmd === "Z" || cmd === "z") continue; }
+      if (cmd === "H") out += tx(+tok[i++]) + " ";
+      else if (cmd === "V") out += ty(+tok[i++]) + " ";
+      else { out += tx(+tok[i]) + " " + ty(+tok[i + 1]) + " "; i += 2; }
+    }
+    return out.trim();
+  };
+  for (const [sm, big] of Object.entries(SMALL)) {
+    KANA[sm] = KANA[big].map((st) => ({ p: st.p.map(tp), n: tp(st.n), parts: st.parts.map((pt) => Object.assign({}, pt, { o: tpath(pt.o) })) }));
+    INFO[sm] = ["маленькая " + { "ゃ": "я", "ゅ": "ю", "ょ": "ё", "っ": "цу" }[sm], "small " + INFO[big][1]];
+  }
+})();
+const isSmall = (k) => !!SMALL[k];
+// для проверки «похоже на другой знак» — только обычные знаки (маленькие повторяют форму больших)
+const BASE_KANA = Object.fromEntries(ALL_KANA.map((k) => [k, KANA[k]]));
 
 /* ===================== Ответы на чтение ===================== */
 function norm(s) {
@@ -1603,7 +1661,15 @@ function writeTask(opts) {
     opts.onDone({ firstOk: !!firstOk, helped, skipped: !!skipped, attempts });
   }
   function check() {
-    const res = Recog.evaluate(pad.strokes, KANA[k], KANA);
+    const res = Recog.evaluate(pad.strokes, KANA[k], BASE_KANA);
+    // маленькую ゃゅょっ надо писать мельче: не больше ~ двух третей клетки
+    if (res.pass && isSmall(k)) {
+      const xs = pad.strokes.flat().map((p) => p[0]), ys = pad.strokes.flat().map((p) => p[1]);
+      if (Math.max(Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys)) > 74) {
+        res.pass = false; res.grade = "fail";
+        res.messages.unshift(`Форма верная, но это маленькая ${SMALL[k]}: пиши её мельче, в нижней части клетки.`);
+      }
+    }
     attempts++;
     if (firstOk === null) firstOk = res.pass && !helped;
     pad.showResult(res, k);
@@ -1751,15 +1817,19 @@ function startLesson(li) {
   const light = L.kind === "dakuten";
   const phases = [];
   phases.push({ t: "intro" });
-  if (L.kind !== "yoon") {
+  if (L.kind === "numbers") {
+    phases.push({ t: "numread" }, { t: "numwrite" }, { t: "numbuild" });
+  } else if (L.kind !== "yoon") {
     kana.forEach((k) => phases.push({ t: "meet", k }));
     phases.push({ t: "drill" });
   } else {
     phases.push({ t: "yoon" });
   }
-  phases.push({ t: "words" });
-  if (L.kind !== "yoon") phases.push({ t: "dict" });
-  else phases.push({ t: "final" });
+  if (L.kind !== "numbers") {
+    phases.push({ t: "words" });
+    if (L.kind !== "yoon") phases.push({ t: "dict" });
+    else phases.push({ t: "final" });
+  }
   phases.push({ t: "finish" });
   const stats = { wOk: 0, wTot: 0, rOk: 0, rTot: 0 };
   let pi = -1;
@@ -1790,12 +1860,15 @@ function startLesson(li) {
     if (ph.t === "words") return words();
     if (ph.t === "dict") return dictation();
     if (ph.t === "final") return finalTest();
+    if (ph.t === "numread") return numRead();
+    if (ph.t === "numwrite") return numWrite();
+    if (ph.t === "numbuild") return numBuild();
     if (ph.t === "finish") return finish();
   }
 
   function phaseName(ph) {
     if (ph.t === "meet") return `знакомство с ${ph.k}`;
-    return { drill: "закрепление", yoon: "слияния", words: "чтение слов", dict: "диктант", final: "итоговая проверка" }[ph.t] || "начало";
+    return { numread: "чтение чисел", numwrite: "письмо чисел", numbuild: "составные числа", drill: "закрепление", yoon: "слияния", words: "чтение слов", dict: "диктант", final: "итоговая проверка" }[ph.t] || "начало";
   }
   function intro() {
     sh.stage("начало");
@@ -1808,6 +1881,11 @@ function startLesson(li) {
       parts.push(h("p", {}, "Тэнтэн и кружок пишут последними: сначала весь знак, потом штрихи слева направо или кружок."));
       if (L.kana.includes("ぢ") || L.kana.includes("じ")) parts.push(h("p", {}, "じ и ぢ читаются одинаково — «дзи», ず и づ — «дзу». В словах почти всегда пишут じ и ず, а ぢ и づ встречаются редко."));
       parts.push(h("p", { class: "muted" }, "Для каждого знака: посмотри анимацию и сразу напиши по памяти. Потом закрепление, слова и короткий диктант."));
+    } else if (L.kind === "numbers") {
+      parts.push(h("div", { class: "num-table" }, NUMS.map(([d, w, c, , alt]) => h("div", { class: "num-cell" }, h("b", { class: "num" }, d), h("span", { class: "ja", lang: "ja" }, w), h("small", {}, c + (alt ? " *" : ""))))),
+        h("p", { class: "muted" }, "* У 4, 7 и 9 есть второе чтение: し «си», しち «сити», く «ку». В счёте чаще говорят よん, なな, きゅう."),
+        h("p", {}, "Составные числа складываются как в русском: 24 = に じゅう よん «два десятка четыре». После さん, ろく, はち ひゃく и せん меняются: さんびゃく, ろっぴゃく, はっぴゃく, さんぜん, はっせん."),
+        h("p", { class: "muted" }, "Маленькие ゃ ゅ っ в きゅう, じゅう, ひゃく пишут мельче, в нижней части клетки."));
     } else if (L.kind === "yoon") {
       parts.push(h("p", {}, "き + маленькая ゃ = きゃ «кя». Маленькие ゃ ゅ ょ пишут в пол-клетки, ниже и ближе к предыдущему знаку."),
         h("div", { class: "pairs" }, ["きゃ", "しゅ", "ちょ", "じゃ", "りょ"].map((y) => h("span", { class: "pair" }, h("span", { class: "ja", lang: "ja" }, y), h("span", {}, sylOpts(y, 0)[0] + " · " + sylOpts(y, 1)[0])))),
@@ -1943,6 +2021,85 @@ function startLesson(li) {
     word();
   }
 
+  function numRead() {
+    const st = takeSub();
+    const items = st && st.items ? st.items : shuffle(NUMS.map((n) => n[0]));
+    let i = st ? st.i || 0 : 0;
+    const serve = () => {
+      sh.stage("чтение чисел"); sh.count(`${i} / ${items.length}`);
+      if (i >= items.length) return next();
+      keep({ items, i });
+      const n = NUMS.find((x) => x[0] === items[i]);
+      const ans = answersFor(n[1], n[2], n[3]); ans.add(n[0]);
+      sh.set(readTask({ reward: true, show: n[1], big: n[1].length > 3 ? false : undefined, label: "Какое это число? Напиши цифрами или чтение", answers: ans, reveal: `${n[0]} — ${n[2]} · ${n[3]}`, sayText: n[1], onDone: (r) => { stats.rTot++; if (r.ok) stats.rOk++; i++; serve(); } }));
+    };
+    serve();
+  }
+  function numWrite() {
+    const st = takeSub();
+    const list = st && st.list ? st.list : shuffle(NUMS.map((n) => n[0]));
+    let wi = st ? st.wi || 0 : 0;
+    function word() {
+      sh.stage("письмо чисел"); sh.count(`${wi} / ${list.length}`);
+      if (wi >= list.length) return next();
+      keep({ list, wi });
+      const n = NUMS.find((x) => x[0] === list[wi]), chars = [...n[1]];
+      let ci = 0;
+      function one() {
+        const c = chars[ci], small = isSmall(c);
+        const slots = h("div", { class: "slots", "aria-label": "Число" }, chars.map((x, j) => h("span", { class: "slot" + (j < ci ? "" : " empty") + (j === ci ? " cur" : "") + (isSmall(x) ? " small" : ""), lang: "ja" }, x)));
+        const head = h("div", { class: "task-head" }, h("div", { class: "task-label" }, `Запиши хираганой: знак ${ci + 1} из ${chars.length}`), h("div", { class: "task-big num" }, n[0]), h("div", { class: "task-sub" }, `${n[2]} · ${n[3]}`, sayBtn(n[1])));
+        const task = writeTask({ reward: true, k: c, mode: "memory", allowForgot: true,
+          label: small ? "Пиши мельче, в нижней части клетки" : `Какой знак даёт «${INFO[c][0]}»?`,
+          nextLabel: ci + 1 < chars.length ? "Следующий знак" : "Готово",
+          onDone: (r) => { stats.wTot++; if (r.firstOk) stats.wOk++; ci++; if (ci < chars.length) one(); else { wi++; word(); } } });
+        sh.set(h("div", { class: "task" }, head, slots, task));
+      }
+      one();
+    }
+    word();
+  }
+  function numBuild() {
+    const st = takeSub();
+    const list = st && st.list ? st.list : shuffle(NUM_COMBOS.map((n) => n[0])).slice(0, 8);
+    let i = st ? st.i || 0 : 0;
+    function serve() {
+      sh.stage("составные числа"); sh.count(`${i} / ${list.length}`);
+      if (i >= list.length) return next();
+      keep({ list, i });
+      const [d, toks, cyr, hint] = NUM_COMBOS.find((x) => x[0] === list[i]);
+      const need = toks.length, picked = [];
+      const decoys = shuffle(NUM_DECOYS.filter((x) => !toks.includes(x))).slice(0, Math.max(2, 6 - new Set(toks).size));
+      const tiles = shuffle(toks.map((t, j) => ({ t, id: "a" + j })).concat(decoys.map((t, j) => ({ t, id: "d" + j }))));
+      const slots = h("div", { class: "num-slots" });
+      const pool = h("div", { class: "num-tiles" });
+      const fb = h("div", { class: "act-bar", hidden: true });
+      let done = false;
+      const draw = () => {
+        slots.replaceChildren(...Array.from({ length: need }, (_, j) => h("button", { class: "num-slot" + (picked[j] ? " full" : ""), type: "button", lang: "ja", disabled: done || !picked[j], onclick: () => { picked.splice(j, 1); draw(); } }, picked[j] ? picked[j].t : "")));
+        pool.replaceChildren(...tiles.map((tl) => h("button", { class: "num-tile", type: "button", lang: "ja", disabled: done || picked.includes(tl) || picked.length >= need, onclick: () => { picked.push(tl); draw(); if (picked.length === need) check(); } }, tl.t)));
+      };
+      function check() {
+        done = true; draw();
+        const ok = picked.map((x) => x.t).join("") === toks.join("");
+        stats.wTot++; if (ok) { stats.wOk++; award(1); }
+        fb.hidden = false;
+        const nextBtn = h("button", { class: "btn primary", type: "button", onclick: () => { i++; serve(); } }, "Дальше");
+        const again = h("button", { class: "btn", type: "button", onclick: () => { done = false; picked.length = 0; fb.hidden = true; draw(); } }, "Ещё раз");
+        fb.replaceChildren(
+          h("div", { class: "act-verdict " + (ok ? "ok" : "bad") }, mascot(ok ? "happy" : "sad"),
+            h("div", {}, h("div", { class: "verdict-title" }, ok ? jpTitle("good") : jpTitle("oops"), ok ? "Верно" : "Не совсем", ok ? h("span", { class: "gain" }, "+1 ★") : null),
+              h("div", { class: "act-reveal" }, h("span", { lang: "ja" }, toks.join("")), ` — «${cyr}»`), h("div", { class: "muted" }, hint))),
+          ok ? nextBtn : h("div", { class: "act-row" }, again, nextBtn));
+      }
+      draw();
+      sh.set(h("div", { class: "task" },
+        h("div", { class: "task-head" }, h("div", { class: "task-label" }, "Собери число из кусочков хираганы"), h("div", { class: "task-big num" }, d), sayBtn(toks.join(""))),
+        slots, pool, fb));
+    }
+    serve();
+  }
+
   function finalTest() {
     const st = takeSub();
     const pool = learned().filter((k) => KANA[k]);
@@ -1974,7 +2131,7 @@ function startLesson(li) {
       h("div", { class: "big-stats" },
         h("div", {}, h("b", {}, pct(stats.wOk, stats.wTot)), h("span", {}, "письмо с первой попытки")),
         h("div", {}, h("b", {}, pct(stats.rOk, stats.rTot)), h("span", {}, "чтение"))),
-      h("p", { class: "note" }, kana.length ? `Новые знаки попали в повторение. Завтра начни с него: так знаки переходят в долгую память.` : "Хирагана пройдена целиком. Дальше — только повторение по расписанию."),
+      h("p", { class: "note" }, L.kind === "numbers" ? "Числа пройдены! Если в задании попадётся число вроде 47, складывай его по кусочкам: よん じゅう なな." : kana.length ? `Новые знаки попали в повторение. Завтра начни с него: так знаки переходят в долгую память.` : "Хирагана пройдена целиком. Дальше — только повторение по расписанию."),
       h("div", { class: "row", style: "justify-content:center" },
         h("button", { class: "btn primary", type: "button", onclick: () => closeShell() }, "К урокам"),
         nxt >= 0 && nxt !== li ? h("button", { class: "btn", type: "button", onclick: () => { closeShell(); startLesson(nxt); } }, `Урок ${nxt + 1}`) : null)));
@@ -2819,6 +2976,7 @@ function viewFor(t) { return t === "home" ? homeView() : t === "review" ? review
 function renderChrome() {
   const pt = document.getElementById("pet-tab"); if (pt) pt.textContent = S.pet.name;
   const bp = document.getElementById("brand-pet"); if (bp) bp.textContent = petCase("ins");
+  const bn = document.getElementById("brand-n"); if (bn) bn.textContent = String(LESSONS.length);
   const bm = document.getElementById("brand-mascot"); if (bm) bm.replaceChildren(mascot(petMood()));
   document.querySelectorAll(".tab").forEach((t) => t.setAttribute("aria-selected", String(t.dataset.tab === tab)));
   updateBadge();
@@ -2877,7 +3035,7 @@ function homeView() {
   } else if (ni >= 0) {
     const L = LESSONS[ni];
     today.append(h("h2", {}, `Урок ${ni + 1}. ${L.title}`),
-      L.kana ? h("div", { class: "lesson-kana", lang: "ja" }, L.kana) : null,
+      h("div", { class: "lesson-kana", lang: "ja" }, L.kana || (L.kind === "numbers" ? "いち に さん … まん" : "きゃ きゅ きょ っ")),
       h("p", { class: "muted" }, "Около 20 минут."));
     actions.append(h("button", { class: "btn primary", type: "button", onclick: () => startLesson(ni) }, lessonResume(ni) ? `Продолжить урок ${ni + 1}` : ni === 0 ? "Начать первый урок" : `Начать урок ${ni + 1}`));
   } else {
@@ -2892,7 +3050,7 @@ function homeView() {
   // карта уроков: 12 плиток вместо длинного списка
   const path = h("div", { class: "path" }, LESSONS.map((L, i) => {
     const done = lessonDone(i), res = lessonResume(i), next = i === ni;
-    const kana = [...(L.kana || "きゃっ")];
+    const kana = [...(L.kana || (L.kind === "numbers" ? "いちにさん" : "きゃっ"))];
     return h("button", { class: "path-tile" + (done ? " done" : "") + (next ? " next" : ""), type: "button", onclick: () => startLesson(i), "aria-label": `Урок ${i + 1}. ${L.title}${done ? ", пройден" : res ? ", начат" : next ? ", следующий" : ""}` },
       h("span", { class: "path-no" }, String(i + 1)),
       h("span", { class: "path-kana", lang: "ja" }, kana.slice(0, 3).join("") + (kana.length > 3 ? "…" : "")),
