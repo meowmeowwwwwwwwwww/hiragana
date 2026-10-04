@@ -362,6 +362,24 @@ body.in-session .star-toast { bottom: calc(24px + env(safe-area-inset-bottom, 0p
 .play-card { display: grid; grid-template-columns: 84px 1fr; gap: 14px; align-items: center; margin-bottom: 20px; }
 .play-ico svg { width: 84px; height: 84px; display: block; }
 .play-body { display: grid; gap: 6px; justify-items: start; }
+.compact-label { text-align: center; }
+.word-task { gap: 10px; }
+.word-task .slots .slot { width: 50px; height: 50px; font-size: 30px; }
+.word-task .pad { max-width: max(220px, min(420px, calc(100dvh - 580px - env(safe-area-inset-bottom, 0px)))); }
+.order-ticket { display: flex; align-items: center; gap: 10px; padding: 10px 14px 10px 8px; border-radius: 22px; background: #FFFDF6; border: 3px solid #fff; box-shadow: 0 0 0 2px var(--line), var(--shadow); position: relative; }
+.order-ticket::after { content: ""; position: absolute; left: 16px; right: 16px; bottom: -8px; height: 8px; background: radial-gradient(circle at 6px 0, transparent 5px, #FFFDF6 5.5px) 0 0 / 12px 8px repeat-x; }
+.order-pet .mascot { width: 64px; height: 64px; }
+.order-body { display: grid; gap: 1px; min-width: 0; }
+.order-say { font-size: 13px; font-weight: 800; color: var(--primary); }
+.order-ru { font-size: 22px; font-weight: 800; color: var(--ink); line-height: 1.2; }
+.order-sub { display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--muted); }
+.order-sub .icon-btn { width: 34px; height: 34px; }
+.order-combo { font-size: 12px; font-weight: 800; color: #fff; background: var(--primary); border-radius: 999px; padding: 2px 9px; }
+.order-log { display: grid; gap: 6px; width: 100%; max-width: 420px; text-align: left; }
+.order-log-row { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 6px 12px; border-radius: 16px; background: #fff; color: var(--muted); }
+.order-log-row .ja { font-size: 20px; color: var(--ink); }
+.order-log-row b { color: var(--muted); }
+.order-log-row.ok b { color: var(--primary); }
 .fetch-scene { display: flex; align-items: flex-end; justify-content: center; gap: 4px; }
 .fetch-pet .mascot { width: 150px; height: 150px; }
 .fetch-ball {
@@ -2358,7 +2376,8 @@ function writeTask(opts) {
   const tools = h("div", { class: "tools" }, undoBtn, clearBtn, hintBtn, checkBtn);
   function showTools() { if (!finished && !bar.contains(tools)) bar.replaceChildren(tools); }
   const hint = HINT[k] ? h("span", { class: "hint-chip" }, HINT[k]) : null;
-  const head = h("div", { class: "task-head" },
+  // compact: над клеткой только одна строчка — когда сверху уже есть своя карточка (диктант, заказы)
+  const head = opts.compact ? h("div", { class: "task-label compact-label" }, opts.label, " ", h("span", { class: "muted" }, "· " + Recog.cherta(KANA[k].length))) : h("div", { class: "task-head" },
     h("div", { class: "task-label" }, opts.label || (trace ? "Обведи знак по розовому образцу" : "Напиши по памяти")),
     trace ? h("div", { class: "task-big ja", lang: "ja" }, k) : h("div", { class: "task-big" }, INFO[k][0]),
     h("div", { class: "task-sub" }, trace ? readingLine(k) : INFO[k][1], hint, sayBtn(k), trace ? null : h("span", { class: "muted" }, "· " + Recog.cherta(KANA[k].length)))
@@ -2730,8 +2749,8 @@ function startLesson(li) {
       function one() {
         const slots = h("div", { class: "slots", "aria-label": "Слово" }, chars.map((c, j) => h("span", { class: "slot" + (j < ci ? "" : " empty") + (j === ci ? " cur" : ""), lang: "ja" }, c)));
         const head = h("div", { class: "task-head" }, h("div", { class: "task-label" }, `Запиши слово: знак ${ci + 1} из ${chars.length}`), h("div", { class: "task-big" }, w[1]), h("div", { class: "task-sub" }, `${w[2]} — ${w[3]}`, sayBtn(w[0])));
-        const task = writeTask({ reward: true, k: chars[ci], mode: "memory", label: `Какой знак даёт «${INFO[chars[ci]][0]}»?`, nextLabel: ci + 1 < chars.length ? "Следующий знак" : "Готово", onDone: (r) => { stats.wTot++; if (r.firstOk) stats.wOk++; ci++; if (ci < chars.length) one(); else { wi++; word(); } } });
-        sh.set(h("div", { class: "task" }, head, slots, task));
+        const task = writeTask({ reward: true, compact: true, k: chars[ci], mode: "memory", label: `Какой знак даёт «${INFO[chars[ci]][0]}»?`, nextLabel: ci + 1 < chars.length ? "Следующий знак" : "Готово", onDone: (r) => { stats.wTot++; if (r.firstOk) stats.wOk++; ci++; if (ci < chars.length) one(); else { wi++; word(); } } });
+        sh.set(h("div", { class: "task word-task" }, head, slots, task));
       }
       one();
     }
@@ -2766,11 +2785,11 @@ function startLesson(li) {
         const c = chars[ci], small = isSmall(c);
         const slots = h("div", { class: "slots", "aria-label": "Число" }, chars.map((x, j) => h("span", { class: "slot" + (j < ci ? "" : " empty") + (j === ci ? " cur" : "") + (isSmall(x) ? " small" : ""), lang: "ja" }, x)));
         const head = h("div", { class: "task-head" }, h("div", { class: "task-label" }, `Запиши хираганой: знак ${ci + 1} из ${chars.length}`), h("div", { class: "task-big num" }, n[0]), h("div", { class: "task-sub" }, `${n[2]} · ${n[3]}`, sayBtn(n[1])));
-        const task = writeTask({ reward: true, k: c, mode: "memory", allowForgot: true,
-          label: small ? "Пиши мельче, в нижней части клетки" : `Какой знак даёт «${INFO[c][0]}»?`,
+        const task = writeTask({ reward: true, k: c, mode: "memory", allowForgot: true, compact: true,
+          label: small ? "Маленький знак — мельче, внизу клетки" : `Какой знак даёт «${INFO[c][0]}»?`,
           nextLabel: ci + 1 < chars.length ? "Следующий знак" : "Готово",
           onDone: (r) => { stats.wTot++; if (r.firstOk) stats.wOk++; ci++; if (ci < chars.length) one(); else { wi++; word(); } } });
-        sh.set(h("div", { class: "task" }, head, slots, task));
+        sh.set(h("div", { class: "task word-task" }, head, slots, task));
       }
       one();
     }
@@ -3356,7 +3375,16 @@ function openGamesSheet() {
         h("div", { class: "play-ico" }, svgNode(DEV_ICONS.games)),
         h("div", { class: "play-body" }, h("h3", {}, "Апорт"),
           h("p", { class: "muted" }, canPlay ? `${S.pet.name} приносит мячик со знаком, а ты говоришь, как он читается. Поднимает настроение, даёт до 10 ★ в день.` : "Откроется, когда выучишь хотя бы 4 знака."),
-          h("button", { class: "btn primary", type: "button", disabled: !canPlay, onclick: () => { close(); startFetch(); } }, "Играть")))];
+          h("button", { class: "btn primary", type: "button", disabled: !canPlay, onclick: () => { close(); startFetch(); } }, "Играть"))),
+      (() => {
+        const pool = orderWords(), ok = pool.length >= 3, best = S.pet.wordBest || 0;
+        return h("section", { class: "panel play-card" },
+          h("div", { class: "play-ico" }, svgNode(ORDER_ICON)),
+          h("div", { class: "play-body" }, h("h3", {}, "Заказы ", h("span", { lang: "ja" }, "ちゅうもん")),
+            h("p", { class: "muted" }, ok ? `${S.pet.name} заказывает 5 вещей, а ты пишешь их хираганой от руки. Три сердечка, серия без ошибок, до 10 ★ в день.` : "Откроется, когда выучишь знаки хотя бы трёх слов из уроков."),
+            best ? h("p", { class: "muted", style: "font-size:13px" }, `Рекорд: ${best} ${plural(best, "очко", "очка", "очков")}`) : null,
+            h("button", { class: "btn primary", type: "button", disabled: !ok, onclick: () => { close(); startOrders(); } }, "Играть")));
+      })()];
   }, { live: true });
 }
 function gachaOwnedGrid() {
@@ -3538,6 +3566,81 @@ function openGacha() {
     actions.replaceChildren(wearBtn, again);
   }
   idle();
+}
+
+/* Игра «Заказы Мони» (ちゅうもん): пишешь слова хираганой от руки */
+const ORDER_ICON = `<svg viewBox="0 0 100 100" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M22 12 H78 V88 L70 82 L62 88 L54 82 L46 88 L38 82 L30 88 L22 82 Z" fill="#FFFDF6" stroke="#5A3848" stroke-width="5" stroke-linejoin="round"/><path d="M32 30 H68 M32 44 H60 M32 58 H64" stroke="#FFB0CD" stroke-width="5" stroke-linecap="round"/><text x="50" y="27" font-size="0"> </text><path d="M64 66 l14 -26 6 4 -14 26 -8 4z" fill="#FF7FA8" stroke="#5A3848" stroke-width="4" stroke-linejoin="round"/></svg>`;
+// слова из уроков (и числа), все знаки которых уже выучены; маленькие ゃゅょっ — если выучен большой знак
+function orderWords() {
+  const all = LESSONS.flatMap((L) => L.words).map((w) => ({ w: w[0], cyr: w[1], ru: w[3] }))
+    .concat(NUMS.map((n) => ({ w: n[1], cyr: n[2], ru: "число " + n[0] })));
+  const ok = (c) => (SMALL[c] ? known(SMALL[c]) : known(c)) && KANA[c];
+  const seen = new Set();
+  return all.filter((x) => [...x.w].length <= 5 && [...x.w].every(ok) && !seen.has(x.w) && seen.add(x.w));
+}
+function startOrders() {
+  const pool = orderWords();
+  if (pool.length < 3) return;
+  const sh = openShell("Заказы");
+  const today = dayKey();
+  if (!S.pet.wgame || S.pet.wgame.day !== today) S.pet.wgame = { day: today, stars: 0 };
+  const ROUND = 5, orders = shuffle(pool.slice()).slice(0, ROUND);
+  let wi = 0, hearts = 3, combo = 0, bestCombo = 0, score = 0, gained = 0;
+  const log = [];
+  const heartsTxt = () => "♥".repeat(hearts) + "♡".repeat(3 - hearts);
+  const give = (n) => { const left = Math.max(0, 10 - S.pet.wgame.stars), g = Math.min(left, n); if (g) { S.pet.wgame.stars += g; S.pet.stars += g; gained += g; toastStars(g); } };
+  function word() {
+    sh.progress(wi / orders.length); sh.stage(`заказ ${Math.min(wi + 1, orders.length)} из ${orders.length}`); sh.count(heartsTxt());
+    if (wi >= orders.length || hearts <= 0) return finish();
+    const o = orders[wi], chars = [...o.w];
+    let ci = 0, clean = true;
+    function one() {
+      const c = chars[ci];
+      const ticket = h("div", { class: "order-ticket" },
+        h("div", { class: "order-pet" }, mascot(combo >= 3 ? "great" : combo ? "happy" : "normal", true)),
+        h("div", { class: "order-body" },
+          h("div", { class: "order-say" }, h("span", { lang: "ja" }, "ください！"), " Хочу…"),
+          h("div", { class: "order-ru" }, o.ru),
+          h("div", { class: "order-sub" }, `«${o.cyr}»`, sayBtn(o.w), combo >= 2 ? h("span", { class: "order-combo" }, `серия ×${combo}`) : null)));
+      const slots = h("div", { class: "slots" }, chars.map((x, j) => h("span", { class: "slot" + (j < ci ? "" : " empty") + (j === ci ? " cur" : "") + (isSmall(x) ? " small" : ""), lang: "ja" }, x)));
+      const task = writeTask({ k: c, mode: "memory", allowForgot: true, compact: true,
+        label: isSmall(c) ? "Маленький знак — мельче, внизу клетки" : `Знак ${ci + 1} из ${chars.length}: «${INFO[c][0]}»`,
+        nextLabel: ci + 1 < chars.length ? "Следующий знак" : "Отдать заказ",
+        onDone: (r) => {
+          if (!r.firstOk || r.helped || r.skipped) {
+            if (clean) { clean = false; hearts--; combo = 0; }
+          }
+          ci++;
+          if (ci < chars.length && hearts > 0) return one();
+          // слово готово
+          if (clean) { combo++; bestCombo = Math.max(bestCombo, combo); score += 10 * combo; give(1); petCommit(0, 5); }
+          log.push({ o, clean });
+          save();
+          wi++; word();
+        } });
+      sh.count(heartsTxt());
+      sh.set(h("div", { class: "task word-task" }, ticket, slots, task));
+    }
+    one();
+  }
+  function finish() {
+    sh.progress(1); sh.stage("итоги"); sh.count(heartsTxt());
+    const perfect = log.length === orders.length && log.every((x) => x.clean);
+    if (perfect) { score += 20; give(2); }
+    const best = S.pet.wordBest || 0, record = score > best;
+    if (record) S.pet.wordBest = score;
+    save();
+    sh.set(h("div", { class: "summary" },
+      h("div", { class: "say-row" }, mascot(hearts > 0 ? "happy" : "sad", true), hearts > 0 ? bubble("yay", perfect ? "Все заказы без ошибок!" : "Спасибо за заказы!") : bubble("cheer", "Сердечки кончились")),
+      h("h2", {}, `${score} ${plural(score, "очко", "очка", "очков")}`),
+      record ? h("div", { class: "gain" }, "Новый рекорд! ✦") : h("p", { class: "muted" }, `Рекорд: ${best}`),
+      h("div", { class: "order-log" }, log.map(({ o, clean }) => h("div", { class: "order-log-row" + (clean ? " ok" : "") }, h("span", { class: "ja", lang: "ja" }, o.w), h("span", {}, `«${o.cyr}» — ${o.ru}`), h("b", {}, clean ? "♥" : "♡")))),
+      h("p", { class: "muted" }, gained ? `+${gained} ★ для ${petCase("gen")}. Серия: ${bestCombo}.` : S.pet.wgame.stars >= 10 ? "Звёздочки за сегодня уже собраны, но очки и рекорд считаются." : `Серия: ${bestCombo}.`),
+      h("div", { class: "row", style: "justify-content:center" },
+        h("button", { class: "btn primary", type: "button", onclick: () => { closeShell(); startOrders(); } }, "Ещё раунд"),
+        h("button", { class: "btn", type: "button", onclick: () => { closeShell(); goTab("pet"); } }, `К ${petCase("dat")}`))));
+  }
+  word();
 }
 
 /* Игра «Апорт»: чтение знаков */
