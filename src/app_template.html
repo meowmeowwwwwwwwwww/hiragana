@@ -355,20 +355,68 @@ body.in-session .star-toast { bottom: calc(24px + env(safe-area-inset-bottom, 0p
 .word-task { gap: 10px; }
 .word-task .slots .slot { width: 50px; height: 50px; font-size: 30px; }
 .word-task .pad { max-width: max(220px, min(420px, calc(100dvh - 580px - env(safe-area-inset-bottom, 0px)))); }
-.order-ticket { display: flex; align-items: center; gap: 10px; padding: 10px 14px 10px 8px; border-radius: 22px; background: #FFFDF6; border: 3px solid #fff; box-shadow: 0 0 0 2px var(--line), var(--shadow); position: relative; }
-.order-ticket::after { content: ""; position: absolute; left: 16px; right: 16px; bottom: -8px; height: 8px; background: radial-gradient(circle at 6px 0, transparent 5px, #FFFDF6 5.5px) 0 0 / 12px 8px repeat-x; }
-.order-pet .mascot { width: 64px; height: 64px; }
-.order-body { display: grid; gap: 1px; min-width: 0; }
-.order-say { font-size: 13px; font-weight: 800; color: var(--primary); }
-.order-ru { font-size: 22px; font-weight: 800; color: var(--ink); line-height: 1.2; }
-.order-sub { display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--muted); }
-.order-sub .icon-btn { width: 34px; height: 34px; }
-.order-combo { font-size: 12px; font-weight: 800; color: #fff; background: var(--primary); border-radius: 999px; padding: 2px 9px; }
-.order-log { display: grid; gap: 6px; width: 100%; max-width: 420px; text-align: left; }
-.order-log-row { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 6px 12px; border-radius: 16px; background: #fff; color: var(--muted); }
-.order-log-row .ja { font-size: 20px; color: var(--ink); }
-.order-log-row b { color: var(--muted); }
-.order-log-row.ok b { color: var(--primary); }
+/* Мини-игра «Заказы»: кафе Мони */
+.cafe { position: relative; padding: 30px 10px 0; border-radius: 24px; overflow: hidden; background: linear-gradient(180deg, #FFF7EC, #FFEFE0); box-shadow: 0 0 0 3px #fff, var(--shadow); }
+.cafe-noren { position: absolute; top: 0; left: 0; right: 0; height: 26px; display: flex; gap: 3px; padding: 0 10px; }
+.cafe-noren span { flex: 1; display: grid; place-items: center; background: linear-gradient(180deg, #FF7FA8, #FF9EC0); color: #fff; font-family: var(--kana); font-weight: 600; font-size: 14px; border-radius: 0 0 10px 10px; box-shadow: inset 0 -3px 0 rgb(200 40 100 / .18); }
+.cafe-top { display: flex; justify-content: space-between; align-items: center; margin: 4px 2px 6px; }
+.cafe-queue { display: flex; gap: 4px; }
+.cafe-chit { width: 24px; height: 28px; display: grid; place-items: center; border-radius: 6px 6px 2px 2px; background: #fff; box-shadow: 0 2px 0 var(--line); font-size: 12px; font-weight: 800; color: var(--muted); }
+.cafe-chit.cur { background: var(--primary); color: #fff; box-shadow: 0 2px 0 var(--primary-deep); transform: translateY(-2px); }
+.cafe-chit.ok { color: var(--primary); }
+.cafe-chit.meh { color: var(--muted); opacity: .7; }
+.cafe-hearts { display: flex; gap: 2px; }
+.cafe-heart { font-size: 22px; line-height: 1; color: #FF5C8A; text-shadow: 0 2px 0 #fff; transition: transform .3s; }
+.cafe-heart.lost { color: #E6C9D4; transform: scale(.85); }
+.cafe-row { position: relative; z-index: 1; display: flex; align-items: flex-end; gap: 8px; }
+.cafe-pet .mascot { width: 84px; height: 84px; display: block; }
+.cafe-bubble { position: relative; flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding: 8px 12px 8px 8px; background: #fff; border-radius: 20px; box-shadow: var(--shadow); animation: cafe-in .4s cubic-bezier(.3, 1.5, .5, 1); }
+.cafe-bubble::before { content: ""; position: absolute; left: -8px; bottom: 16px; width: 14px; height: 14px; background: #fff; transform: rotate(45deg); border-radius: 2px; }
+.cafe-pic { flex: none; width: 58px; height: 58px; display: grid; place-items: center; border-radius: 16px; background: #FFF0F5; }
+.cafe-emo { font-size: 38px; line-height: 1; display: inline-block; }
+.cafe-num { font-size: 24px; font-weight: 800; color: var(--primary); font-variant-numeric: tabular-nums; }
+.cafe-emo.fly, .cafe-num.fly { animation: cafe-fly .9s cubic-bezier(.4, 0, .6, 1) forwards; }
+.cafe-text { min-width: 0; display: grid; gap: 0; }
+.cafe-say { font-family: var(--kana); font-weight: 600; font-size: 13px; color: var(--primary); }
+.cafe-ru { font-size: 20px; font-weight: 800; line-height: 1.15; color: var(--ink); overflow-wrap: anywhere; }
+.cafe-read { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; color: var(--muted); }
+.cafe-read .icon-btn { width: 30px; height: 30px; }
+.cafe-counter { height: 16px; margin: -6px -10px 0; background: repeating-linear-gradient(90deg, #E9B98A 0 34px, #DDA877 34px 36px); box-shadow: inset 0 3px 0 #F4CFA6; }
+.cafe-combo { position: absolute; top: 34px; right: 12px; z-index: 2; padding: 3px 12px; border-radius: 999px; background: linear-gradient(180deg, #FFE27A, #FFC94D); color: #7A5A12; font-weight: 800; font-size: 14px; box-shadow: 0 3px 0 #E0B53A; animation: cafe-combo .6s cubic-bezier(.3, 1.6, .5, 1); }
+.cafe-stamp { position: absolute; right: 10px; top: 50%; padding: 2px 10px; border: 3px solid var(--accent); border-radius: 10px; color: var(--accent); font-family: var(--kana); font-weight: 600; font-size: 20px; background: rgb(255 255 255 / .85); transform: translateY(-50%) rotate(-12deg); animation: cafe-stamp .35s cubic-bezier(.3, 1.6, .5, 1); }
+.cafe-stamp.meh { border-color: var(--muted); color: var(--muted); }
+.slot.pop { animation: cafe-pop .35s cubic-bezier(.3, 1.6, .5, 1); }
+@keyframes cafe-in { from { transform: translateY(10px) scale(.92); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes cafe-fly { 30% { transform: translateY(-10px) scale(1.2); } 100% { transform: translate(-110px, 30px) scale(.2); opacity: 0; } }
+@keyframes cafe-combo { from { transform: scale(.3) rotate(-10deg); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes cafe-stamp { from { transform: translateY(-50%) rotate(-12deg) scale(2.2); opacity: 0; } to { transform: translateY(-50%) rotate(-12deg); opacity: 1; } }
+@keyframes cafe-pop { 50% { transform: scale(1.18); } }
+.cafe-task { gap: 8px; }
+.cafe-task .pad { max-width: max(210px, min(420px, calc(100dvh - 620px - env(safe-area-inset-bottom, 0px)))); }
+/* Чек */
+.receipt { position: relative; width: 100%; max-width: 360px; padding: 18px 18px 22px; background: #FFFEFA; text-align: left; font-variant-numeric: tabular-nums; box-shadow: 0 8px 20px rgb(150 90 110 / .18);
+  -webkit-mask: radial-gradient(circle at 8px 0, transparent 6px, #000 6.5px) -8px 0 / 16px 51% repeat-x, radial-gradient(circle at 8px 100%, transparent 6px, #000 6.5px) -8px 100% / 16px 51% repeat-x;
+  mask: radial-gradient(circle at 8px 0, transparent 6px, #000 6.5px) -8px 0 / 16px 51% repeat-x, radial-gradient(circle at 8px 100%, transparent 6px, #000 6.5px) -8px 100% / 16px 51% repeat-x; }
+.rc-head { display: grid; justify-items: center; gap: 2px; }
+.rc-head b { font-family: var(--kana); font-size: 20px; color: var(--primary); }
+.rc-head span { font-size: 12px; color: var(--muted); font-weight: 700; }
+.rc-line { border-top: 2px dashed var(--line); margin: 10px 0; }
+.rc-row { display: grid; grid-template-columns: 26px auto 1fr auto; gap: 8px; align-items: center; padding: 3px 0; color: var(--ink); }
+.rc-row .ja { font-size: 18px; }
+.rc-ru { font-size: 13px; color: var(--muted); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rc-row b { color: var(--primary); }
+.rc-row.meh { opacity: .6; }
+.rc-row.meh b { color: var(--muted); }
+.rc-emo { font-size: 18px; text-align: center; }
+.rc-emo.num { font-size: 14px; font-weight: 800; color: var(--primary); }
+.rc-sum { display: flex; justify-content: space-between; font-weight: 700; color: var(--ink-soft); font-size: 14px; }
+.rc-sum.total { font-size: 18px; font-weight: 800; color: var(--ink); margin: 2px 0; }
+.rc-foot { text-align: left; padding-bottom: 14px; font-size: 13px; font-weight: 800; color: var(--muted); }
+.rc-stamp { position: absolute; right: 14px; bottom: 6px; padding: 4px 10px; border: 3px solid var(--accent); border-radius: 50%; color: var(--accent); font-family: var(--kana); font-weight: 600; font-size: 16px; transform: rotate(-14deg); opacity: .85; animation: cafe-stamp2 .5s cubic-bezier(.3, 1.6, .5, 1) .3s both; }
+.rc-stamp.meh { border-color: var(--muted); color: var(--muted); }
+@keyframes cafe-stamp2 { from { transform: rotate(-14deg) scale(2.4); opacity: 0; } to { transform: rotate(-14deg); opacity: .85; } }
+.cafe-end { gap: 12px; padding-block: 8px; }
+.cafe-end .say-row .mascot { width: 80px; height: 80px; }
 .fetch-scene { display: flex; align-items: flex-end; justify-content: center; gap: 4px; }
 .fetch-pet .mascot { width: 150px; height: 150px; }
 .fetch-ball {
@@ -682,6 +730,7 @@ html.sheet-open, html.sheet-open body { overflow: hidden; }
   .mascot.bounce, .float { animation: none; }
   .confetti, .pat-heart { display: none; }
   .star-toast, .fetch-ball, .dev-dot, .tools .btn.primary.ready { animation: none; }
+  .cafe-bubble, .cafe-combo, .cafe-stamp, .slot.pop, .rc-stamp, .cafe-emo.fly, .cafe-num.fly { animation: none; }
   .sp-stage::before, .sp-pet, .sp-hello span, .sp-read, .sp-sub, .sp-title, .sp-tap { animation: none; }
   .sp-deco { animation: none; transform: translate(var(--x), var(--y)); }
   .g-machine.turning .g-handle, .g-machine.turning .g-caps, .g-cap-btn, .g-capsule, .g-reveal { animation: none; }
@@ -2861,6 +2910,9 @@ function orderWords() {
   const seen = new Set();
   return all.filter((x) => [...x.w].length <= 5 && [...x.w].every(ok) && !seen.has(x.w) && seen.add(x.w));
 }
+const WORD_EMO = {"あい": "💗", "いえ": "🏠", "うえ": "⬆️", "あおい": "💙", "いいえ": "🙅", "かお": "😊", "あき": "🍁", "えき": "🚉", "こえ": "🗣️", "ここ": "📍", "おおきい": "🐘", "すし": "🍣", "あさ": "🌅", "かさ": "☂️", "しお": "🧂", "せかい": "🌏", "いす": "🪑", "たこ": "🐙", "くつ": "👟", "そと": "🌳", "あした": "📅", "つくえ": "🗄️", "ちかてつ": "🚇", "なつ": "🍉", "いぬ": "🐶", "ねこ": "🐱", "きのこ": "🍄", "おかね": "💴", "なに": "❓", "はな": "🌸", "ひと": "🧍", "ふね": "⛵", "ほし": "⭐", "ひこうき": "✈️", "へた": "😅", "みみ": "👂", "むし": "🐞", "あめ": "🌧️", "もも": "🍑", "なまえ": "📛", "うみ": "🌊", "やま": "🗻", "ゆき": "❄️", "ふゆ": "⛄", "わたし": "🙋", "にほん": "🗾", "ほんをよむ": "📖", "さくら": "🌸", "くるま": "🚗", "よる": "🌙", "はる": "🌷", "とり": "🐦", "いろ": "🎨", "かぎ": "🔑", "めがね": "👓", "みず": "💧", "かぞく": "👨‍👩‍👧", "ひらがな": "✍️", "にほんご": "🇯🇵", "まど": "🪟", "ともだち": "🤝", "どこ": "🗺️", "かばん": "👜", "ことば": "💬", "えんぴつ": "✏️", "さんぽ": "🐾", "きょう": "☀️", "おちゃ": "🍵", "しゃしん": "📷", "でんしゃ": "🚃", "ひゃく": "💯", "きって": "✉️", "ざっし": "📰", "がっこう": "🏫", "ちょっと": "🤏", "りょこう": "🧳"};
+// цифры — картинкой-числом
+const wordPic = (o) => WORD_EMO[o.w] ? h("span", { class: "cafe-emo", "aria-hidden": "true" }, WORD_EMO[o.w]) : h("span", { class: "cafe-num", "aria-hidden": "true" }, o.ru.replace("число ", ""));
 function startOrders() {
   const pool = orderWords();
   if (pool.length < 3) return;
@@ -2870,55 +2922,87 @@ function startOrders() {
   const ROUND = 5, orders = shuffle(pool.slice()).slice(0, ROUND);
   let wi = 0, hearts = 3, combo = 0, bestCombo = 0, score = 0, gained = 0;
   const log = [];
-  const heartsTxt = () => "♥".repeat(hearts) + "♡".repeat(3 - hearts);
   const give = (n) => { const left = Math.max(0, 10 - S.pet.wgame.stars), g = Math.min(left, n); if (g) { S.pet.wgame.stars += g; S.pet.stars += g; gained += g; toastStars(g); } };
+  const heartsEl = () => h("div", { class: "cafe-hearts", "aria-label": `Сердечек: ${hearts}` }, [0, 1, 2].map((i) => h("span", { class: "cafe-heart" + (i < hearts ? "" : " lost") }, i < hearts ? "♥" : "♡")));
+  const queueEl = () => h("div", { class: "cafe-queue" }, orders.map((o, i) => {
+    const done = log[i];
+    return h("span", { class: "cafe-chit" + (i === wi ? " cur" : "") + (done ? (done.clean ? " ok" : " meh") : "") }, done ? (done.clean ? "♥" : "♡") : String(i + 1));
+  }));
   function word() {
-    sh.progress(wi / orders.length); sh.stage(`заказ ${Math.min(wi + 1, orders.length)} из ${orders.length}`); sh.count(heartsTxt());
+    sh.progress(wi / orders.length); sh.stage(`заказ ${Math.min(wi + 1, orders.length)} из ${orders.length}`); sh.count("♥".repeat(hearts) + "♡".repeat(3 - hearts));
     if (wi >= orders.length || hearts <= 0) return finish();
     const o = orders[wi], chars = [...o.w];
     let ci = 0, clean = true;
-    function one() {
+    function one(stampLast) {
       const c = chars[ci];
-      const ticket = h("div", { class: "order-ticket" },
-        h("div", { class: "order-pet" }, mascot(combo >= 3 ? "great" : combo ? "happy" : "normal", true)),
-        h("div", { class: "order-body" },
-          h("div", { class: "order-say" }, h("span", { lang: "ja" }, "ください！"), " Хочу…"),
-          h("div", { class: "order-ru" }, o.ru),
-          h("div", { class: "order-sub" }, `«${o.cyr}»`, sayBtn(o.w), combo >= 2 ? h("span", { class: "order-combo" }, `серия ×${combo}`) : null)));
-      const slots = h("div", { class: "slots" }, chars.map((x, j) => h("span", { class: "slot" + (j < ci ? "" : " empty") + (j === ci ? " cur" : "") + (isSmall(x) ? " small" : ""), lang: "ja" }, x)));
+      const bubbleEl = h("div", { class: "cafe-bubble" },
+        h("div", { class: "cafe-pic" }, wordPic(o)),
+        h("div", { class: "cafe-text" },
+          h("div", { class: "cafe-say", lang: "ja" }, "ください！"),
+          h("div", { class: "cafe-ru" }, o.ru),
+          h("div", { class: "cafe-read" }, `«${o.cyr}»`, sayBtn(o.w))));
+      const scene = h("div", { class: "cafe" },
+        h("div", { class: "cafe-noren", "aria-hidden": "true" }, ["ち", "ゅ", "う", "も", "ん"].map((x) => h("span", {}, x))),
+        h("div", { class: "cafe-top" }, queueEl(), heartsEl()),
+        h("div", { class: "cafe-row" }, h("div", { class: "cafe-pet" }, mascot(combo >= 3 ? "great" : combo ? "happy" : "normal", true)), bubbleEl),
+        h("div", { class: "cafe-counter", "aria-hidden": "true" }),
+        combo >= 2 && ci === 0 ? h("div", { class: "cafe-combo" }, h("span", { lang: "ja" }, "れんぞく"), ` ×${combo}`) : null);
+      const slots = h("div", { class: "slots" }, chars.map((x, j) => h("span", { class: "slot" + (j < ci ? "" : " empty") + (j === ci ? " cur" : "") + (isSmall(x) ? " small" : "") + (j === ci - 1 && stampLast ? " pop" : ""), lang: "ja" }, x)));
       const task = writeTask({ k: c, mode: "memory", allowForgot: true, compact: true,
         label: isSmall(c) ? "Маленький знак — мельче, внизу клетки" : `Знак ${ci + 1} из ${chars.length}: «${INFO[c][0]}»`,
         nextLabel: ci + 1 < chars.length ? "Следующий знак" : "Отдать заказ",
         onDone: (r) => {
-          if (!r.firstOk || r.helped || r.skipped) {
-            if (clean) { clean = false; hearts--; combo = 0; }
-          }
+          if ((!r.firstOk || r.helped || r.skipped) && clean) { clean = false; hearts--; combo = 0; }
           ci++;
-          if (ci < chars.length && hearts > 0) return one();
-          // слово готово
+          if (ci < chars.length && hearts > 0) return one(true);
           if (clean) { combo++; bestCombo = Math.max(bestCombo, combo); score += 10 * combo; give(1); petCommit(0, 5); }
           log.push({ o, clean });
           save();
-          wi++; word();
+          served(o, clean);
         } });
-      sh.count(heartsTxt());
-      sh.set(h("div", { class: "task word-task" }, ticket, slots, task));
+      sh.set(h("div", { class: "task word-task cafe-task" }, scene, slots, task));
     }
-    one();
+    one(false);
+  }
+  // заказ отдан: печать на чеке, картинка улетает к Моне
+  function served(o, clean) {
+    const scene = document.querySelector(".cafe"), bub = document.querySelector(".cafe-bubble");
+    const go = () => { wi++; word(); };
+    if (!scene || reducedMotion()) return go();
+    const pet = scene.querySelector(".cafe-pet");
+    pet.replaceChildren(mascot(clean ? "great" : "happy", false));
+    if (bub) bub.append(h("span", { class: "cafe-stamp" + (clean ? "" : " meh"), lang: "ja" }, clean ? "できた！" : "おしい"));
+    const pic = scene.querySelector(".cafe-pic span");
+    if (pic) pic.classList.add("fly");
+    if (clean) petalBurst(scene);
+    setTimeout(go, 1100);
   }
   function finish() {
-    sh.progress(1); sh.stage("итоги"); sh.count(heartsTxt());
+    sh.progress(1); sh.stage("итоги"); sh.count("♥".repeat(hearts) + "♡".repeat(3 - hearts));
     const perfect = log.length === orders.length && log.every((x) => x.clean);
     if (perfect) { score += 20; give(2); }
     const best = S.pet.wordBest || 0, record = score > best;
     if (record) S.pet.wordBest = score;
     save();
-    sh.set(h("div", { class: "summary" },
+    const now = new Date();
+    const receipt = h("div", { class: "receipt" },
+      h("div", { class: "rc-head" }, h("b", { lang: "ja" }, "わんわん おみせ"), h("span", {}, `${dayKey()} · ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`)),
+      h("div", { class: "rc-line" }),
+      log.map(({ o, clean }) => h("div", { class: "rc-row" + (clean ? "" : " meh") },
+        h("span", { class: "rc-emo" + (WORD_EMO[o.w] ? "" : " num"), "aria-hidden": "true" }, WORD_EMO[o.w] || o.ru.replace("число ", "")), h("span", { class: "ja", lang: "ja" }, o.w), h("span", { class: "rc-ru" }, o.ru), h("b", {}, clean ? "♥" : "♡"))),
+      log.length < orders.length ? h("div", { class: "rc-row meh" }, h("span", {}), h("span", {}, `не успели: ${orders.length - log.length}`), h("span", {}), h("b", {}, "")) : null,
+      h("div", { class: "rc-line" }),
+      h("div", { class: "rc-sum" }, h("span", {}, "серия"), h("b", {}, String(bestCombo))),
+      perfect ? h("div", { class: "rc-sum" }, h("span", {}, "без ошибок"), h("b", {}, "+20")) : null,
+      h("div", { class: "rc-sum total" }, h("span", {}, "ИТОГО"), h("b", {}, `${score} ${plural(score, "очко", "очка", "очков")}`)),
+      gained ? h("div", { class: "rc-sum" }, h("span", {}, `для ${petCase("gen")}`), h("b", {}, `+${gained} ★`)) : null,
+      h("div", { class: "rc-line" }),
+      h("div", { class: "rc-foot" }, record ? "★ новый рекорд ★" : `рекорд: ${best}`),
+      h("span", { class: "rc-stamp" + (hearts > 0 ? "" : " meh"), lang: "ja" }, hearts > 0 ? "ありがとう" : "またね"));
+    sh.set(h("div", { class: "summary cafe-end" },
       h("div", { class: "say-row" }, mascot(hearts > 0 ? "happy" : "sad", true), hearts > 0 ? bubble("yay", perfect ? "Все заказы без ошибок!" : "Спасибо за заказы!") : bubble("cheer", "Сердечки кончились")),
-      h("h2", {}, `${score} ${plural(score, "очко", "очка", "очков")}`),
-      record ? h("div", { class: "gain" }, "Новый рекорд! ✦") : h("p", { class: "muted" }, `Рекорд: ${best}`),
-      h("div", { class: "order-log" }, log.map(({ o, clean }) => h("div", { class: "order-log-row" + (clean ? " ok" : "") }, h("span", { class: "ja", lang: "ja" }, o.w), h("span", {}, `«${o.cyr}» — ${o.ru}`), h("b", {}, clean ? "♥" : "♡")))),
-      h("p", { class: "muted" }, gained ? `+${gained} ★ для ${petCase("gen")}. Серия: ${bestCombo}.` : S.pet.wgame.stars >= 10 ? "Звёздочки за сегодня уже собраны, но очки и рекорд считаются." : `Серия: ${bestCombo}.`),
+      receipt,
+      S.pet.wgame.stars >= 10 && !gained ? h("p", { class: "muted" }, "Звёздочки за сегодня уже собраны, но очки и рекорд считаются.") : null,
       h("div", { class: "row", style: "justify-content:center" },
         h("button", { class: "btn primary", type: "button", onclick: () => { closeShell(); startOrders(); } }, "Ещё раунд"),
         h("button", { class: "btn", type: "button", onclick: () => { closeShell(); goTab("pet"); } }, `К ${petCase("dat")}`))));
