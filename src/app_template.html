@@ -411,6 +411,7 @@ body.in-session .star-toast { bottom: calc(24px + env(safe-area-inset-bottom, 0p
 .cafe-text { min-width: 0; display: grid; gap: 0; }
 .cafe-say { font-family: var(--kana); font-weight: 600; font-size: 13px; color: var(--primary); }
 .cafe-ru { font-size: 20px; font-weight: 800; line-height: 1.15; color: var(--ink); overflow-wrap: anywhere; }
+.cafe-ru.long { font-size: 16px; }
 .cafe-read { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; color: var(--muted); }
 .cafe-read .icon-btn { width: 30px; height: 30px; }
 .cafe-counter { height: 16px; margin: -6px -10px 0; background: repeating-linear-gradient(90deg, #E9B98A 0 34px, #DDA877 34px 36px); box-shadow: inset 0 3px 0 #F4CFA6; }
@@ -3000,7 +3001,7 @@ function startOrders() {
         h("div", { class: "cafe-pic" }, wordPic(o)),
         h("div", { class: "cafe-text" },
           h("div", { class: "cafe-say", lang: "ja" }, "ください！"),
-          h("div", { class: "cafe-ru" }, o.ru),
+          h("div", { class: "cafe-ru" + (o.ru.length > 12 ? " long" : "") }, o.ru),
           h("div", { class: "cafe-read" }, `«${o.cyr}»`, sayBtn(o.w))));
       const scene = h("div", { class: "cafe" },
         h("div", { class: "cafe-noren", "aria-hidden": "true" }, ["ち", "ゅ", "う", "も", "ん"].map((x) => h("span", {}, x))),
