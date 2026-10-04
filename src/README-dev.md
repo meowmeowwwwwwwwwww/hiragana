@@ -4,7 +4,7 @@
 
 - `app_template.html` — разметка, стили и логика приложения.
 - `recognizer.js` — проверка рисунка, `stabilizer.js` — сглаживание линии (StreamLine),
-  `puppy.js` — щенок, `room.js` — комната щенка, `pics.js` — картинки-ассоциации, `kana2.json` — эталоны черт (AnimCJK).
+  `puppy.js` — щенок, `room.js` — комната щенка, `icons.js` — картинки к словам игр, `pics.js` — картинки-ассоциации, `kana2.json` — эталоны черт (AnimCJK).
 - `fonts/` — урезанные шрифты Klee One и M PLUS Rounded 1c (OFL).
 - `icons/` — иконки приложения, `licenses.txt` — лицензии (копируются в корень при сборке).
 - `sw_template.js` — service worker (работа без сети), `build.py` — сборка.

@@ -398,8 +398,14 @@ body.in-session .star-toast { bottom: calc(24px + env(safe-area-inset-bottom, 0p
 .cafe-pet .mascot { width: 84px; height: 84px; display: block; }
 .cafe-bubble { position: relative; flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding: 8px 12px 8px 8px; background: #fff; border-radius: 20px; box-shadow: var(--shadow); animation: cafe-in .4s cubic-bezier(.3, 1.5, .5, 1); }
 .cafe-bubble::before { content: ""; position: absolute; left: -8px; bottom: 16px; width: 14px; height: 14px; background: #fff; transform: rotate(45deg); border-radius: 2px; }
-.cafe-pic { flex: none; width: 58px; height: 58px; display: grid; place-items: center; border-radius: 16px; background: #FFF0F5; }
-.cafe-emo { font-size: 38px; line-height: 1; display: inline-block; }
+.cafe-pic { flex: none; width: 62px; height: 62px; display: grid; place-items: center; border-radius: 16px; background: #FFF0F5; }
+.cafe-emo { width: 50px; height: 50px; display: block; }
+.word-ico { display: inline-block; vertical-align: middle; }
+.word-emo { display: inline-block; line-height: 1; }
+.rc-emo .word-ico { width: 24px; height: 24px; }
+.cw-emo .word-ico, .cw-emo .word-emo { width: 48px; height: 48px; font-size: 36px; }
+.cw-chip-ico { width: 24px; height: 24px; font-size: 18px; margin-left: 2px; }
+.cw-sheet-pic .word-ico { width: 46px; height: 46px; display: block; }
 .cafe-num { font-size: 24px; font-weight: 800; color: var(--primary); font-variant-numeric: tabular-nums; }
 .cafe-emo.fly, .cafe-num.fly { animation: cafe-fly .9s cubic-bezier(.4, 0, .6, 1) forwards; }
 .cafe-text { min-width: 0; display: grid; gap: 0; }
@@ -801,6 +807,7 @@ __RECOG__
 __STAB__
 __PUPPY__
 __ROOM__
+__ICONS__
 __PICS__
 
 /* ===================== Справочные данные ===================== */
@@ -2954,12 +2961,19 @@ const ORDER_ITEMS = [
   ["とけい", "токэй", "часы", "⏰"], ["ふうせん", "фу:сэн", "воздушный шарик", "🎈"], ["ほね", "хонэ", "косточка", "🦴"]
 ];
 const WORD_EMO = Object.fromEntries(ORDER_ITEMS.map((x) => [x[0], x[3]]));
+// Рисунок слова в стиле тетради (icons.js или иконки еды из магазина); если рисунка нет — эмодзи
+const ICON_FROM_FOOD = { "すし": "sushi", "いちご": "ichigo", "おにぎり": "onigiri", "にく": "niku", "だんご": "dango", "もち": "mochi", "ほね": "hone" };
+function wordIcon(w, cls = "") {
+  const inner = WordIcons.get(w) || (ICON_FROM_FOOD[w] && FOOD_ICONS[ICON_FROM_FOOD[w]]);
+  if (inner) return svgNode(`<svg viewBox="0 0 100 100" class="word-ico ${cls}" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`);
+  return h("span", { class: "word-emo " + cls, "aria-hidden": "true" }, WORD_EMO[w] || (CW_EXTRA.find((x) => x[0] === w) || [])[3] || "🎁");
+}
 // вещи, все знаки которых уже выучены (маленькие ゃゅょっ — если выучен большой знак)
 function orderWords() {
   const ok = (c) => (SMALL[c] ? known(SMALL[c]) : known(c)) && KANA[c];
   return ORDER_ITEMS.filter((x) => [...x[0]].every(ok)).map((x) => ({ w: x[0], cyr: x[1], ru: x[2] }));
 }
-const wordPic = (o) => h("span", { class: "cafe-emo", "aria-hidden": "true" }, WORD_EMO[o.w] || "🎁");
+const wordPic = (o) => wordIcon(o.w, "cafe-emo");
 function startOrders() {
   const pool = orderWords();
   if (pool.length < 3) return;
@@ -3019,7 +3033,7 @@ function startOrders() {
     const pet = scene.querySelector(".cafe-pet");
     pet.replaceChildren(mascot(clean ? "great" : "happy", false));
     if (bub) bub.append(h("span", { class: "cafe-stamp" + (clean ? "" : " meh"), lang: "ja" }, clean ? "できた！" : "おしい"));
-    const pic = scene.querySelector(".cafe-pic span");
+    const pic = scene.querySelector(".cafe-pic .cafe-emo");
     if (pic) pic.classList.add("fly");
     if (clean) petalBurst(scene);
     setTimeout(go, 1100);
@@ -3036,7 +3050,7 @@ function startOrders() {
       h("div", { class: "rc-head" }, h("b", { lang: "ja" }, "わんわん おみせ"), h("span", {}, `${dayKey()} · ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`)),
       h("div", { class: "rc-line" }),
       log.map(({ o, clean }) => h("div", { class: "rc-row" + (clean ? "" : " meh") },
-        h("span", { class: "rc-emo", "aria-hidden": "true" }, WORD_EMO[o.w] || "🎁"), h("span", { class: "ja", lang: "ja" }, o.w), h("span", { class: "rc-ru" }, o.ru), h("b", {}, clean ? "♥" : "♡"))),
+        h("span", { class: "rc-emo" }, wordIcon(o.w)), h("span", { class: "ja", lang: "ja" }, o.w), h("span", { class: "rc-ru" }, o.ru), h("b", {}, clean ? "♥" : "♡"))),
       log.length < orders.length ? h("div", { class: "rc-row meh" }, h("span", {}), h("span", {}, `не успели: ${orders.length - log.length}`), h("span", {}), h("b", {}, "")) : null,
       h("div", { class: "rc-line" }),
       h("div", { class: "rc-sum" }, h("span", {}, "серия"), h("b", {}, String(bestCombo))),
@@ -3155,10 +3169,10 @@ function startCrossword(fresh) {
     }
     const x = cw.words[sel];
     const clue = h("div", { class: "cw-clue" },
-      h("span", { class: "cw-emo", "aria-hidden": "true" }, x.emo),
+      h("span", { class: "cw-emo" }, wordIcon(x.w)),
       h("div", {}, h("div", { class: "cw-no" }, `${x.no} ${x.d ? "↓" : "→"} · ${[...x.w].length} ${plural([...x.w].length, "знак", "знака", "знаков")}`), h("div", { class: "cw-ru" }, x.ru)),
       h("button", { class: "tool-btn", type: "button", "aria-label": "Подсказка: как читается", title: "Как читается", onclick: (e) => { e.currentTarget.replaceWith(h("span", { class: "cw-read" }, `«${x.cyr}»`)); } }, icon("hint")));
-    const list = h("div", { class: "cw-list" }, cw.words.map((y, i) => h("button", { class: "cw-chip" + (i === sel ? " on" : "") + (wordDone(y) ? " done" : ""), type: "button", onclick: () => { sel = i; const e = cwCells(y).find((c) => !cw.filled[c.key]); if (e) openCell(e.key); else { curKey = null; draw(); } } }, h("b", {}, `${y.no}${y.d ? "↓" : "→"}`), " ", y.emo)));
+    const list = h("div", { class: "cw-list" }, cw.words.map((y, i) => h("button", { class: "cw-chip" + (i === sel ? " on" : "") + (wordDone(y) ? " done" : ""), type: "button", onclick: () => { sel = i; const e = cwCells(y).find((c) => !cw.filled[c.key]); if (e) openCell(e.key); else { curKey = null; draw(); } } }, h("b", {}, `${y.no}${y.d ? "↓" : "→"}`), wordIcon(y.w, "cw-chip-ico"))));
     sh.set(h("div", { class: "task cw" }, grid, clue, list,
       h("p", { class: "muted cw-tip" }, "Нажми на клетку и впиши знак. Знак на пересечении подходит обоим словам.")));
   }
@@ -3176,7 +3190,7 @@ function startCrossword(fresh) {
     const ui = openSheet("Впиши знак", (close) => {
       const x = cw.words[sel], cells = cwCells(x), idx = cells.findIndex((c) => c.key === curKey), cell = cells[idx];
       const slots = h("div", { class: "slots" }, cells.map((c) => h("span", { class: "slot" + (cw.filled[c.key] ? "" : " empty") + (c.key === curKey ? " cur" : ""), lang: "ja" }, c.k)));
-      const task = writeTask({ k: cell.k, mode: "memory", allowForgot: true, compact: true, label: `${x.emo} ${x.ru}: знак ${idx + 1} из ${cells.length}`, nextLabel: "Вписать",
+      const task = writeTask({ k: cell.k, mode: "memory", allowForgot: true, compact: true, label: `${x.ru}: знак ${idx + 1} из ${cells.length}`, nextLabel: "Вписать",
         onDone: (r) => {
           cw.filled[cell.key] = 1;
           if (r.helped || !r.firstOk) cw.helped[cell.key] = 1;
@@ -3188,7 +3202,7 @@ function startCrossword(fresh) {
           if (next) { curKey = next.key; draw(); ui.refresh(); }
           else { close(); curKey = null; const nx = cw.words.findIndex((y) => !wordDone(y)); if (nx >= 0) sel = nx; draw(); }
         } });
-      return [sheetHead("かきこむ", "Впиши знак", close), slots, task];
+      return [h("div", { class: "sheet-head" }, h("div", { class: "cw-sheet-pic" }, wordIcon(x.w)), h("div", { style: "flex:1" }, h("div", { class: "eyebrow" }, "かきこむ"), h("h2", {}, "Впиши знак")), h("button", { class: "icon-btn", type: "button", "aria-label": "Закрыть", onclick: close }, icon("close"))), slots, task];
     });
   }
   function win() {
@@ -3201,7 +3215,7 @@ function startCrossword(fresh) {
     const box = h("div", { class: "summary" },
       h("div", { class: "say-row" }, mascot("great", true), bubble("congrats", "Кроссворд решён!")),
       grid,
-      h("div", { class: "cw-words" }, cw.words.map((x) => h("span", {}, x.emo, " ", h("b", { lang: "ja" }, x.w), " ", x.ru))),
+      h("div", { class: "cw-words" }, cw.words.map((x) => h("span", {}, wordIcon(x.w, "cw-chip-ico"), " ", h("b", { lang: "ja" }, x.w), " ", x.ru))),
       h("div", { class: "row", style: "justify-content:center" },
         h("button", { class: "btn primary", type: "button", onclick: () => { closeShell(); startCrossword(true); } }, "Новый кроссворд"),
         h("button", { class: "btn", type: "button", onclick: () => { closeShell(); goTab("pet"); } }, `К ${petCase("dat")}`)));
