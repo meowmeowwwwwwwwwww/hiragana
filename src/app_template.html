@@ -681,6 +681,45 @@ details.how .how-body { display: grid; gap: 10px; margin-top: 12px; max-width: 6
 .num-cell .ja { font-size: 19px; line-height: 1.3; }
 .num-cell small { font-size: 11px; font-weight: 700; color: var(--muted); }
 .task-big.num { font-variant-numeric: tabular-nums; }
+.num-plan { display: flex; flex-wrap: wrap; gap: 6px; }
+.num-plan span { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px 5px 5px; border-radius: 999px; background: #fff; font-weight: 800; font-size: 14px; box-shadow: 0 2px 0 var(--line); }
+.num-plan b { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--primary); color: #fff; font-size: 12px; }
+.num-known { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+.num-known > span { display: inline-flex; align-items: baseline; gap: 4px; padding: 4px 10px; border-radius: 999px; background: rgb(255 255 255 / .6); color: var(--muted); font-size: 14px; }
+.num-known > span.seen { background: #fff; color: var(--ink); }
+.num-known > span.cur { background: var(--primary); color: #fff; }
+.num-known [lang] { font-family: var(--kana); font-size: 14px; }
+.num-meet { gap: 10px; }
+.num-hero { display: flex; align-items: center; justify-content: center; gap: 16px; }
+.num-digit { font-size: 88px; font-weight: 800; line-height: 1; color: var(--primary); text-shadow: 0 3px 0 #fff, 3px 0 0 #fff, -3px 0 0 #fff, 0 -3px 0 #fff; }
+.num-berries { display: grid; grid-template-columns: repeat(5, 30px); gap: 4px; }
+.num-berry { width: 30px; height: 30px; filter: none; }
+.num-times { white-space: nowrap; font-size: 24px; font-weight: 800; color: var(--muted); background: #fff; padding: 6px 12px; border-radius: 16px; }
+.num-times b { color: var(--ink); }
+.num-digit.long { font-size: 64px; white-space: nowrap; }
+.num-word { font-family: var(--kana); font-weight: 600; font-size: 64px; line-height: 1.15; color: var(--ink); }
+.small-kana { font-size: .8em; }
+.choice-card { display: grid; place-items: center; min-height: 120px; padding: 10px 14px; border-radius: 26px; background: #fff; border: 3px solid #fff; box-shadow: var(--shadow); font-weight: 800; color: var(--ink); }
+.choice-card.num { font-size: 64px; color: var(--primary); }
+.choice-card.ja { font-family: var(--kana); font-weight: 600; font-size: 44px; line-height: 1.2; text-align: center; }
+.choice-card.ja.long { font-size: 32px; }
+.choice-card.ja.long > span { max-width: 9em; }
+.choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.choice-btn { min-height: 64px; padding: 6px 10px; border-radius: 20px; border: 3px solid #fff; background: linear-gradient(180deg, #fff, var(--surface-2)); box-shadow: 0 3px 0 var(--line); font-size: 24px; font-weight: 800; color: var(--ink); }
+.choice-btn.ja { font-family: var(--kana); font-weight: 600; font-size: 28px; }
+.choice-btn:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 1px 0 var(--line); }
+.choice-btn.ok { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); opacity: 1; }
+.choice-btn.bad { background: #FFE3E8; border-color: var(--berry-deep); opacity: 1; }
+.choice-btn:disabled:not(.ok):not(.bad) { opacity: .45; }
+.num-rule { display: grid; gap: 4px; padding: 8px 12px; border-radius: 18px; background: rgb(255 255 255 / .75); }
+.num-rule p { margin: 0; font-weight: 700; }
+.num-ex { display: flex; align-items: center; gap: 8px; }
+.num-ex .muted { font-size: 13px; min-width: 0; overflow-wrap: anywhere; }
+.num-ex .say { margin-left: auto; }
+.num-ex > b { min-width: 52px; font-size: 20px; color: var(--primary); }
+.num-ex-toks { display: inline-flex; gap: 3px; font-family: var(--kana); font-size: 18px; flex: none; }
+.num-ex-toks > span { padding: 1px 8px; border-radius: 10px; background: var(--cream); }
+.hint-chip.as-btn { border: 0; cursor: pointer; font-size: 13px; }
 .num-slots { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; min-height: 58px; }
 .num-slot { min-width: 72px; height: 56px; padding: 0 10px; border-radius: 18px; border: 3px dashed var(--grid-faint); background: rgb(255 255 255 / .6); font-family: var(--kana); font-weight: 600; font-size: 24px; color: var(--ink); }
 .num-slot.full { border-style: solid; border-color: #fff; background: #fff; box-shadow: 0 0 0 2px var(--primary-2); }
@@ -999,24 +1038,79 @@ const LESSONS = [
     tip: "Маленькие ゃ ゅ ょ сливаются с предыдущим знаком, маленькая っ удваивает согласный. В конце — 15 случайных знаков по памяти.",
     words: [["きょう","кё:","kyō","сегодня"],["おちゃ","отя","ocha","чай"],["しゃしん","сясин","shashin","фотография"],["でんしゃ","дэнся","densha","электричка"],["ひゃく","хяку","hyaku","сто"],["きって","киттэ","kitte","почтовая марка"],["ざっし","дзасси","zasshi","журнал"],["がっこう","гакко:","gakkō","школа"],["ちょっと","тётто","chotto","немного"],["りょこう","рёко:","ryokō","путешествие"]] },
   { title: "Цифры", kana: "", kind: "numbers",
-    tip: "Числа от 1 до 10, сто, тысяча и десять тысяч. Читаешь, пишешь от руки и собираешь составные числа вроде 24 или 300.",
+    tip: "Числа учим порциями: 1–5, 6–10, потом сто, тысяча и десять тысяч. А из этих слов, как из конструктора, складывается любое число.",
     words: [] }
 ];
 // Числа: [цифры, хирагана, чтение кириллицей, латиницей, другие чтения]
 const NUMS = [
   ["1", "いち", "ити", "ichi"], ["2", "に", "ни", "ni"], ["3", "さん", "сан", "san"], ["4", "よん", "ён", "yon", "し «си» — реже"],
   ["5", "ご", "го", "go"], ["6", "ろく", "року", "roku"], ["7", "なな", "нана", "nana", "しち «сити» — тоже можно"], ["8", "はち", "хати", "hachi"],
-  ["9", "きゅう", "кю:", "kyū", "く «ку» — реже"], ["10", "じゅう", "дзю:", "jū"], ["100", "ひゃく", "хяку", "hyaku"], ["1000", "せん", "сэн", "sen"], ["10000", "まん", "ман", "man"]
+  ["9", "きゅう", "кю:", "kyū", "く «ку» — реже"], ["10", "じゅう", "дзю:", "jū"], ["100", "ひゃく", "хяку", "hyaku"], ["1000", "せん", "сэн", "sen"], ["10000", "いちまん", "итиман", "ichiman"]
 ];
-// Составные числа: [цифры, части (токены), чтение кириллицей, подсказка]
-const NUM_COMBOS = [
-  ["11", ["じゅう", "いち"], "дзю:ити", "10 + 1"], ["15", ["じゅう", "ご"], "дзю:го", "10 + 5"], ["20", ["に", "じゅう"], "нидзю:", "2 × 10"],
-  ["24", ["に", "じゅう", "よん"], "нидзю:ён", "2 × 10 + 4"], ["99", ["きゅう", "じゅう", "きゅう"], "кю:дзю:кю:", "9 × 10 + 9"],
-  ["300", ["さん", "びゃく"], "самбяку", "ひゃく после さん звонкое: びゃく"], ["600", ["ろっ", "ぴゃく"], "роппяку", "ろく + ひゃく = ろっぴゃく"],
-  ["800", ["はっ", "ぴゃく"], "хаппяку", "はち + ひゃく = はっぴゃく"], ["3000", ["さん", "ぜん"], "сандзэн", "せん после さん звонкое: ぜん"],
-  ["8000", ["はっ", "せん"], "хассэн", "はち + せん = はっせん"], ["2026", ["に", "せん", "に", "じゅう", "ろく"], "нисэн нидзю: року", "2 × 1000 + 2 × 10 + 6"]
-];
-const NUM_DECOYS = ["ひゃく", "びゃく", "ぴゃく", "せん", "ぜん", "しち", "なな", "ろく", "はち", "さん", "よん"];
+// Порции урока «Цифры» и подсказки, как запомнить (*жирным* — главное)
+const NUM_GROUPS = [["1", "2", "3", "4", "5"], ["6", "7", "8", "9", "10"], ["100", "1000", "10000"]];
+const NUM_GROUP_NAME = ["1–5", "6–10", "большие"];
+const NUM_MNEMO = {
+  "1": "*いち*ご — это клубника! Одна клубничка — *いち*.",
+  "2": "Посмотри на знак *に*: справа у него две чёрточки — как два пальчика.",
+  "3": "«*Сан*» — трое катятся на *сан*ках.",
+  "4": "«*Ён*» — *ё*жик на четырёх лапках.",
+  "5": "«*Го!*» — дай пять и вперёд!",
+  "6": "«*Року*» — *рок*-гитара: у неё шесть струн.",
+  "7": "«*Нана*» — в гамме семь нот, поём «*на-на*-на».",
+  "8": "«*Хати*» — как верный пёс *Хати*ко. А ещё はち — это пчела.",
+  "9": "«*Кю:*» — девять раз пискнула мышка: *кю*-*кю*…",
+  "10": "«*Дзю:*» — две ладошки, десять пальчиков. じゅう встретится во всех числах от 11 до 99.",
+  "100": "«*Хяку*» — будто чихнули сто раз подряд: *хя*-ап-*чху*!",
+  "1000": "«*Сэн*» — у *сэн*сэя тысяча учеников.",
+  "10000": "Десять тысяч — отдельное слово *まん*, в русском такого нет. «*Ман*» — *ман*дарины: целых 10 000 штук! А одна такая куча — *いち*まん."
+};
+const NUM_DIG = ["", "いち", "に", "さん", "よん", "ご", "ろく", "なな", "はち", "きゅう"];
+// Число → кусочки хираганы: 24 → に じゅう よん, 300 → さん びゃく, 10000 → いち まん
+function numToks(n) {
+  const t = [];
+  const man = Math.floor(n / 10000); n %= 10000;
+  if (man) t.push(...numToks(man), "まん");
+  const sen = Math.floor(n / 1000); n %= 1000;
+  if (sen) t.push(...({ 1: ["せん"], 3: ["さん", "ぜん"], 8: ["はっ", "せん"] }[sen] || [NUM_DIG[sen], "せん"]));
+  const hy = Math.floor(n / 100); n %= 100;
+  if (hy) t.push(...({ 1: ["ひゃく"], 3: ["さん", "びゃく"], 6: ["ろっ", "ぴゃく"], 8: ["はっ", "ぴゃく"] }[hy] || [NUM_DIG[hy], "ひゃく"]));
+  const ju = Math.floor(n / 10); n %= 10;
+  if (ju) t.push(...(ju === 1 ? ["じゅう"] : [NUM_DIG[ju], "じゅう"]));
+  if (n) t.push(NUM_DIG[n]);
+  return t;
+}
+const NUM_TOK_CYR = { "いち": "ити", "に": "ни", "さん": "сан", "よん": "ён", "ご": "го", "ろく": "року", "なな": "нана", "はち": "хати", "きゅう": "кю:", "じゅう": "дзю:", "ひゃく": "хяку", "びゃく": "бяку", "ぴゃく": "пяку", "せん": "сэн", "ぜん": "дзэн", "まん": "ман", "ろっ": "ро", "はっ": "ха" };
+// Чтение кириллицей: っ удваивает следующий согласный, н перед б/п/м звучит как м
+function numCyr(toks) {
+  let out = "";
+  toks.forEach((t, i) => {
+    let c = NUM_TOK_CYR[t];
+    if (i && toks[i - 1].endsWith("っ")) c = c[0] + c;
+    if (/н$/.test(out) && /^[бпм]/.test(c)) out = out.slice(0, -1) + "м";
+    out += c;
+  });
+  return out;
+}
+const NUM_TWINS = [["ひゃく", "びゃく", "ぴゃく"], ["せん", "ぜん"], ["ろく", "ろっ"], ["はち", "はっ"]];
+// Кусочки-ловушки для сборки: похожие по звуку варианты + пара случайных цифр
+function numDecoys(toks) {
+  const d = new Set();
+  for (const t of toks) for (const tw of NUM_TWINS) if (tw.includes(t)) tw.forEach((x) => d.add(x));
+  for (const x of shuffle(NUM_DIG.slice(1).concat(["じゅう", "ひゃく", "せん"]))) { if (d.size >= toks.length + 3) break; d.add(x); }
+  toks.forEach((t) => d.delete(t));
+  return shuffle([...d]).slice(0, Math.max(3, 8 - toks.length));
+}
+const rndInt = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const pick1 = (a) => a[Math.floor(Math.random() * a.length)];
+// Похожие числа для выбора ответа: переставленные цифры, ±10, другая цифра в одном разряде
+function numLookalikes(n, k = 3) {
+  const out = new Set(), s = String(n);
+  const tries = [+s.split("").reverse().join(""), n + 10, n - 10, n + 1, n - 1, n * 10, Math.floor(n / 10)];
+  for (let i = 0; i < 12; i++) { const a = s.split(""), j = rndInt(0, a.length - 1); a[j] = String((+a[j] + rndInt(1, 8)) % 10); tries.push(+a.join("")); }
+  for (const x of shuffle(tries)) { if (out.size >= k) break; if (x > 0 && x !== n && x < 100000 && String(x).length >= s.length - 1) out.add(x); }
+  return [...out];
+}
 const YOON = ["きゃ","きゅ","きょ","しゃ","しゅ","しょ","ちゃ","ちゅ","ちょ","にゃ","にゅ","にょ","ひゃ","ひゅ","ひょ","みゃ","みゅ","みょ","りゃ","りゅ","りょ","ぎゃ","ぎゅ","ぎょ","じゃ","じゅ","じょ","びゃ","びゅ","びょ","ぴゃ","ぴゅ","ぴょ"];
 const GOJUON = [
   ["あ","い","う","え","お"],["か","き","く","け","こ"],["さ","し","す","せ","そ"],["た","ち","つ","て","と"],
@@ -1920,7 +2014,10 @@ function startLesson(li) {
   const phases = [];
   phases.push({ t: "intro" });
   if (L.kind === "numbers") {
-    phases.push({ t: "numread" }, { t: "numwrite" }, { t: "numbuild" });
+    for (const g of [0, 1]) phases.push({ t: "nmeet", g }, { t: "nquiz", g }, { t: "nwrite", g });
+    phases.push({ t: "nquiz", g: "mix" }, { t: "nbuild", r: "tens" });
+    phases.push({ t: "nmeet", g: 2 }, { t: "nquiz", g: 2 }, { t: "nwrite", g: 2 });
+    phases.push({ t: "nbuild", r: "big" }, { t: "nfinal" });
   } else if (L.kind !== "yoon") {
     kana.forEach((k) => phases.push({ t: "meet", k }));
     phases.push({ t: "drill" });
@@ -1935,12 +2032,14 @@ function startLesson(li) {
   phases.push({ t: "finish" });
   const stats = { wOk: 0, wTot: 0, rOk: 0, rTot: 0 };
   let pi = -1;
-  const saved = lessonResume(li);
+  let saved = lessonResume(li);
+  // урок «Цифры» переделан: старое место внутри него не подходит к новым этапам
+  if (saved && L.kind === "numbers" && saved.nv !== 2) saved = null;
   let sub = null; // где продолжить внутри этапа
   // Запоминаем место в уроке после каждого шага, чтобы можно было выйти и вернуться
   const keep = (state) => {
     if (phases[pi].t === "intro" || phases[pi].t === "finish") return;
-    S.lessons[li + 1] = Object.assign(S.lessons[li + 1] || {}, { resume: { pi, stats: Object.assign({}, stats), sub: state || null, at: Date.now() } });
+    S.lessons[li + 1] = Object.assign(S.lessons[li + 1] || {}, { resume: { pi, stats: Object.assign({}, stats), sub: state || null, at: Date.now(), nv: 2 } });
     save();
   };
   const next = () => { pi++; sh.progress(pi / (phases.length - 1)); keep(); runPhase(phases[pi]); };
@@ -1962,15 +2061,22 @@ function startLesson(li) {
     if (ph.t === "words") return words();
     if (ph.t === "dict") return dictation();
     if (ph.t === "final") return finalTest();
-    if (ph.t === "numread") return numRead();
-    if (ph.t === "numwrite") return numWrite();
-    if (ph.t === "numbuild") return numBuild();
+    if (ph.t === "nmeet") return numMeet(ph.g);
+    if (ph.t === "nquiz") return numQuiz(ph.g);
+    if (ph.t === "nwrite") return numWrite(ph.g);
+    if (ph.t === "nbuild") return numBuild(ph.r);
+    if (ph.t === "nfinal") return numFinal();
     if (ph.t === "finish") return finish();
   }
 
   function phaseName(ph) {
     if (ph.t === "meet") return `знакомство с ${ph.k}`;
-    return { numread: "чтение чисел", numwrite: "письмо чисел", numbuild: "составные числа", drill: "закрепление", yoon: "слияния", words: "чтение слов", dict: "диктант", final: "итоговая проверка" }[ph.t] || "начало";
+    const gn = ph.g === "mix" ? "1–10" : NUM_GROUP_NAME[ph.g];
+    if (ph.t === "nmeet") return `знакомство: ${gn}`;
+    if (ph.t === "nquiz") return `узнаём числа ${gn}`;
+    if (ph.t === "nwrite") return `пишем ${gn}`;
+    if (ph.t === "nbuild") return ph.r === "tens" ? "числа до 99" : "сотни и тысячи";
+    return { nfinal: "итоговая проверка чисел", drill: "закрепление", yoon: "слияния", words: "чтение слов", dict: "диктант", final: "итоговая проверка" }[ph.t] || "начало";
   }
   function intro() {
     sh.stage("начало");
@@ -1984,10 +2090,9 @@ function startLesson(li) {
       if (L.kana.includes("ぢ") || L.kana.includes("じ")) parts.push(h("p", {}, "じ и ぢ читаются одинаково — «дзи», ず и づ — «дзу». В словах почти всегда пишут じ и ず, а ぢ и づ встречаются редко."));
       parts.push(h("p", { class: "muted" }, "Для каждого знака: посмотри анимацию и сразу напиши по памяти. Потом закрепление, слова и короткий диктант."));
     } else if (L.kind === "numbers") {
-      parts.push(h("div", { class: "num-table" }, NUMS.map(([d, w, c, , alt]) => h("div", { class: "num-cell" }, h("b", { class: "num" }, d), h("span", { class: "ja", lang: "ja" }, w), h("small", {}, c + (alt ? " *" : ""))))),
-        h("p", { class: "muted" }, "* У 4, 7 и 9 есть второе чтение: し «си», しち «сити», く «ку». В счёте чаще говорят よん, なな, きゅう."),
-        h("p", {}, "Составные числа складываются как в русском: 24 = に じゅう よん «два десятка четыре». После さん, ろく, はち ひゃく и せん меняются: さんびゃく, ろっぴゃく, はっぴゃく, さんぜん, はっせん."),
-        h("p", { class: "muted" }, "Маленькие ゃ ゅ っ в きゅう, じゅう, ひゃく пишут мельче, в нижней части клетки."));
+      parts.push(h("div", { class: "num-plan" }, ["1–5", "6–10", "до 99", "100 · 1000 · 10 000", "сотни и тысячи"].map((x, i) => h("span", {}, h("b", { class: "num" }, String(i + 1)), x))),
+        h("p", {}, "С каждым числом сначала знакомишься: слово, звук и подсказка, как запомнить. Потом узнаёшь его среди других и пишешь рукой. Так за раз нужно удержать в голове только пять слов."),
+        h("p", { class: "muted" }, "Все знаки ты уже знаешь по урокам. Здесь главное — запомнить, какое слово за каким числом."));
     } else if (L.kind === "yoon") {
       parts.push(h("p", {}, "き + маленькая ゃ = きゃ «кя». Маленькие ゃ ゅ ょ пишут в пол-клетки, ниже и ближе к предыдущему знаку."),
         h("div", { class: "pairs" }, ["きゃ", "しゅ", "ちょ", "じゃ", "りょ"].map((y) => h("span", { class: "pair" }, h("span", { class: "ja", lang: "ja" }, y), h("span", {}, sylOpts(y, 0)[0] + " · " + sylOpts(y, 1)[0])))),
@@ -2123,36 +2228,121 @@ function startLesson(li) {
     word();
   }
 
-  function numRead() {
-    const st = takeSub();
-    const items = st && st.items ? st.items : shuffle(NUMS.map((n) => n[0]));
+  // ---- урок «Цифры» ----
+  const numRow = (d) => NUMS.find((x) => x[0] === d);
+  const kanaText = (w) => [...w].map((c) => (isSmall(c) ? h("span", { class: "small-kana" }, c) : c));
+  const fmtNum = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  // наглядно: клубнички для 1–10, «10 × …» для больших
+  function numVisual(d) {
+    const n = +d;
+    if (n <= 10) return h("div", { class: "num-berries" + (n > 5 ? " two" : "") }, Array.from({ length: n }, () => berrySticker("num-berry")));
+    const parts = { 100: ["10", "10"], 1000: ["10", "100"], 10000: ["10", "1 000"] }[n];
+    return h("div", { class: "num-times" }, h("b", {}, parts[0]), " × ", h("b", {}, parts[1]));
+  }
+  function numMnemo(d) {
+    const p = h("p", { class: "mnemo-text" });
+    NUM_MNEMO[d].split("*").forEach((part, i) => p.append(i % 2 ? h("b", {}, part) : document.createTextNode(part)));
+    return h("div", { class: "mnemo" }, h("div", { class: "mnemo-title" }, heartSticker("#FFB0CD"), "Как запомнить"), p);
+  }
+  // Знакомство: по одному числу, рядом — уже пройденные из этой порции
+  function numMeet(g) {
+    const st = takeSub(), list = NUM_GROUPS[g];
     let i = st ? st.i || 0 : 0;
-    const serve = () => {
-      sh.stage("чтение чисел"); sh.count(`${i} / ${items.length}`);
-      if (i >= items.length) return next();
-      keep({ items, i });
-      const n = NUMS.find((x) => x[0] === items[i]);
-      const ans = answersFor(n[1], n[2], n[3]); ans.add(n[0]);
-      sh.set(readTask({ reward: true, show: n[1], big: n[1].length > 3 ? false : undefined, label: "Какое это число? Напиши цифрами или чтение", answers: ans, reveal: `${n[0]} — ${n[2]} · ${n[3]}`, sayText: n[1], onDone: (r) => { stats.rTot++; if (r.ok) stats.rOk++; i++; serve(); } }));
-    };
+    function show() {
+      sh.stage(`знакомство · ${NUM_GROUP_NAME[g]}`); sh.count(`${i} / ${list.length}`);
+      if (i >= list.length) return next();
+      keep({ i });
+      const [d, w, cyr, lat, alt] = numRow(list[i]);
+      say(w);
+      sh.set(h("div", { class: "task" },
+        h("div", { class: "num-known" }, list.map((x, j) => h("span", { class: j < i ? "seen" : j === i ? "cur" : "" }, h("b", { class: "num" }, fmtNum(x)), j < i ? h("span", { lang: "ja" }, numRow(x)[1]) : null))),
+        h("div", { class: "meet num-meet" },
+          h("div", { class: "num-hero" }, h("div", { class: "num-digit num" + (d.length > 3 ? " long" : "") }, fmtNum(d)), numVisual(d)),
+          h("div", { class: "num-word", lang: "ja" }, kanaText(w)),
+          h("div", { class: "facts" }, h("span", {}, `${cyr} · ${lat}`), h("span", {}, nZnak([...w].length)), sayBtn(w)),
+          numMnemo(d),
+          alt ? h("p", { class: "note" }, `Бывает и другое чтение: ${alt}. В счёте говорят ${w}.`) : null),
+        h("div", { class: "row", style: "justify-content:center" }, h("button", { class: "btn primary", type: "button", onclick: () => { i++; show(); } }, i + 1 < list.length ? "Следующее число" : "Проверим себя"))));
+    }
+    show();
+  }
+  // Выбор ответа из 4 вариантов; ошибка — показываем верный, число вернётся чуть позже
+  function choiceTask(o) {
+    let done = false;
+    const bar = h("div", { class: "act-bar", hidden: true });
+    const btns = o.options.map((op) => {
+      const b = h("button", { class: "choice-btn" + (o.ja ? " ja" : " num"), type: "button", lang: o.ja ? "ja" : null, onclick: () => pick(op, b) }, o.ja ? kanaText(op) : op);
+      return b;
+    });
+    function pick(op, b) {
+      if (done) return; done = true;
+      const ok = op === o.answer;
+      btns.forEach((x, j) => { x.disabled = true; if (o.options[j] === o.answer) x.classList.add("ok"); });
+      if (!ok) b.classList.add("bad");
+      if (ok) award(1);
+      const nextBtn = h("button", { class: "btn primary", type: "button", onclick: () => o.onDone({ ok }) }, "Дальше");
+      bar.hidden = false;
+      bar.replaceChildren(h("div", { class: "act-verdict " + (ok ? "ok" : "bad") }, mascot(ok ? "happy" : "sad"),
+        h("div", {}, h("div", { class: "verdict-title" }, jpTitle(ok ? "good" : "oops"), ok ? "Верно" : "Не совсем", ok ? h("span", { class: "gain" }, "+1 ★") : null),
+          h("div", { class: "act-reveal" }, o.reveal))), nextBtn);
+      if (o.say) say(o.say);
+      if (ok) setTimeout(() => { if (nextBtn.isConnected) nextBtn.click(); }, 800);
+      else requestAnimationFrame(() => nextBtn.focus({ preventScroll: true }));
+    }
+    return h("div", { class: "task" },
+      h("div", { class: "task-head" }, h("div", { class: "task-label" }, o.label), o.say ? sayBtn(o.say) : null),
+      h("div", { class: "choice-card" + (o.showJa ? " ja" : " num") + (o.show.length > 5 ? " long" : ""), lang: o.showJa ? "ja" : null }, h("span", {}, o.showJa ? kanaText(o.show) : o.show)),
+      h("div", { class: "choice-grid" }, btns), bar);
+  }
+  // Узнавание: каждое число в обе стороны (цифра → слово и слово → цифра)
+  function numQuiz(g) {
+    const st = takeSub();
+    const ten = NUM_GROUPS[0].concat(NUM_GROUPS[1]);
+    const pool = g === "mix" ? ten : NUM_GROUPS[g];
+    const others = g === 2 ? NUM_GROUPS[2].concat(["10"]) : g === "mix" ? ten : NUM_GROUPS[g];
+    let queue, total, doneCount;
+    if (st && st.queue) ({ queue, total, doneCount } = st);
+    else {
+      queue = g === "mix" ? shuffle(ten.slice()).slice(0, 8).map((d, j) => ({ d, dir: j % 2 ? "kd" : "dk" }))
+        : shuffle(pool.flatMap((d) => [{ d, dir: "dk" }, { d, dir: "kd" }]));
+      for (let j = 1; j < queue.length; j++) if (queue[j].d === queue[j - 1].d) { const x = (j + 2) % queue.length; [queue[j], queue[x]] = [queue[x], queue[j]]; }
+      total = queue.length; doneCount = 0;
+    }
+    function serve() {
+      sh.stage(g === "mix" ? "узнаём 1–10 вперемешку" : `узнаём ${NUM_GROUP_NAME[g]}`); sh.count(`${doneCount} / ${total}`);
+      if (!queue.length) return next();
+      keep({ queue, total, doneCount });
+      const it = queue.shift(), [d, w, cyr] = numRow(it.d);
+      const opts = shuffle([d].concat(shuffle(others.filter((x) => x !== d)).slice(0, 3)));
+      const kd = it.dir === "kd";
+      sh.set(choiceTask({
+        label: kd ? "Какое это число?" : "Как это число по-японски?",
+        show: kd ? w : fmtNum(d), showJa: kd, ja: !kd, say: w,
+        options: kd ? opts.map(fmtNum) : opts.map((x) => numRow(x)[1]), answer: kd ? fmtNum(d) : w,
+        reveal: h("span", {}, h("b", { class: "num" }, fmtNum(d)), " — ", h("span", { lang: "ja" }, kanaText(w)), ` «${cyr}»`),
+        onDone: ({ ok }) => { stats.rTot++; if (ok) { stats.rOk++; doneCount++; } else queue.splice(Math.min(queue.length, 2 + Math.floor(Math.random() * 2)), 0, it); serve(); }
+      }));
+    }
     serve();
   }
-  function numWrite() {
+  // Письмо: видишь цифру, пишешь слово по знаку; звук знака — только по подсказке
+  function numWrite(g) {
     const st = takeSub();
-    const list = st && st.list ? st.list : shuffle(NUMS.map((n) => n[0]));
+    const list = st && st.list ? st.list : shuffle(NUM_GROUPS[g].slice());
     let wi = st ? st.wi || 0 : 0;
     function word() {
-      sh.stage("письмо чисел"); sh.count(`${wi} / ${list.length}`);
+      sh.stage(`пишем ${NUM_GROUP_NAME[g]}`); sh.count(`${wi} / ${list.length}`);
       if (wi >= list.length) return next();
       keep({ list, wi });
-      const n = NUMS.find((x) => x[0] === list[wi]), chars = [...n[1]];
+      const [d, w, cyr] = numRow(list[wi]), chars = [...w];
       let ci = 0;
       function one() {
         const c = chars[ci], small = isSmall(c);
         const slots = h("div", { class: "slots", "aria-label": "Число" }, chars.map((x, j) => h("span", { class: "slot" + (j < ci ? "" : " empty") + (j === ci ? " cur" : "") + (isSmall(x) ? " small" : ""), lang: "ja" }, x)));
-        const head = h("div", { class: "task-head" }, h("div", { class: "task-label" }, `Запиши хираганой: знак ${ci + 1} из ${chars.length}`), h("div", { class: "task-big num" }, n[0]), h("div", { class: "task-sub" }, `${n[2]} · ${n[3]}`, sayBtn(n[1])));
+        const tip = h("button", { class: "hint-chip as-btn", type: "button", onclick: () => { tip.textContent = `«${cyr}»`; tip.disabled = true; } }, "как звучит?");
+        const head = h("div", { class: "task-head" }, h("div", { class: "task-label" }, "Запиши число хираганой"), h("div", { class: "task-big num" }, fmtNum(d)), h("div", { class: "task-sub" }, tip, sayBtn(w)));
         const task = writeTask({ reward: true, k: c, mode: "memory", allowForgot: true, compact: true,
-          label: small ? "Маленький знак — мельче, внизу клетки" : `Какой знак даёт «${INFO[c][0]}»?`,
+          label: small ? `Знак ${ci + 1} из ${chars.length} — маленький, внизу клетки` : `Знак ${ci + 1} из ${chars.length}`,
           nextLabel: ci + 1 < chars.length ? "Следующий знак" : "Готово",
           onDone: (r) => { stats.wTot++; if (r.firstOk) stats.wOk++; ci++; if (ci < chars.length) one(); else { wi++; word(); } } });
         sh.set(h("div", { class: "task word-task" }, head, slots, task));
@@ -2161,43 +2351,87 @@ function startLesson(li) {
     }
     word();
   }
-  function numBuild() {
+  // Правило перед сборкой: короткие строчки с примерами
+  const NUM_RULES = {
+    tens: { title: "Числа до 99 — как конструктор", lines: [
+      ["11–19: じゅう и единицы — «десять-один».", [11, 15]],
+      ["Десятки: сколько раз по десять + じゅう.", [20, 30]],
+      ["Всё вместе — как по-русски «два десятка четыре».", [24, 99]]] },
+    big: { title: "Сотни и тысячи", lines: [
+      ["Сотни: цифра + ひゃく. Сто — просто ひゃく, без いち.", [100, 200]],
+      ["Три особые сотни: звук становится звонче, а ろく и はち сжимаются в ろっ и はっ.", [300, 600, 800]],
+      ["Тысячи так же: цифра + せん, а тысяча — просто せん. Особые — 3000 и 8000.", [3000, 8000]],
+      ["10 000 — いちまん: японцы считают десятками тысяч.", [10000]]] }
+  };
+  function numRuleCard(r, go) {
+    const R = NUM_RULES[r];
+    sh.set(h("div", { class: "task explain" }, h("h2", {}, R.title),
+      R.lines.map(([text, ex]) => h("div", { class: "num-rule" }, h("p", {}, text),
+        ex.map((n) => { const t = numToks(n); return h("div", { class: "num-ex" }, h("b", { class: "num" }, fmtNum(n)), h("span", { class: "num-ex-toks", lang: "ja" }, t.map((x) => h("span", {}, kanaText(x)))), h("span", { class: "muted" }, numCyr(t)), sayBtn(t.join(""))); }))),
+      h("div", { class: "row", style: "justify-content:center" }, h("button", { class: "btn primary", type: "button", onclick: go }, "Собрать самой"))));
+  }
+  function buildTask(n, onDone) {
+    const toks = numToks(n), need = toks.length, picked = [];
+    const tiles = shuffle(toks.map((t, j) => ({ t, id: "a" + j })).concat(numDecoys(toks).map((t, j) => ({ t, id: "d" + j }))));
+    const slots = h("div", { class: "num-slots" }), pool = h("div", { class: "num-tiles" });
+    const fb = h("div", { class: "act-bar", hidden: true });
+    let done = false, tries = 0;
+    const draw = () => {
+      slots.replaceChildren(...Array.from({ length: need }, (_, j) => h("button", { class: "num-slot" + (picked[j] ? " full" : ""), type: "button", lang: "ja", disabled: done || !picked[j], onclick: () => { picked.splice(j, 1); draw(); } }, picked[j] ? kanaText(picked[j].t) : "")));
+      pool.replaceChildren(...tiles.map((tl) => h("button", { class: "num-tile", type: "button", lang: "ja", disabled: done || picked.includes(tl) || picked.length >= need, onclick: () => { picked.push(tl); draw(); if (picked.length === need) check(); } }, kanaText(tl.t))));
+    };
+    function check() {
+      done = true; tries++; draw();
+      const ok = picked.map((x) => x.t).join("") === toks.join("");
+      if (ok && tries === 1) award(1);
+      fb.hidden = false;
+      const nextBtn = h("button", { class: "btn primary", type: "button", onclick: () => onDone(ok && tries === 1) }, "Дальше");
+      const again = h("button", { class: "btn", type: "button", onclick: () => { done = false; picked.length = 0; fb.hidden = true; draw(); } }, "Ещё раз");
+      fb.replaceChildren(
+        h("div", { class: "act-verdict " + (ok ? "ok" : "bad") }, mascot(ok ? "happy" : "sad"),
+          h("div", {}, h("div", { class: "verdict-title" }, jpTitle(ok ? "good" : "oops"), ok ? "Верно" : "Не совсем", ok && tries === 1 ? h("span", { class: "gain" }, "+1 ★") : null),
+            h("div", { class: "act-reveal" }, h("span", { lang: "ja" }, toks.map((x) => kanaText(x)).flatMap((x, i) => (i ? [" · ", ...x] : x))), ` «${numCyr(toks)}»`))),
+        ok ? nextBtn : h("div", { class: "act-row" }, again));
+      if (ok) say(toks.join(""));
+    }
+    draw();
+    return h("div", { class: "task" },
+      h("div", { class: "task-head" }, h("div", { class: "task-label" }, "Собери число из кусочков"), h("div", { class: "task-big num" }, fmtNum(n))),
+      slots, pool, fb);
+  }
+  function numBuildList(r) {
+    if (r === "tens") return shuffle([rndInt(11, 19), rndInt(11, 19), rndInt(2, 9) * 10, rndInt(2, 9) * 10, rndInt(21, 99), rndInt(21, 99), rndInt(21, 99)]);
+    return shuffle([pick1([200, 400, 500, 700, 900]), pick1([300, 600, 800]), rndInt(101, 999), pick1([2000, 4000, 5000, 6000, 7000, 9000]), pick1([3000, 8000]), rndInt(1990, 2030), pick1([10000, 20000, 30000])]);
+  }
+  function numBuild(r) {
     const st = takeSub();
-    const list = st && st.list ? st.list : shuffle(NUM_COMBOS.map((n) => n[0])).slice(0, 8);
+    const list = st && st.list ? st.list : numBuildList(r);
     let i = st ? st.i || 0 : 0;
     function serve() {
-      sh.stage("составные числа"); sh.count(`${i} / ${list.length}`);
+      sh.stage(r === "tens" ? "числа до 99" : "сотни и тысячи"); sh.count(`${i} / ${list.length}`);
       if (i >= list.length) return next();
       keep({ list, i });
-      const [d, toks, cyr, hint] = NUM_COMBOS.find((x) => x[0] === list[i]);
-      const need = toks.length, picked = [];
-      const decoys = shuffle(NUM_DECOYS.filter((x) => !toks.includes(x))).slice(0, Math.max(2, 6 - new Set(toks).size));
-      const tiles = shuffle(toks.map((t, j) => ({ t, id: "a" + j })).concat(decoys.map((t, j) => ({ t, id: "d" + j }))));
-      const slots = h("div", { class: "num-slots" });
-      const pool = h("div", { class: "num-tiles" });
-      const fb = h("div", { class: "act-bar", hidden: true });
-      let done = false;
-      const draw = () => {
-        slots.replaceChildren(...Array.from({ length: need }, (_, j) => h("button", { class: "num-slot" + (picked[j] ? " full" : ""), type: "button", lang: "ja", disabled: done || !picked[j], onclick: () => { picked.splice(j, 1); draw(); } }, picked[j] ? picked[j].t : "")));
-        pool.replaceChildren(...tiles.map((tl) => h("button", { class: "num-tile", type: "button", lang: "ja", disabled: done || picked.includes(tl) || picked.length >= need, onclick: () => { picked.push(tl); draw(); if (picked.length === need) check(); } }, tl.t)));
-      };
-      function check() {
-        done = true; draw();
-        const ok = picked.map((x) => x.t).join("") === toks.join("");
-        stats.wTot++; if (ok) { stats.wOk++; award(1); }
-        fb.hidden = false;
-        const nextBtn = h("button", { class: "btn primary", type: "button", onclick: () => { i++; serve(); } }, "Дальше");
-        const again = h("button", { class: "btn", type: "button", onclick: () => { done = false; picked.length = 0; fb.hidden = true; draw(); } }, "Ещё раз");
-        fb.replaceChildren(
-          h("div", { class: "act-verdict " + (ok ? "ok" : "bad") }, mascot(ok ? "happy" : "sad"),
-            h("div", {}, h("div", { class: "verdict-title" }, ok ? jpTitle("good") : jpTitle("oops"), ok ? "Верно" : "Не совсем", ok ? h("span", { class: "gain" }, "+1 ★") : null),
-              h("div", { class: "act-reveal" }, h("span", { lang: "ja" }, toks.join("")), ` — «${cyr}»`), h("div", { class: "muted" }, hint))),
-          ok ? nextBtn : h("div", { class: "act-row" }, again, nextBtn));
-      }
-      draw();
-      sh.set(h("div", { class: "task" },
-        h("div", { class: "task-head" }, h("div", { class: "task-label" }, "Собери число из кусочков хираганы"), h("div", { class: "task-big num" }, d), sayBtn(toks.join(""))),
-        slots, pool, fb));
+      sh.set(buildTask(list[i], (ok) => { stats.wTot++; if (ok) stats.wOk++; i++; serve(); }));
+    }
+    if (i === 0) numRuleCard(r, serve); else serve();
+  }
+  // Итог: вперемешку читаем составные числа (выбор) и собираем их
+  function numFinal() {
+    const st = takeSub();
+    const items = st && st.items ? st.items : shuffle([rndInt(11, 99), rndInt(11, 99), rndInt(101, 999), rndInt(1001, 9999), pick1([300, 600, 800, 3000, 8000]), rndInt(11, 99), rndInt(101, 999), rndInt(1990, 2030)]).map((n, j) => ({ n, kind: j % 2 ? "build" : "read" }));
+    let i = st ? st.i || 0 : 0;
+    function serve() {
+      sh.stage("итоговая проверка"); sh.count(`${i} / ${items.length}`);
+      if (i >= items.length) return next();
+      keep({ items, i });
+      const { n, kind } = items[i];
+      const after = (ok) => { if (kind === "read") { stats.rTot++; if (ok) stats.rOk++; } else { stats.wTot++; if (ok) stats.wOk++; } i++; serve(); };
+      if (kind === "build") return sh.set(buildTask(n, after));
+      const toks = numToks(n), w = toks.join("");
+      sh.set(choiceTask({ label: "Какое это число?", show: w, showJa: true, say: w,
+        options: shuffle([n].concat(numLookalikes(n))).map(fmtNum), answer: fmtNum(n),
+        reveal: h("span", {}, h("b", { class: "num" }, fmtNum(n)), " — ", h("span", { lang: "ja" }, toks.map((x) => kanaText(x)).flatMap((x, j) => (j ? [" · ", ...x] : x))), ` «${numCyr(toks)}»`),
+        onDone: ({ ok }) => after(ok) }));
     }
     serve();
   }
