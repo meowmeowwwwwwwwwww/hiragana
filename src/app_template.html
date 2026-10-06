@@ -2974,7 +2974,7 @@ function openGamesSheet() {
     const cwCard = h("section", { class: "panel play-card" },
       h("div", { class: "play-ico" }, svgNode(CW_ICON)),
       h("div", { class: "play-body" }, h("h3", {}, "Кроссворд"),
-        h("p", { class: "muted" }, cwOk ? "Угадай слова по картинкам и впиши их хираганой от руки. Знаки на пересечениях помогают соседним словам. +1 ★ за слово, конпэйто за первый кроссворд дня." : "Откроется, когда выучишь побольше знаков."),
+        h("p", { class: "muted" }, cwOk ? "20 слов из учебника: угадай слово по картинке и впиши хираганой от руки. Знаки на пересечениях помогают соседним словам. +1 ★ за слово, конпэйто за первый кроссворд дня." : "Откроется, когда выучишь побольше знаков."),
         h("div", { class: "row" },
           h("button", { class: "btn primary", type: "button", disabled: !cwOk, onclick: () => { close(); startCrossword(false); } }, cwOn ? "Продолжить" : "Играть"),
           cwOn ? h("button", { class: "btn", type: "button", onclick: () => { close(); startCrossword(true); } }, "Новый") : null)));
@@ -3201,7 +3201,7 @@ const ICON_FROM_FOOD = { "すし": "sushi", "いちご": "ichigo", "おにぎり
 function wordIcon(w, cls = "") {
   const inner = WordIcons.get(w) || (ICON_FROM_FOOD[w] && FOOD_ICONS[ICON_FROM_FOOD[w]]);
   if (inner) return svgNode(`<svg viewBox="0 0 100 100" class="word-ico ${cls}" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`);
-  return h("span", { class: "word-emo " + cls, "aria-hidden": "true" }, WORD_EMO[w] || (CW_EXTRA.find((x) => x[0] === w) || [])[3] || "🎁");
+  return h("span", { class: "word-emo " + cls, "aria-hidden": "true" }, WORD_EMO[w] || (CW_WORDS.find((x) => x[0] === w) || [])[3] || "🎁");
 }
 // вещи, все знаки которых уже выучены (маленькие ゃゅょっ — если выучен большой знак)
 function orderWords() {
@@ -3307,44 +3307,38 @@ function startOrders() {
 }
 
 /* ===================== Кроссворд хираганой ===================== */
-const CW_EXTRA = [
-  ["いぬ", "ину", "собака", "🐶"], ["ねこ", "нэко", "кошка", "🐱"], ["とり", "тори", "птица", "🐦"], ["むし", "муси", "жучок", "🐞"],
-  ["かめ", "камэ", "черепаха", "🐢"], ["うさぎ", "усаги", "кролик", "🐰"], ["きつね", "кицунэ", "лиса", "🦊"], ["たぬき", "тануки", "енотовидная собака", "🦝"],
-  ["さる", "сару", "обезьяна", "🐒"], ["くま", "кума", "медведь", "🐻"], ["ぶた", "бута", "свинья", "🐷"], ["うし", "уси", "корова", "🐮"],
-  ["うま", "ума", "лошадь", "🐴"], ["ひつじ", "хицудзи", "овца", "🐑"], ["へび", "хэби", "змея", "🐍"], ["かえる", "каэру", "лягушка", "🐸"],
-  ["うみ", "уми", "море", "🌊"], ["やま", "яма", "гора", "🗻"], ["かわ", "кава", "река", "🏞️"], ["あめ", "амэ", "дождь", "🌧️"],
-  ["ゆき", "юки", "снег", "❄️"], ["ほし", "хоси", "звезда", "⭐"], ["つき", "цуки", "луна", "🌙"], ["くも", "кумо", "облако", "☁️"],
-  ["たいよう", "тайё:", "солнце", "☀️"], ["さくら", "сакура", "сакура", "🌸"], ["くるま", "курума", "машина", "🚗"], ["ふね", "фунэ", "корабль", "⛵"],
-  ["いえ", "иэ", "дом", "🏠"], ["みみ", "мими", "ухо", "👂"], ["あし", "аси", "нога", "🦶"], ["くち", "кути", "рот", "👄"], ["かお", "као", "лицо", "😊"]
+// Слова кроссворда — из учебника (ことばを よみましょう, стр. 24)
+const CW_WORDS = [
+  ["あさ", "аса", "утро", "🌅"], ["ひる", "хиру", "день, полдень", "☀️"], ["よる", "ёру", "ночь, вечер", "🌙"], ["いす", "ису", "стул", "🪑"],
+  ["おちゃ", "отя", "(зелёный) чай", "🍵"], ["とけい", "токэ:", "часы", "⏰"], ["うみ", "уми", "море", "🌊"], ["やま", "яма", "гора", "⛰️"],
+  ["いぬ", "ину", "собака", "🐶"], ["ねこ", "нэко", "кошка", "🐱"], ["ざっし", "дзасси", "журнал", "📖"], ["つくえ", "цукуэ", "стол, парта", "🪑"],
+  ["にほんご", "нихонго", "японский язык", "📕"], ["てんぷら", "тэмпура", "тэмпура", "🍤"], ["ふじさん", "фудзисан", "гора Фудзи", "🗻"], ["とうきょう", "то:кё:", "Токио", "🗼"],
+  ["やさい", "ясай", "овощи", "🥕"], ["さかな", "сакана", "рыба", "🐟"], ["たまご", "тамаго", "яйцо", "🥚"], ["かぞく", "кадзоку", "семья", "👪"]
 ];
-const CW_N = 7;
-// генератор: слова пересекаются по общим знакам, соседние слова не слипаются; лучшая из многих попыток
-function cwBuild(pool, rnd = Math.random) {
+const CW_N = 8, CW_ROWS = 9, CW_WORDS_N = 7;
+// Генератор: 7 слов (сначала те, что реже попадались), слова пересекаются по общим знакам,
+// соседние слова не слипаются. Слово без общих знаков с остальными встаёт отдельным островком.
+function cwBuild(pool, rnd = Math.random, seen = {}) {
   const shuf = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
-  let best = null;
-  for (let attempt = 0; attempt < 120; attempt++) {
-    const cand = shuf(pool);
-    const grid = new Map(), placed = [], dirs = new Map();
+  const chosen = shuf(pool).sort((a, b) => (seen[a.w] || 0) - (seen[b.w] || 0)).slice(0, Math.min(CW_WORDS_N, pool.length));
+  // один островок: свои клетки, направления и границы
+  function island(first, d0) {
+    const grid = new Map(), dirs = new Map(), placed = [];
+    const b = { minR: 0, maxR: 0, minC: 0, maxC: 0 };
     const at = (r, c) => grid.get(r + "," + c);
-    let minR = 0, maxR = 0, minC = 0, maxC = 0;
-    const put = (x, r, c, d) => { const ch = [...x.w]; ch.forEach((k, i) => { const rr = r + (d ? i : 0), cc = c + (d ? 0 : i); grid.set(rr + "," + cc, k); dirs.set(rr + "," + cc, (dirs.get(rr + "," + cc) || "") + d); minR = Math.min(minR, rr); maxR = Math.max(maxR, rr); minC = Math.min(minC, cc); maxC = Math.max(maxC, cc); }); placed.push(Object.assign({ r, c, d }, x)); };
+    const put = (x, r, c, d) => { [...x.w].forEach((k, i) => { const rr = r + (d ? i : 0), cc = c + (d ? 0 : i), key = rr + "," + cc; grid.set(key, k); dirs.set(key, (dirs.get(key) || "") + d); b.minR = Math.min(b.minR, rr); b.maxR = Math.max(b.maxR, rr); b.minC = Math.min(b.minC, cc); b.maxC = Math.max(b.maxC, cc); }); placed.push(Object.assign({}, x, { r, c, d })); };
     const fits = (x, r, c, d) => {
-      const ch = [...x.w], n = ch.length; let cross = 0;
-      const dr = d ? 1 : 0, dc = d ? 0 : 1;
+      const ch = [...x.w], n = ch.length, dr = d ? 1 : 0, dc = d ? 0 : 1;
       if (at(r - dr, c - dc) || at(r + dr * n, c + dc * n)) return false;
       for (let i = 0; i < n; i++) {
         const rr = r + dr * i, cc = c + dc * i, cur = at(rr, cc);
-        if (cur) { if (cur !== ch[i] || (dirs.get(rr + "," + cc) || "").includes(String(d))) return false; cross++; continue; }
+        if (cur) { if (cur !== ch[i] || (dirs.get(rr + "," + cc) || "").includes(String(d))) return false; continue; }
         if (at(rr + dc, cc + dr) || at(rr - dc, cc - dr)) return false; // соседи сбоку
       }
-      const r0 = Math.min(minR, r), r1 = Math.max(maxR, r + dr * (n - 1)), c0 = Math.min(minC, c), c1 = Math.max(maxC, c + dc * (n - 1));
-      if (r1 - r0 >= CW_N || c1 - c0 >= CW_N) return false;
-      return cross > 0;
+      const r0 = Math.min(b.minR, r), r1 = Math.max(b.maxR, r + dr * (n - 1)), c0 = Math.min(b.minC, c), c1 = Math.max(b.maxC, c + dc * (n - 1));
+      return r1 - r0 < CW_ROWS && c1 - c0 < CW_N;
     };
-    put(cand[0], 0, 0, 0);
-    for (const x of cand.slice(1)) {
-      if (placed.length >= 7) break;
-      if (placed.some((p) => p.w === x.w)) continue;
+    const tryAdd = (x) => {
       const ch = [...x.w], opts = [];
       for (const p of placed) [...p.w].forEach((pk, pi) => ch.forEach((k, i) => {
         if (k !== pk) return;
@@ -3352,31 +3346,64 @@ function cwBuild(pool, rnd = Math.random) {
         const r = pr - (d ? i : 0), c = pc - (d ? 0 : i);
         if (fits(x, r, c, d)) opts.push([r, c, d]);
       }));
-      if (opts.length) { const o = opts[Math.floor(rnd() * opts.length)]; put(x, ...o); }
-    }
-    const crosses = [...grid.keys()].filter((key) => placed.filter((p) => [...p.w].some((_, i) => (p.r + (p.d ? i : 0)) + "," + (p.c + (p.d ? 0 : i)) === key)).length > 1).length;
-    const score = placed.length * 10 + crosses;
-    if (!best || score > best.score) best = { score, placed: placed.map((p) => Object.assign({}, p)), minR, minC, maxR, maxC };
-    if (placed.length >= 7) break;
+      if (!opts.length) return false;
+      put(x, ...opts[Math.floor(rnd() * opts.length)]); return true;
+    };
+    put(first, 0, 0, d0);
+    return { placed, b, tryAdd, h: () => b.maxR - b.minR + 1, w: () => b.maxC - b.minC + 1 };
   }
-  // сдвиг в начало координат и нумерация по положению начала
-  const words = best.placed.map((p) => ({ w: p.w, cyr: p.cyr, ru: p.ru, emo: p.emo, r: p.r - best.minR, c: p.c - best.minC, d: p.d }));
+  let best = null;
+  for (let attempt = 0; attempt < 200; attempt++) {
+    let left = shuf(chosen);
+    const isl = [];
+    while (left.length) {
+      const one = island(left.shift(), rnd() < 0.5 ? 0 : 1);
+      for (let again = true; again;) { again = false; for (const x of left.slice()) if (one.tryAdd(x)) { left = left.filter((y) => y !== x); again = true; } }
+      isl.push(one);
+    }
+    // раскладываем островки полками: слева направо, не влезло — ниже; между ними пустая клетка
+    isl.sort((a, b) => b.placed.length - a.placed.length);
+    let x = 0, y = 0, shelf = 0, cols = 0, ok = true;
+    const words = [];
+    for (const one of isl) {
+      const w = one.w(), hgt = one.h();
+      if (x && x + w > CW_N) { y += shelf + 1; x = 0; shelf = 0; }
+      if (w > CW_N) { ok = false; break; }
+      one.placed.forEach((p) => words.push({ w: p.w, cyr: p.cyr, ru: p.ru, emo: p.emo, r: p.r - one.b.minR + y, c: p.c - one.b.minC + x, d: p.d }));
+      x += w + 1; shelf = Math.max(shelf, hgt); cols = Math.max(cols, x - 1);
+    }
+    const rows = y + shelf;
+    if (!ok || rows > CW_ROWS) continue;
+    const cells = new Map(); words.forEach((wd) => [...wd.w].forEach((_, i) => { const key = (wd.r + (wd.d ? i : 0)) + "," + (wd.c + (wd.d ? 0 : i)); cells.set(key, (cells.get(key) || 0) + 1); }));
+    const crosses = [...cells.values()].filter((n) => n > 1).length;
+    const score = crosses * 4 - isl.length * 6 - rows * cols * 0.1;
+    if (!best || score > best.score) best = { score, words, rows, cols };
+  }
+  // нумерация по положению начала слова
+  const words = best.words;
   const starts = [...new Set(words.map((x) => x.r * 100 + x.c))].sort((a, b) => a - b);
   words.forEach((x) => { x.no = starts.indexOf(x.r * 100 + x.c) + 1; });
   words.sort((a, b) => a.no - b.no || a.d - b.d);
-  return { words, rows: best.maxR - best.minR + 1, cols: best.maxC - best.minC + 1, filled: {}, helped: {}, done: false };
+  return { words, rows: best.rows, cols: best.cols, filled: {}, helped: {}, done: false };
 }
 function cwPool() {
-  const ok = (c) => !SMALL[c] && known(c);
-  const seen = new Set();
-  return ORDER_ITEMS.concat(CW_EXTRA).map((x) => ({ w: x[0], cyr: x[1], ru: x[2], emo: x[3] }))
-    .filter((x) => { const ch = [...x.w]; return ch.length >= 2 && ch.length <= 5 && ch.every(ok) && !seen.has(x.w) && seen.add(x.w); });
+  // маленькие ゃゅょっ тоже вписываются в клетку — нужно только знать большую
+  const ok = (c) => !!KANA[c] && known(SMALL[c] || c);
+  return CW_WORDS.map((x) => ({ w: x[0], cyr: x[1], ru: x[2], emo: x[3] })).filter((x) => [...x.w].every(ok));
 }
 const cwCells = (x) => [...x.w].map((k, i) => ({ k, r: x.r + (x.d ? i : 0), c: x.c + (x.d ? 0 : i), key: (x.r + (x.d ? i : 0)) + "," + (x.c + (x.d ? 0 : i)) }));
 function startCrossword(fresh) {
   const pool = cwPool();
   if (pool.length < 8) return;
-  if (fresh || !S.pet.cw || S.pet.cw.done) { S.pet.cw = cwBuild(pool); save(); }
+  // кроссворд из старых слов (до учебного списка) начинаем заново
+  const stale = S.pet.cw && S.pet.cw.words && S.pet.cw.words.some((x) => !pool.some((p) => p.w === x.w));
+  if (fresh || stale || !S.pet.cw || S.pet.cw.done) {
+    // считаем, сколько раз слово попадалось, чтобы по очереди пройти все слова из учебника
+    const seen = S.pet.cwSeen || (S.pet.cwSeen = {});
+    S.pet.cw = cwBuild(pool, Math.random, seen);
+    S.pet.cw.words.forEach((x) => { seen[x.w] = (seen[x.w] || 0) + 1; });
+    save();
+  }
   const cw = S.pet.cw;
   const today = dayKey();
   if (!S.pet.cwday || S.pet.cwday.day !== today) S.pet.cwday = { day: today, stars: 0, kp: false };
