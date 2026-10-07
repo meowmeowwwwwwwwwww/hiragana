@@ -129,7 +129,7 @@ p { margin: 0; }
 .tab-t { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tab[aria-selected="true"] { color: var(--primary-deep); }
 .tab { position: relative; z-index: 1; }
-.tab-pill { position: absolute; left: 5px; top: 5px; bottom: 5px; width: calc((100% - 10px) / 4); border-radius: 999px; background: rgb(255 111 159 / .16); transition: transform .32s cubic-bezier(.22, .9, .3, 1); will-change: transform; }
+.tab-pill { position: absolute; left: 5px; top: 5px; bottom: 5px; width: calc((100% - 10px) / 5); border-radius: 999px; background: rgb(255 111 159 / .16); transition: transform .32s cubic-bezier(.22, .9, .3, 1); will-change: transform; }
 .tab[aria-selected="true"] .fillme { fill: var(--primary-2); }
 .tab:active .tab-ico { transform: scale(.86); }
 .badge {
@@ -681,6 +681,38 @@ details.how .how-body { display: grid; gap: 10px; margin-top: 12px; max-width: 6
 .num-cell .ja { font-size: 19px; line-height: 1.3; }
 .num-cell small { font-size: 11px; font-weight: 700; color: var(--muted); }
 .task-big.num { font-variant-numeric: tabular-nums; }
+.v-head p { margin: 4px 0 0; }
+.v-set { display: grid; gap: 8px; margin-top: 12px; }
+.v-set-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.v-set-top h3 { margin: 0; font-size: 18px; }
+.v-count { font-size: 18px; font-weight: 800; color: var(--primary); }
+.v-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.v-actions .btn { width: 100%; }
+.v-seg { margin: 4px 0 10px; }
+.v-dict { display: grid; gap: 6px; }
+.v-row { display: grid; grid-template-columns: 44px 1fr auto auto; align-items: center; gap: 10px; width: 100%; padding: 6px 12px 6px 6px; border-radius: 18px; border: 3px solid #fff; background: rgb(255 255 255 / .85); box-shadow: 0 2px 0 var(--line); text-align: left; color: var(--ink); }
+.v-row-ico { width: 44px; height: 44px; }
+.v-row-main { display: grid; min-width: 0; }
+.v-row-main b { font-family: var(--kana); font-weight: 600; font-size: 20px; line-height: 1.2; }
+.v-row-main .muted { font-size: 12px; }
+.v-row-ru { font-size: 14px; font-weight: 700; text-align: right; max-width: 9.5em; }
+.v-dots { display: inline-flex; gap: 3px; }
+.v-dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--line); }
+.v-dots i.on { background: var(--ok); }
+.v-mode { display: grid; gap: 2px; width: 100%; text-align: left; padding: 12px 16px; color: var(--ink); }
+.v-mode b { font-size: 17px; }
+.v-cards { gap: 14px; }
+.v-flash { display: grid; place-items: center; min-height: 380px; width: 100%; padding: 18px; border-radius: 30px; border: 3px solid #fff; background: #fff; box-shadow: var(--shadow); color: var(--ink); animation: v-in .28s cubic-bezier(.3, 1.4, .5, 1); }
+.v-flash.flipped { background: linear-gradient(180deg, #fff, var(--cream)); animation: v-flip .32s ease; }
+.v-face { display: grid; justify-items: center; gap: 8px; text-align: center; }
+.v-tap { font-size: 13px; }
+.v-pic-mid { width: 88px; height: 88px; }
+.v-flash-bar { justify-content: center; }
+.v-flash-bar .btn { flex: 1; max-width: 190px; }
+.btn.v-no { background: #fff; }
+@keyframes v-in { from { transform: translateY(14px) scale(.96); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes v-flip { 0% { transform: rotateY(0); } 50% { transform: rotateY(90deg); } 100% { transform: rotateY(0); } }
+@media (prefers-reduced-motion: reduce) { .v-flash, .v-flash.flipped { animation: none; } }
 .vocab-panel { display: grid; gap: 8px; }
 .v-sub { font-size: 13px; font-weight: 700; }
 .v-strip { display: grid; grid-template-columns: repeat(10, 1fr); gap: 3px; }
@@ -869,6 +901,7 @@ html.sheet-open, html.sheet-open body { overflow: hidden; }
   <div id="pager"><main id="main"></main></div>
   <nav class="tabbar" id="tabs" role="tablist" aria-label="Разделы">
     <button class="tab" role="tab" data-tab="home" aria-selected="true"><span class="tab-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="fillme" d="M12 6.4C10.2 5 7.6 4.4 4.6 4.6c-.6 0-1.1.5-1.1 1.1v11.8c0 .6.5 1.1 1.1 1.1 2.8-.1 5.2.5 7.4 2 2.2-1.5 4.6-2.1 7.4-2 .6 0 1.1-.5 1.1-1.1V5.7c0-.6-.5-1.1-1.1-1.1-3-.2-5.6.4-7.4 1.8z"/><path d="M12 6.4v13.8"/></svg></span><span class="tab-t">Уроки</span></button>
+    <button class="tab" role="tab" data-tab="words" aria-selected="false"><span class="tab-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect class="fillme" x="6.2" y="3.6" width="13.4" height="15.2" rx="2.6" transform="rotate(8 12.9 11.2)"/><rect x="3.8" y="5.4" width="13.4" height="15.2" rx="2.6" fill="#fff"/><path d="M7.4 10.2h6.2M10.5 8.6v4.6c0 1.6-.9 3.2-2.8 3.6M13 13.4c-.6 2-2.4 3.6-4.6 3.6"/></svg></span><span class="tab-t">Слова</span></button>
     <button class="tab" role="tab" data-tab="review" aria-selected="false"><span class="tab-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.2 9.4A7.6 7.6 0 0 0 5.6 7.2M4.8 14.6a7.6 7.6 0 0 0 13.6 2.2"/><path class="fillme" d="M20.4 4.2v5.6h-5.6zM3.6 19.8v-5.6h5.6z"/></svg><span class="badge" id="due-badge" hidden>0</span></span><span class="tab-t">Повторы</span></button>
     <button class="tab" role="tab" data-tab="pet" aria-selected="false"><span class="tab-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="fillme" d="M12 12.6c-3 0-5.8 2.6-5.8 5 0 1.6 1.2 2.4 2.6 2.4 1.3 0 2-.6 3.2-.6s1.9.6 3.2.6c1.4 0 2.6-.8 2.6-2.4 0-2.4-2.8-5-5.8-5z"/><ellipse class="fillme" cx="5.2" cy="10.2" rx="1.9" ry="2.4"/><ellipse class="fillme" cx="9.2" cy="6.2" rx="1.9" ry="2.5"/><ellipse class="fillme" cx="14.8" cy="6.2" rx="1.9" ry="2.5"/><ellipse class="fillme" cx="18.8" cy="10.2" rx="1.9" ry="2.4"/></svg></span><span class="tab-t" id="pet-tab">Моня</span></button>
     <button class="tab" role="tab" data-tab="table" aria-selected="false"><span class="tab-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect class="fillme" x="3.6" y="3.6" width="7" height="7" rx="2.2"/><rect class="fillme" x="13.4" y="3.6" width="7" height="7" rx="2.2"/><rect class="fillme" x="3.6" y="13.4" width="7" height="7" rx="2.2"/><rect class="fillme" x="13.4" y="13.4" width="7" height="7" rx="2.2"/></svg></span><span class="tab-t">Таблица</span></button>
@@ -1171,13 +1204,16 @@ const VOCAB_WORDS = [
   { w: "たまご", cyr: "тамаго", lat: "tamago", ru: "яйцо", mn: "*Тамаго*чи вылупился из яйца — «*тамаго*»." },
   { w: "かぞく", cyr: "кадзоку", lat: "kazoku", ru: "семья", mn: "*Ка-дзо-ку* — три слога, как папа, мама и я: семья." }
 ];
-const VOCAB_GROUPS = [0, 1, 2, 3].map((g) => VOCAB_WORDS.slice(g * 5, g * 5 + 5));
+// Наборы слов (раздел «Слова»): новые страницы учебника добавляются сюда отдельными наборами
+const VOCAB_SETS = [{ id: "p24", title: VOCAB_TITLE, jp: "ことばを よみましょう", words: VOCAB_WORDS }];
+const VOCAB_ALL = VOCAB_SETS.flatMap((x) => x.words);
+const vSet = (id) => VOCAB_SETS.find((x) => x.id === id) || VOCAB_SETS[0];
 // Неверные написания: сначала ловушки из учебника, потом похожие знаки, тэнтэн, маленькие/большие, перестановки
 const VOCAB_TRAPS = { "とけい": ["とけえ", "ときい", "とけ"], "とうきょう": ["ときょう", "とうきよう", "とおきょう"], "おちゃ": ["おちや", "おちょ", "おしゃ"], "ざっし": ["ざつし", "さっし", "ざし"] };
 const LOOKALIKE = [["ぬ", "め"], ["ね", "れ", "わ"], ["る", "ろ"], ["さ", "ち", "き"], ["は", "ほ"], ["い", "こ", "り"], ["あ", "お"], ["う", "つ"], ["ま", "も"], ["て", "そ"], ["に", "た"], ["く", "へ"], ["す", "む"], ["や", "か"], ["ひ", "ふ"], ["み", "め"], ["よ", "ま"], ["け", "は"], ["ん", "し"]];
 function vSpellings(w, n = 3) {
   const out = new Set(VOCAB_TRAPS[w] || []), ch = [...w];
-  const add = (a) => { const v = a.join(""); if (v !== w && !VOCAB_WORDS.some((x) => x.w === v)) out.add(v); };
+  const add = (a) => { const v = a.join(""); if (v !== w && !VOCAB_ALL.some((x) => x.w === v)) out.add(v); };
   ch.forEach((c, i) => {
     const d = c.normalize("NFD");
     if (d.length > 1) { const a = ch.slice(); a[i] = d[0]; add(a); }
@@ -3567,11 +3603,20 @@ function startCrossword(fresh) {
 
 /* ===================== Слова к тесту (учебник) ===================== */
 // S.vocab: lv — уровень слова 0…5 (3 и выше — выучено), resume — место в «Учить», best/last — пробный тест
-function vState() { if (!S.vocab) S.vocab = { lv: {}, resume: null, best: null, last: null }; return S.vocab; }
+function vState() {
+  if (!S.vocab) S.vocab = { lv: {} };
+  const v = S.vocab;
+  if (!v.res) v.res = {};
+  if (!v.tests) v.tests = {};
+  // перенос из первой версии: одно место и один тест — это набор стр. 24
+  if (v.resume !== undefined) { if (v.resume) v.res.p24 = v.resume; delete v.resume; }
+  if (v.best !== undefined || v.last !== undefined) { v.tests.p24 = { best: v.best || null, last: v.last || null }; delete v.best; delete v.last; }
+  return v;
+}
 const vLevel = (w) => vState().lv[w] || 0;
 function vGrade(w, ok) { const v = vState(); v.lv[w] = Math.max(0, Math.min(5, (v.lv[w] || 0) + (ok ? 1 : -1))); }
-const vKnownN = () => VOCAB_WORDS.filter((x) => vLevel(x.w) >= 3).length;
-const vByW = (w) => VOCAB_WORDS.find((x) => x.w === w);
+const vKnownN = (words = VOCAB_ALL) => words.filter((x) => vLevel(x.w) >= 3).length;
+const vByW = (w) => VOCAB_ALL.find((x) => x.w === w);
 const vReveal = (x) => h("span", {}, h("b", { lang: "ja" }, kanaText(x.w)), ` «${x.cyr}» — ${x.ru}`);
 const vPicCard = (x, withRu = true) => h("div", { class: "v-card" }, wordIcon(x.w, "v-pic"), withRu ? h("div", { class: "v-ru" }, x.ru) : null);
 function vMnemo(x) {
@@ -3650,21 +3695,23 @@ function vTaskWrite(x, sh, onDone) {
   one();
 }
 
-function startVocab(mode, only) {
+function startVocab(mode, only, setId = "p24") {
+  const SET = vSet(setId), WORDS = SET.words;
+  const GROUPS = []; for (let g = 0; g < WORDS.length; g += 5) GROUPS.push(WORDS.slice(g, g + 5));
   const v = vState();
   const titles = { learn: "Слова к тесту", review: "Повторение слов", test: "Пробный тест" };
   const sh = openShell(titles[mode]);
   const phases = [];
   if (mode === "learn") {
     phases.push({ t: "intro" });
-    VOCAB_GROUPS.forEach((_, g) => phases.push({ t: "meet", g }, { t: "quiz", g }, { t: "build", g }, { t: "write", g }));
+    GROUPS.forEach((_, g) => phases.push({ t: "meet", g }, { t: "quiz", g }, { t: "build", g }, { t: "write", g }));
     phases.push({ t: "traps" }, { t: "mix" }, { t: "finish" });
   } else if (mode === "review") phases.push({ t: "review" }, { t: "finish" });
   else phases.push({ t: "test" }, { t: "testEnd" });
   const stats = { ok: 0, tot: 0 };
   let pi = -1, sub = null;
-  const saved = mode === "learn" ? v.resume : null;
-  const keep = (state) => { if (mode !== "learn" || phases[pi].t === "intro" || phases[pi].t === "finish") return; v.resume = { pi, sub: state || null, stats: Object.assign({}, stats), at: Date.now() }; save(); };
+  const saved = mode === "learn" ? v.res[SET.id] : null;
+  const keep = (state) => { if (mode !== "learn" || phases[pi].t === "intro" || phases[pi].t === "finish") return; v.res[SET.id] = { pi, sub: state || null, stats: Object.assign({}, stats), at: Date.now() }; save(); };
   const next = () => { pi++; sh.progress(pi / (phases.length - 1)); keep(); run(phases[pi]); };
   const takeSub = () => { const x = sub; sub = null; return x; };
   const count = (ok, w) => { stats.tot++; if (ok) stats.ok++; if (w) vGrade(w, ok); save(); };
@@ -3701,10 +3748,10 @@ function startVocab(mode, only) {
   };
   function intro() {
     sh.stage("начало");
-    const parts = [h("div", { class: "eyebrow" }, VOCAB_TITLE), h("h2", {}, "20 слов к тесту"),
-      h("div", { class: "v-strip" }, VOCAB_WORDS.map((x) => h("span", { class: vLevel(x.w) >= 3 ? "ok" : "" }, wordIcon(x.w)))),
+    const parts = [h("div", { class: "eyebrow" }, SET.title), h("h2", {}, `${WORDS.length} слов`),
+      h("div", { class: "v-strip" }, WORDS.map((x) => h("span", { class: vLevel(x.w) >= 3 ? "ok" : "" }, wordIcon(x.w)))),
       h("p", {}, "Учим по пять слов. С каждым словом: картинка, звук и подсказка, как запомнить. Потом узнаёшь его среди других, собираешь из слогов, как во втором упражнении учебника, и пишешь рукой."),
-      h("p", {}, "В конце — ловушки из рамки «きを つけましょう!»: とけい, とうきょう, おちゃ, ざっし — и все 20 слов вперемешку."),
+      h("p", {}, `В конце — ловушки из рамки «きを つけましょう!» (${WORDS.filter((x) => x.trap).map((x) => x.w).join(", ")}) и все слова вперемешку.`),
       h("p", { class: "muted" }, "Можно выйти в любой момент: продолжишь с того же места.")];
     const go = h("button", { class: "btn primary", type: "button", onclick: next }, "Начать");
     if (saved && saved.pi > 0 && saved.pi < phases.length - 1) {
@@ -3716,7 +3763,7 @@ function startVocab(mode, only) {
     sh.set(h("div", { class: "task explain" }, parts, h("div", { class: "row" }, go)));
   }
   function meet(g) {
-    const st = takeSub(), list = VOCAB_GROUPS[g];
+    const st = takeSub(), list = GROUPS[g];
     let i = st ? st.i || 0 : 0;
     function show() {
       sh.stage(`знакомство · ${gname(g)}`); sh.count(`${i} / ${list.length}`);
@@ -3737,50 +3784,51 @@ function startVocab(mode, only) {
     show();
   }
   function quiz(g) {
-    const list = VOCAB_GROUPS[g];
+    const list = GROUPS[g];
     queueRun(`узнаём ${gname(g)}`, takeSub(), () => {
       const q = shuffle(list.flatMap((x) => [{ w: x.w, k: "pk" }, { w: x.w, k: "kr" }]));
       for (let j = 1; j < q.length; j++) if (q[j].w === q[j - 1].w) { const z = (j + 2) % q.length; [q[j], q[z]] = [q[z], q[j]]; }
       return q;
     }, (it, done) => taskOf(it, done, list));
   }
-  function build(g) { queueRun(`собираем ${gname(g)}`, takeSub(), () => shuffle(VOCAB_GROUPS[g].map((x) => ({ w: x.w, k: "bd" }))), (it, done) => taskOf(it, done), false); }
-  function write(g) { queueRun(`пишем ${gname(g)}`, takeSub(), () => shuffle(VOCAB_GROUPS[g].map((x) => ({ w: x.w, k: "wr" }))), (it, done) => taskOf(it, done), false); }
+  function build(g) { queueRun(`собираем ${gname(g)}`, takeSub(), () => shuffle(GROUPS[g].map((x) => ({ w: x.w, k: "bd" }))), (it, done) => taskOf(it, done), false); }
+  function write(g) { queueRun(`пишем ${gname(g)}`, takeSub(), () => shuffle(GROUPS[g].map((x) => ({ w: x.w, k: "wr" }))), (it, done) => taskOf(it, done), false); }
   function traps() {
     const st = takeSub();
-    const go = () => queueRun("ловушки", { queue: null }, () => shuffle(["とけい", "とうきょう", "おちゃ", "ざっし", pick1(["にほんご", "かぞく", "たまご"]), pick1(["てんぷら", "ふじさん", "やさい"])].map((w) => ({ w, k: "sp" }))), (it, done) => taskOf(it, done));
+    const go = () => queueRun("ловушки", { queue: null }, () => shuffle(WORDS.filter((x) => x.trap).map((x) => x.w).concat(shuffle(WORDS.filter((x) => !x.trap)).slice(0, 2).map((x) => x.w)).map((w) => ({ w, k: "sp" }))), (it, done) => taskOf(it, done));
     if (st && st.queue) return queueRun("ловушки", st, null, (it, done) => taskOf(it, done));
     sh.stage("ловушки"); sh.count("");
     const row = (w, text) => h("div", { class: "v-rule" }, wordIcon(w, "v-pic-s"), h("div", {}, h("b", { lang: "ja" }, kanaText(w)), h("p", {}, text)));
     sh.set(h("div", { class: "task explain" }, h("div", { class: "eyebrow", lang: "ja" }, "きを つけましょう！"), h("h2", {}, "Ловушки из учебника"),
-      VOCAB_WORDS.filter((x) => x.trap).map((x) => row(x.w, x.trap)),
+      WORDS.filter((x) => x.trap).map((x) => row(x.w, x.trap)),
       h("div", { class: "row", style: "justify-content:center" }, h("button", { class: "btn primary", type: "button", onclick: go }, "Проверить себя"))));
   }
   function mix() {
-    queueRun("все 20 слов", takeSub(), () => shuffle(VOCAB_WORDS.map((x) => ({ w: x.w, k: pick1(jaVoice ? ["pk", "kr", "bd", "ls"] : ["pk", "kr", "bd"]) }))), (it, done) => taskOf(it, done));
+    queueRun(`все ${WORDS.length} слов`, takeSub(), () => shuffle(WORDS.map((x) => ({ w: x.w, k: pick1(jaVoice ? ["pk", "kr", "bd", "ls"] : ["pk", "kr", "bd"]) }))), (it, done) => taskOf(it, done));
   }
   function review() {
-    const words = only && only.length ? only.map(vByW) : shuffle(VOCAB_WORDS.slice()).sort((a, b) => vLevel(a.w) - vLevel(b.w)).slice(0, 10);
+    const words = only && only.length ? only.map(vByW) : shuffle(WORDS.slice()).sort((a, b) => vLevel(a.w) - vLevel(b.w)).slice(0, 10);
     const kinds = jaVoice ? ["pk", "kr", "bd", "ls"] : ["pk", "kr", "bd"];
     queueRun("повторение", null, () => shuffle(words.map((x, j) => ({ w: x.w, k: j < 3 ? "wr" : x.trap && Math.random() < 0.5 ? "sp" : pick1(kinds) }))), (it, done) => taskOf(it, done));
   }
   const misses = [];
   function test() {
     // как на тесте: каждое слово по одному разу, без повторов
-    const order = shuffle(VOCAB_WORDS.slice());
+    const order = shuffle(WORDS.slice());
     const kinds = ["kr", "kr", "kr", "kr", "kr", "kr", "pk", "pk", "pk", "pk", "pk", "bd", "bd", "bd", "bd", "sp", "wr", "wr", "wr", jaVoice ? "ls" : "pk"];
     const tr = order.filter((x) => x.trap), rest = order.filter((x) => !x.trap), q = [];
     // ловушки — всегда на правописание или сборку
     tr.forEach((x, j) => q.push({ w: x.w, k: j % 2 ? "bd" : "sp" }));
     const left = shuffle(kinds.filter((k, j) => !(k === "sp" || (k === "bd" && j < 13)))).slice(0, rest.length);
     rest.forEach((x, j) => q.push({ w: x.w, k: left[j] || "pk" }));
-    queueRun("20 вопросов", null, () => shuffle(q), (it, done) => taskOf(it, (ok) => { if (!ok) misses.push(it.w); done(ok); }), false);
+    queueRun(`${WORDS.length} вопросов`, null, () => shuffle(q), (it, done) => taskOf(it, (ok) => { if (!ok) misses.push(it.w); done(ok); }), false);
   }
   function testEnd() {
     sh.stage("итог"); sh.count("");
     const score = stats.ok, tot = stats.tot;
-    v.last = { score, tot, at: Date.now() };
-    if (!v.best || score > v.best.score) v.best = { score, tot, at: Date.now() };
+    const T = v.tests[SET.id] || (v.tests[SET.id] = { best: null, last: null });
+    T.last = { score, tot, at: Date.now() };
+    if (!T.best || score > T.best.score) T.best = { score, tot, at: Date.now() };
     save();
     const great = score >= tot - 2;
     sh.set(h("div", { class: "summary" },
@@ -3789,24 +3837,80 @@ function startVocab(mode, only) {
       misses.length ? h("div", {}, h("p", { class: "muted" }, "Ошибки — их стоит повторить:"),
         h("div", { class: "cw-words" }, misses.map((w) => { const x = vByW(w); return h("span", {}, wordIcon(w, "cw-chip-ico"), " ", h("b", { lang: "ja" }, kanaText(w)), " ", x.ru); }))) : h("p", {}, "Без единой ошибки!"),
       h("div", { class: "row", style: "justify-content:center" },
-        misses.length ? h("button", { class: "btn primary", type: "button", onclick: () => { closeShell(); startVocab("review", misses.slice()); } }, "Повторить ошибки") : null,
+        misses.length ? h("button", { class: "btn primary", type: "button", onclick: () => { closeShell(); startVocab("review", misses.slice(), SET.id); } }, "Повторить ошибки") : null,
         h("button", { class: misses.length ? "btn" : "btn primary", type: "button", onclick: () => closeShell() }, "Готово"))));
     if (great) petalBurst(document.querySelector(".summary"));
   }
   function finish() {
     sh.stage("готово"); sh.count("");
-    if (mode === "learn") { v.resume = null; award(10); }
+    if (mode === "learn") { delete v.res[SET.id]; award(10); }
     save();
-    const n = vKnownN();
+    const n = vKnownN(WORDS);
     sh.set(h("div", { class: "summary" },
-      h("div", { class: "say-row" }, mascot("happy", true), bubble("yay", mode === "learn" ? "Все 20 слов пройдены!" : "Повторение готово")),
-      h("div", { class: "big-stats" }, h("div", {}, h("b", {}, stats.tot ? Math.round((100 * stats.ok) / stats.tot) + "%" : "—"), h("span", {}, "верно с первого раза")), h("div", {}, h("b", {}, `${n}/20`), h("span", {}, "слов выучено"))),
+      h("div", { class: "say-row" }, mascot("happy", true), bubble("yay", mode === "learn" ? "Все слова пройдены!" : "Повторение готово")),
+      h("div", { class: "big-stats" }, h("div", {}, h("b", {}, stats.tot ? Math.round((100 * stats.ok) / stats.tot) + "%" : "—"), h("span", {}, "верно с первого раза")), h("div", {}, h("b", {}, `${n}/${WORDS.length}`), h("span", {}, "слов выучено"))),
       h("p", { class: "note" }, "Слово считается выученным после трёх верных ответов подряд. Повторяй понемногу каждый день, а накануне теста пройди пробный тест."),
       h("div", { class: "row", style: "justify-content:center" },
-        h("button", { class: "btn primary", type: "button", onclick: () => { closeShell(); startVocab("test"); } }, "Пробный тест"),
+        h("button", { class: "btn primary", type: "button", onclick: () => { closeShell(); startVocab("test", null, SET.id); } }, "Пробный тест"),
         h("button", { class: "btn", type: "button", onclick: () => closeShell() }, "Готово"))));
   }
   next();
+}
+
+// Карточки: вспомнить слово по картинке (или значение по слову), перевернуть, отметить «помню / не помню»
+function startCards(setId = "p24") {
+  const SET = vSet(setId), sh = openShell("Карточки");
+  let dir = "pic";
+  function choose() {
+    sh.stage("начало"); sh.count(""); sh.progress(0);
+    const opt = (d, title, text) => h("button", { class: "panel v-mode", type: "button", onclick: () => { dir = d; start(); } }, h("b", {}, title), h("span", { class: "muted" }, text));
+    sh.set(h("div", { class: "task explain" }, h("div", { class: "eyebrow" }, SET.title), h("h2", {}, "Карточки"),
+      h("p", {}, "Посмотри на карточку и вспомни ответ, потом переверни её и честно отметь, вспомнила или нет. Что не вспомнилось — вернётся в конце."),
+      opt("pic", "Картинка → слово", "Видишь картинку и значение, вспоминаешь японское слово."),
+      opt("kana", "Слово → значение", "Видишь хирагану, вспоминаешь, что она значит.")));
+  }
+  function start() {
+    // сначала слабые слова
+    const queue = shuffle(SET.words.slice()).sort((a, b) => vLevel(a.w) - vLevel(b.w));
+    const total = queue.length; let known = 0, firstOk = 0; const tried = new Set();
+    function show() {
+      sh.stage(dir === "pic" ? "картинка → слово" : "слово → значение"); sh.count(`${known} / ${total}`); sh.progress(known / total);
+      if (!queue.length) return end();
+      const x = queue[0];
+      const front = dir === "pic" ? [wordIcon(x.w, "v-pic-big"), h("div", { class: "v-meaning" }, x.ru)] : [h("div", { class: "v-word" + ([...x.w].length > 4 ? " long" : ""), lang: "ja" }, kanaText(x.w)), sayBtn(x.w)];
+      const back = [wordIcon(x.w, "v-pic-mid"), h("div", { class: "v-word" + ([...x.w].length > 4 ? " long" : ""), lang: "ja" }, kanaText(x.w)),
+        h("div", { class: "facts" }, h("span", {}, `${x.cyr} · ${x.lat}`), sayBtn(x.w)), h("div", { class: "v-meaning" }, x.ru), x.trap ? vTrapNote(x) : null];
+      const cardEl = h("button", { class: "v-flash", type: "button", "aria-label": "Перевернуть карточку" }, h("div", { class: "v-face" }, front, h("span", { class: "muted v-tap" }, "нажми, чтобы перевернуть")));
+      const bar = h("div", { class: "row v-flash-bar" });
+      const mark = (ok) => {
+        if (!tried.has(x.w)) { tried.add(x.w); vGrade(x.w, ok); if (ok) firstOk++; save(); }
+        queue.shift();
+        if (ok) known++; else queue.push(x);
+        show();
+      };
+      const flip = () => {
+        if (cardEl.classList.contains("flipped")) return;
+        cardEl.classList.add("flipped"); say(x.w);
+        cardEl.replaceChildren(h("div", { class: "v-face" }, back));
+        bar.replaceChildren(h("button", { class: "btn v-no", type: "button", onclick: () => mark(false) }, "Не помню"), h("button", { class: "btn primary", type: "button", onclick: () => mark(true) }, "Помню"));
+      };
+      cardEl.addEventListener("click", flip);
+      bar.append(h("button", { class: "btn primary", type: "button", onclick: flip }, "Перевернуть"));
+      sh.set(h("div", { class: "task v-cards" }, cardEl, bar));
+    }
+    show();
+    function end() {
+      sh.stage("готово"); sh.count(""); sh.progress(1);
+      if (firstOk) award(Math.min(5, Math.ceil(firstOk / 4)));
+      sh.set(h("div", { class: "summary" },
+        h("div", { class: "say-row" }, mascot("happy", true), bubble("yay", `Вспомнила сразу ${firstOk} из ${total}`)),
+        h("div", { class: "big-stats" }, h("div", {}, h("b", {}, `${vKnownN(SET.words)}/${total}`), h("span", {}, "слов выучено"))),
+        h("div", { class: "row", style: "justify-content:center" },
+          h("button", { class: "btn primary", type: "button", onclick: () => start() }, "Ещё раз"),
+          h("button", { class: "btn", type: "button", onclick: () => closeShell() }, "Готово"))));
+    }
+  }
+  choose();
 }
 
 /* Игра «Апорт»: чтение знаков */
@@ -3956,9 +4060,50 @@ function updateBadge() {
   const n = dueItems().length;
   b.hidden = n === 0; b.textContent = String(n);
 }
-const TAB_ORDER = ["home", "review", "pet", "table"];
+/* ===================== Вкладка «Слова» ===================== */
+let wordsFilter = "all";
+const levelDots = (w) => h("span", { class: "v-dots", "aria-label": `уровень ${Math.min(3, vLevel(w))} из 3` }, [0, 1, 2].map((i) => h("i", { class: i < vLevel(w) ? "on" : "" })));
+function wordsView() {
+  const v = vState();
+  const total = VOCAB_ALL.length, known = vKnownN();
+  const head = h("section", { class: "panel today bowed v-head" },
+    h("div", { class: "eyebrow", lang: "ja" }, "ことば"),
+    h("h2", {}, "Слова"),
+    h("p", { class: "muted" }, `${total} ${plural(total, "слово", "слова", "слов")} · выучено ${known}`));
+  const sets = VOCAB_SETS.map((st) => {
+    const n = vKnownN(st.words), T = v.tests[st.id], res = v.res[st.id];
+    return h("section", { class: "panel v-set" },
+      h("div", { class: "v-set-top" }, h("div", {}, h("h3", {}, st.title), h("div", { class: "muted v-sub", lang: "ja" }, st.jp)), h("span", { class: "v-count num" }, `${n}/${st.words.length}`)),
+      h("div", { class: "v-progress" }, h("span", { style: `width:${(n / st.words.length) * 100}%` })),
+      T && T.best ? h("div", { class: "muted v-line" }, `Лучший тест: ${T.best.score} из ${T.best.tot}` + (T.last && T.last.at !== T.best.at ? ` · последний ${T.last.score}` : "")) : null,
+      h("div", { class: "v-actions" },
+        h("button", { class: "btn primary", type: "button", onclick: () => startVocab("learn", null, st.id) }, res ? "Продолжить" : "Учить"),
+        h("button", { class: "btn", type: "button", onclick: () => startCards(st.id) }, "Карточки"),
+        h("button", { class: "btn", type: "button", onclick: () => startVocab("review", null, st.id) }, "Повторить"),
+        h("button", { class: "btn", type: "button", onclick: () => startVocab("test", null, st.id) }, "Тест")));
+  });
+  const seg = h("div", { class: "seg v-seg", role: "group", "aria-label": "Какие слова показать" },
+    [["all", "Все"], ["learn", "Учу"], ["known", "Выучено"]].map(([k, t]) => h("button", { type: "button", "aria-pressed": String(wordsFilter === k), onclick: () => { wordsFilter = k; render(); } }, t)));
+  const list = VOCAB_ALL.filter((x) => wordsFilter === "all" || (wordsFilter === "known") === (vLevel(x.w) >= 3));
+  const dict = h("div", { class: "v-dict" }, list.length ? list.map((x) => h("button", { class: "v-row", type: "button", onclick: () => wordSheet(x) },
+    wordIcon(x.w, "v-row-ico"), h("span", { class: "v-row-main" }, h("b", { lang: "ja" }, kanaText(x.w)), h("span", { class: "muted" }, x.cyr)), h("span", { class: "v-row-ru" }, x.ru), levelDots(x.w)))
+    : h("p", { class: "muted" }, wordsFilter === "known" ? "Пока пусто: слово попадает сюда после трёх верных ответов подряд." : "Все слова выучены!"));
+  return h("div", {}, head, sets, h("h2", { class: "section-title" }, starSticker("#FFB0CD"), "Словарик"), seg, dict);
+}
+function wordSheet(x) {
+  openSheet(x.w, (close) => [
+    h("div", { class: "sheet-head" }, h("div", {}, h("div", { class: "eyebrow" }, "Слово"), h("h2", {}, x.ru)), h("button", { class: "icon-btn", type: "button", "aria-label": "Закрыть", onclick: close }, icon("close"))),
+    h("div", { class: "meet v-meet" }, wordIcon(x.w, "v-pic-big"),
+      h("div", { class: "v-word" + ([...x.w].length > 4 ? " long" : ""), lang: "ja" }, kanaText(x.w)),
+      h("div", { class: "facts" }, h("span", {}, `${x.cyr} · ${x.lat}`), levelDots(x.w), sayBtn(x.w)),
+      vMnemo(x), vTrapNote(x)),
+    h("div", { class: "row", style: "justify-content:center" },
+      h("button", { class: "btn primary", type: "button", onclick: () => { close(); startVocab("review", [x.w], (VOCAB_SETS.find((st) => st.words.includes(x)) || VOCAB_SETS[0]).id); } }, "Потренировать"),
+      h("button", { class: "btn", type: "button", onclick: close }, "Закрыть"))]);
+}
+const TAB_ORDER = ["home", "words", "review", "pet", "table"];
 const scrollMem = {}; // своя прокрутка у каждой вкладки, как в приложениях iOS
-function viewFor(t) { return t === "home" ? homeView() : t === "review" ? reviewView() : t === "pet" ? petView() : tableView(); }
+function viewFor(t) { return t === "home" ? homeView() : t === "words" ? wordsView() : t === "review" ? reviewView() : t === "pet" ? petView() : tableView(); }
 function renderChrome() {
   const pt = document.getElementById("pet-tab"); if (pt) pt.textContent = S.pet.name;
   const bp = document.getElementById("brand-pet"); if (bp) bp.textContent = petCase("ins");
@@ -4043,18 +4188,7 @@ function homeView() {
       h("span", { class: "path-t" }, L.title),
       done ? berrySticker("path-badge") : res ? h("span", { class: "path-badge dot", "aria-hidden": "true" }) : null);
   }));
-  return h("div", {}, petStrip(), today, vocabPanel(), h("h2", { class: "section-title" }, starSticker("#FFB0CD"), "Уроки"), path);
-}
-function vocabPanel() {
-  const v = vState(), n = vKnownN();
-  return h("section", { class: "panel vocab-panel" },
-    h("div", { class: "today-top" }, h("div", { class: "eyebrow" }, "Слова к тесту"), h("span", { class: "muted v-sub" }, VOCAB_TITLE + " · 20 слов")),
-    h("div", { class: "v-progress" }, h("span", { style: `width:${(n / 20) * 100}%` })),
-    h("div", { class: "muted v-line" }, `Выучено ${n} из 20` + (v.best ? ` · лучший тест ${v.best.score}/${v.best.tot}` : "")),
-    h("div", { class: "row" },
-      h("button", { class: "btn primary", type: "button", onclick: () => startVocab("learn") }, v.resume ? "Продолжить" : "Учить"),
-      h("button", { class: "btn", type: "button", onclick: () => startVocab("review") }, "Повторить"),
-      h("button", { class: "btn", type: "button", onclick: () => startVocab("test") }, "Тест")));
+  return h("div", {}, petStrip(), today, h("h2", { class: "section-title" }, starSticker("#FFB0CD"), "Уроки"), path);
 }
 function reviewView() {
   const due = dueItems();
