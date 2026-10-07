@@ -692,6 +692,42 @@ details.how .how-body { display: grid; gap: 10px; margin-top: 12px; max-width: 6
 .num-cell .ja { font-size: 19px; line-height: 1.3; }
 .num-cell small { font-size: 11px; font-weight: 700; color: var(--muted); }
 .task-big.num { font-variant-numeric: tabular-nums; }
+.vocab-panel { display: grid; gap: 8px; }
+.v-sub { font-size: 13px; font-weight: 700; }
+.v-strip { display: grid; grid-template-columns: repeat(10, 1fr); gap: 3px; }
+.v-strip > span { aspect-ratio: 1; border-radius: 10px; background: #fff; display: grid; place-items: center; opacity: .45; filter: grayscale(.6); }
+.v-strip > span.mid { opacity: .8; filter: none; }
+.v-strip > span.ok { opacity: 1; filter: none; box-shadow: 0 0 0 2px var(--ok); }
+.v-strip .word-ico { width: 88%; height: 88%; }
+.v-progress { height: 8px; border-radius: 99px; background: #fff; overflow: hidden; }
+.v-progress span { display: block; height: 100%; background: linear-gradient(90deg, var(--primary-2), var(--primary)); border-radius: 99px; }
+.v-line { font-size: 13px; font-weight: 700; }
+.v-card { display: grid; justify-items: center; gap: 4px; padding: 10px; border-radius: 26px; background: #fff; border: 3px solid #fff; box-shadow: var(--shadow); }
+.v-card .v-pic { width: 112px; height: 112px; }
+.v-ru { font-size: 20px; font-weight: 800; color: var(--ink); text-align: center; }
+.choice-btn.txt { font-size: 17px; line-height: 1.2; }
+.v-listen-card { min-height: 112px; }
+.v-listen { font-size: 17px; }
+.v-known { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+.v-known > span { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px 3px 3px; border-radius: 999px; background: rgb(255 255 255 / .6); font-size: 14px; opacity: .6; }
+.v-known > span.seen { background: #fff; opacity: 1; }
+.v-known > span.cur { background: var(--primary); color: #fff; opacity: 1; }
+.v-known .word-ico { width: 26px; height: 26px; }
+.v-known [lang] { font-family: var(--kana); }
+.v-meet { gap: 8px; }
+.v-pic-big { width: 120px; height: 120px; }
+.v-word { font-family: var(--kana); font-weight: 600; font-size: 60px; line-height: 1.1; color: var(--ink); }
+.v-word.long { font-size: 48px; }
+.v-meaning { font-size: 22px; font-weight: 800; color: var(--primary); }
+.v-trap { width: 100%; max-width: 46ch; text-align: left; font-size: 14px; padding: 10px 14px; border-radius: 18px; background: var(--warn-soft); border: 3px solid #fff; color: var(--ink); }
+.v-trap b { color: var(--warn); }
+.v-slot { min-width: 56px; }
+.v-tile { min-width: 56px; }
+.v-write-head { display: flex; align-items: center; justify-content: center; gap: 12px; text-align: left; }
+.v-pic-s { width: 56px; height: 56px; flex: none; }
+.v-rule { display: flex; gap: 12px; align-items: center; padding: 8px 12px; border-radius: 18px; background: rgb(255 255 255 / .8); }
+.v-rule b { font-family: var(--kana); font-size: 22px; font-weight: 600; }
+.v-rule p { margin: 2px 0 0; font-size: 14px; }
 .num-plan { display: flex; flex-wrap: wrap; gap: 6px; }
 .num-plan span { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px 5px 5px; border-radius: 999px; background: #fff; font-weight: 800; font-size: 14px; box-shadow: 0 2px 0 var(--line); }
 .num-plan b { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--primary); color: #fff; font-size: 12px; }
@@ -1941,6 +1977,48 @@ function numLookalikes(n, k = 3) {
   for (const x of shuffle(tries)) { if (out.size >= k) break; if (x > 0 && x !== n && x < 100000 && String(x).length >= s.length - 1) out.add(x); }
   return [...out];
 }
+// Слова к тесту: учебник, стр. 24 «ことばを よみましょう». mn — как запомнить (*жирным* — главное), trap — «きを つけましょう!»
+const VOCAB_TITLE = "Учебник, стр. 24";
+const VOCAB_WORDS = [
+  { w: "あさ", cyr: "аса", lat: "asa", ru: "утро", mn: "Утром я *ас*: всё успеваю — «*аса*»." },
+  { w: "ひる", cyr: "хиру", lat: "hiru", ru: "день, полдень", mn: "В полдень у *хиру*рга обед — «*хиру*»." },
+  { w: "よる", cyr: "ёру", lat: "yoru", ru: "ночь, вечер", mn: "Ночью *ёр*заю в кровати — «*ёру*»." },
+  { w: "いす", cyr: "ису", lat: "isu", ru: "стул", mn: "«*И сю*да садись!» — на стул, «*ису*»." },
+  { w: "おちゃ", cyr: "отя", lat: "ocha", ru: "(зелёный) чай", mn: "В «о*ча*» спрятался *ча*й. お — вежливая приставка.", trap: "ちゃ «ча» — с маленькой ゃ. С большой や вышло бы おちや «отия»." },
+  { w: "とけい", cyr: "токэ:", lat: "tokee", ru: "часы", mn: "Часы работают от батарейки — «*ток*э:».", trap: "Долгое «э:» пишется через い: と・け・い. Не とけえ!" },
+  { w: "うみ", cyr: "уми", lat: "umi", ru: "море", mn: "У моря — *уми*ротворение: «*уми*»." },
+  { w: "やま", cyr: "яма", lat: "yama", ru: "гора", mn: "Наоборот: не *яма*, а гора — «*яма*»." },
+  { w: "いぬ", cyr: "ину", lat: "inu", ru: "собака", mn: "Пёс тянет поводок: «*И ну* гулять!» — «*ину*»." },
+  { w: "ねこ", cyr: "нэко", lat: "neko", ru: "кошка", mn: "«*Нэ ко*т», а кошка — «*нэко*»." },
+  { w: "ざっし", cyr: "дзасси", lat: "zasshi", ru: "журнал", mn: "*Засы*паю над журналом — «*дзасси*».", trap: "Маленькая っ — короткая пауза, согласный удваивается: «дза-сси». С большой つ было бы ざつし «дзацуси»." },
+  { w: "つくえ", cyr: "цукуэ", lat: "tsukue", ru: "стол, парта", mn: "*Цук!* — стучу ручкой по парте: «*цукуэ*»." },
+  { w: "にほんご", cyr: "нихонго", lat: "nihongo", ru: "японский язык", mn: "*にほん* — Япония, *ご* — язык. Вместе — японский язык." },
+  { w: "てんぷら", cyr: "тэмпура", lat: "tenpura", ru: "тэмпура", mn: "Как по-русски: *тэмпура* — креветки в кляре. ん перед ぷ звучит как «м»." },
+  { w: "ふじさん", cyr: "фудзисан", lat: "Fujisan", ru: "гора Фудзи", mn: "*ふじ* — Фудзи, *さん* здесь значит «гора». Фудзи-гора!" },
+  { w: "とうきょう", cyr: "то:кё:", lat: "Tookyoo", ru: "Токио", mn: "Не «Токио», а «*то:-кё:*» — оба «о» долгие.", trap: "Два долгих «о:»: после と и после きょ пишется う. И ょ — маленькая: と・う・きょ・う." },
+  { w: "やさい", cyr: "ясай", lat: "yasai", ru: "овощи", mn: "«*Я са*жаю» овощи — «*ясай*»." },
+  { w: "さかな", cyr: "сакана", lat: "sakana", ru: "рыба", mn: "Ловлю рыбу *сак*ом — «*сакана*»." },
+  { w: "たまご", cyr: "тамаго", lat: "tamago", ru: "яйцо", mn: "*Тамаго*чи вылупился из яйца — «*тамаго*»." },
+  { w: "かぞく", cyr: "кадзоку", lat: "kazoku", ru: "семья", mn: "*Ка-дзо-ку* — три слога, как папа, мама и я: семья." }
+];
+const VOCAB_GROUPS = [0, 1, 2, 3].map((g) => VOCAB_WORDS.slice(g * 5, g * 5 + 5));
+// Неверные написания: сначала ловушки из учебника, потом похожие знаки, тэнтэн, маленькие/большие, перестановки
+const VOCAB_TRAPS = { "とけい": ["とけえ", "ときい", "とけ"], "とうきょう": ["ときょう", "とうきよう", "とおきょう"], "おちゃ": ["おちや", "おちょ", "おしゃ"], "ざっし": ["ざつし", "さっし", "ざし"] };
+const LOOKALIKE = [["ぬ", "め"], ["ね", "れ", "わ"], ["る", "ろ"], ["さ", "ち", "き"], ["は", "ほ"], ["い", "こ", "り"], ["あ", "お"], ["う", "つ"], ["ま", "も"], ["て", "そ"], ["に", "た"], ["く", "へ"], ["す", "む"], ["や", "か"], ["ひ", "ふ"], ["み", "め"], ["よ", "ま"], ["け", "は"], ["ん", "し"]];
+function vSpellings(w, n = 3) {
+  const out = new Set(VOCAB_TRAPS[w] || []), ch = [...w];
+  const add = (a) => { const v = a.join(""); if (v !== w && !VOCAB_WORDS.some((x) => x.w === v)) out.add(v); };
+  ch.forEach((c, i) => {
+    const d = c.normalize("NFD");
+    if (d.length > 1) { const a = ch.slice(); a[i] = d[0]; add(a); }
+    else { const v = (c + "゙").normalize("NFC"); if (v.length === 1) { const a = ch.slice(); a[i] = v; add(a); } }
+    for (const g of LOOKALIKE) if (g.includes(c)) for (const o of g) if (o !== c) { const a = ch.slice(); a[i] = o; add(a); }
+    if (SMALL[c]) { const a = ch.slice(); a[i] = SMALL[c]; add(a); }
+    if (i && ch[i] !== ch[i - 1] && !isSmall(c) && !isSmall(ch[i - 1])) { const a = ch.slice(); [a[i - 1], a[i]] = [a[i], a[i - 1]]; add(a); }
+  });
+  const trap = (VOCAB_TRAPS[w] || []).slice(0, n);
+  return trap.concat(shuffle([...out].filter((x) => !trap.includes(x)))).slice(0, n);
+}
 const YOON = ["きゃ","きゅ","きょ","しゃ","しゅ","しょ","ちゃ","ちゅ","ちょ","にゃ","にゅ","にょ","ひゃ","ひゅ","ひょ","みゃ","みゅ","みょ","りゃ","りゅ","りょ","ぎゃ","ぎゅ","ぎょ","じゃ","じゅ","じょ","びゃ","びゅ","びょ","ぴゃ","ぴゅ","ぴょ"];
 const GOJUON = [
   ["あ","い","う","え","お"],["か","き","く","け","こ"],["さ","し","す","せ","そ"],["た","ち","つ","て","と"],
@@ -2784,6 +2862,40 @@ function readTask(opts) {
   return el;
 }
 
+/* ===================== Задание: выбрать ответ ===================== */
+// хирагана с маленькими ゃゅょっ помельче
+const kanaText = (w) => [...w].map((c) => (isSmall(c) ? h("span", { class: "small-kana" }, c) : c));
+/* opts: label, show (строка) + showJa, или card (готовый узел); options, answer, kind ("ja" | "txt" | число), reveal, say, onDone({ok}) */
+function choiceTask(o) {
+  let done = false;
+  const bar = h("div", { class: "act-bar", hidden: true });
+  const kind = o.kind || (o.ja ? "ja" : "num");
+  const btns = o.options.map((op) => {
+    const b = h("button", { class: "choice-btn " + kind, type: "button", lang: kind === "ja" ? "ja" : null, onclick: () => pick(op, b) }, kind === "ja" ? kanaText(op) : op);
+    return b;
+  });
+  function pick(op, b) {
+    if (done) return; done = true;
+    const ok = op === o.answer;
+    btns.forEach((x, j) => { x.disabled = true; if (o.options[j] === o.answer) x.classList.add("ok"); });
+    if (!ok) b.classList.add("bad");
+    const gain = ok && o.reward !== false ? 1 : 0;
+    if (gain) award(1);
+    const nextBtn = h("button", { class: "btn primary", type: "button", onclick: () => o.onDone({ ok }) }, "Дальше");
+    bar.hidden = false;
+    bar.replaceChildren(h("div", { class: "act-verdict " + (ok ? "ok" : "bad") }, mascot(ok ? "happy" : "sad"),
+      h("div", {}, h("div", { class: "verdict-title" }, jpTitle(ok ? "good" : "oops"), ok ? "Верно" : "Не совсем", gain ? h("span", { class: "gain" }, "+1 ★") : null),
+        h("div", { class: "act-reveal" }, o.reveal))), nextBtn);
+    if (o.say) say(o.say);
+    if (ok) setTimeout(() => { if (nextBtn.isConnected) nextBtn.click(); }, 800);
+    else requestAnimationFrame(() => nextBtn.focus({ preventScroll: true }));
+  }
+  const card = o.card || h("div", { class: "choice-card" + (o.showJa ? " ja" : " num") + (o.show.length > 5 ? " long" : ""), lang: o.showJa ? "ja" : null }, h("span", {}, o.showJa ? kanaText(o.show) : o.show));
+  return h("div", { class: "task" },
+    h("div", { class: "task-head" }, h("div", { class: "task-label" }, o.label), o.say && !o.hideSay ? sayBtn(o.say) : null),
+    card, h("div", { class: "choice-grid" }, btns), bar);
+}
+
 /* ===================== Оболочка занятия ===================== */
 let shell = null;
 // Анимация перехода между экраном вкладки и занятием
@@ -3060,7 +3172,6 @@ function startLesson(li) {
 
   // ---- урок «Цифры» ----
   const numRow = (d) => NUMS.find((x) => x[0] === d);
-  const kanaText = (w) => [...w].map((c) => (isSmall(c) ? h("span", { class: "small-kana" }, c) : c));
   const fmtNum = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
   // наглядно: клубнички для 1–10, «10 × …» для больших
   function numVisual(d) {
@@ -3097,33 +3208,6 @@ function startLesson(li) {
     show();
   }
   // Выбор ответа из 4 вариантов; ошибка — показываем верный, число вернётся чуть позже
-  function choiceTask(o) {
-    let done = false;
-    const bar = h("div", { class: "act-bar", hidden: true });
-    const btns = o.options.map((op) => {
-      const b = h("button", { class: "choice-btn" + (o.ja ? " ja" : " num"), type: "button", lang: o.ja ? "ja" : null, onclick: () => pick(op, b) }, o.ja ? kanaText(op) : op);
-      return b;
-    });
-    function pick(op, b) {
-      if (done) return; done = true;
-      const ok = op === o.answer;
-      btns.forEach((x, j) => { x.disabled = true; if (o.options[j] === o.answer) x.classList.add("ok"); });
-      if (!ok) b.classList.add("bad");
-      if (ok) award(1);
-      const nextBtn = h("button", { class: "btn primary", type: "button", onclick: () => o.onDone({ ok }) }, "Дальше");
-      bar.hidden = false;
-      bar.replaceChildren(h("div", { class: "act-verdict " + (ok ? "ok" : "bad") }, mascot(ok ? "happy" : "sad"),
-        h("div", {}, h("div", { class: "verdict-title" }, jpTitle(ok ? "good" : "oops"), ok ? "Верно" : "Не совсем", ok ? h("span", { class: "gain" }, "+1 ★") : null),
-          h("div", { class: "act-reveal" }, o.reveal))), nextBtn);
-      if (o.say) say(o.say);
-      if (ok) setTimeout(() => { if (nextBtn.isConnected) nextBtn.click(); }, 800);
-      else requestAnimationFrame(() => nextBtn.focus({ preventScroll: true }));
-    }
-    return h("div", { class: "task" },
-      h("div", { class: "task-head" }, h("div", { class: "task-label" }, o.label), o.say ? sayBtn(o.say) : null),
-      h("div", { class: "choice-card" + (o.showJa ? " ja" : " num") + (o.show.length > 5 ? " long" : ""), lang: o.showJa ? "ja" : null }, h("span", {}, o.showJa ? kanaText(o.show) : o.show)),
-      h("div", { class: "choice-grid" }, btns), bar);
-  }
   // Узнавание: каждое число в обе стороны (цифра → слово и слово → цифра)
   function numQuiz(g) {
     const st = takeSub();
@@ -4137,14 +4221,8 @@ function startOrders() {
 }
 
 /* ===================== Кроссворд хираганой ===================== */
-// Слова кроссворда — из учебника (ことばを よみましょう, стр. 24)
-const CW_WORDS = [
-  ["あさ", "аса", "утро", "🌅"], ["ひる", "хиру", "день, полдень", "☀️"], ["よる", "ёру", "ночь, вечер", "🌙"], ["いす", "ису", "стул", "🪑"],
-  ["おちゃ", "отя", "(зелёный) чай", "🍵"], ["とけい", "токэ:", "часы", "⏰"], ["うみ", "уми", "море", "🌊"], ["やま", "яма", "гора", "⛰️"],
-  ["いぬ", "ину", "собака", "🐶"], ["ねこ", "нэко", "кошка", "🐱"], ["ざっし", "дзасси", "журнал", "📖"], ["つくえ", "цукуэ", "стол, парта", "🪑"],
-  ["にほんご", "нихонго", "японский язык", "📕"], ["てんぷら", "тэмпура", "тэмпура", "🍤"], ["ふじさん", "фудзисан", "гора Фудзи", "🗻"], ["とうきょう", "то:кё:", "Токио", "🗼"],
-  ["やさい", "ясай", "овощи", "🥕"], ["さかな", "сакана", "рыба", "🐟"], ["たまご", "тамаго", "яйцо", "🥚"], ["かぞく", "кадзоку", "семья", "👪"]
-];
+// Слова кроссворда — те же, что в «Словах к тесту»
+const CW_WORDS = VOCAB_WORDS.map((x) => [x.w, x.cyr, x.ru, ""]);
 const CW_N = 8, CW_ROWS = 9, CW_WORDS_N = 7;
 // Генератор: 7 слов (сначала те, что реже попадались), слова пересекаются по общим знакам,
 // соседние слова не слипаются. Слово без общих знаков с остальными встаёт отдельным островком.
@@ -4315,6 +4393,250 @@ function startCrossword(fresh) {
     petalBurst(box);
   }
   draw();
+}
+
+/* ===================== Слова к тесту (учебник) ===================== */
+// S.vocab: lv — уровень слова 0…5 (3 и выше — выучено), resume — место в «Учить», best/last — пробный тест
+function vState() { if (!S.vocab) S.vocab = { lv: {}, resume: null, best: null, last: null }; return S.vocab; }
+const vLevel = (w) => vState().lv[w] || 0;
+function vGrade(w, ok) { const v = vState(); v.lv[w] = Math.max(0, Math.min(5, (v.lv[w] || 0) + (ok ? 1 : -1))); }
+const vKnownN = () => VOCAB_WORDS.filter((x) => vLevel(x.w) >= 3).length;
+const vByW = (w) => VOCAB_WORDS.find((x) => x.w === w);
+const vReveal = (x) => h("span", {}, h("b", { lang: "ja" }, kanaText(x.w)), ` «${x.cyr}» — ${x.ru}`);
+const vPicCard = (x, withRu = true) => h("div", { class: "v-card" }, wordIcon(x.w, "v-pic"), withRu ? h("div", { class: "v-ru" }, x.ru) : null);
+function vMnemo(x) {
+  const p = h("p", { class: "mnemo-text" });
+  x.mn.split("*").forEach((part, i) => p.append(i % 2 ? h("b", {}, part) : document.createTextNode(part)));
+  return h("div", { class: "mnemo" }, h("div", { class: "mnemo-title" }, heartSticker("#FFB0CD"), "Как запомнить"), p);
+}
+const vTrapNote = (x) => x.trap ? h("div", { class: "v-trap" }, h("b", { lang: "ja" }, "きを つけて！"), " ", x.trap) : null;
+// --- задания: каждое получает слово и onDone(ok) ---
+function vTaskPicToKana(x, onDone, pool = VOCAB_WORDS) {
+  const others = shuffle(pool.filter((y) => y.w !== x.w)).slice(0, 1).map((y) => y.w);
+  const wrong = vSpellings(x.w, 3 - others.length).concat(others).slice(0, 3);
+  return choiceTask({ label: "Как это по-японски?", card: vPicCard(x), kind: "ja", say: x.w, hideSay: true,
+    options: shuffle([x.w].concat(wrong)), answer: x.w, reveal: vReveal(x), onDone: ({ ok }) => onDone(ok) });
+}
+function vTaskKanaToRu(x, onDone, pool = VOCAB_WORDS) {
+  const others = shuffle(pool.filter((y) => y.w !== x.w).concat(VOCAB_WORDS.filter((y) => y.w !== x.w && !pool.includes(y)))).slice(0, 3).map((y) => y.ru);
+  return choiceTask({ label: "Что это значит?", show: x.w, showJa: true, kind: "txt", say: x.w,
+    options: shuffle([x.ru].concat(others)), answer: x.ru, reveal: vReveal(x), onDone: ({ ok }) => onDone(ok) });
+}
+function vTaskListen(x, onDone, pool = VOCAB_WORDS) {
+  const others = shuffle(pool.filter((y) => y.w !== x.w).concat(VOCAB_WORDS.filter((y) => y.w !== x.w && !pool.includes(y)))).slice(0, 3).map((y) => y.w);
+  const play = h("button", { class: "btn v-listen", type: "button", onclick: () => say(x.w) }, icon("speaker"), " Послушать ещё");
+  setTimeout(() => say(x.w), 300);
+  return choiceTask({ label: "Послушай и выбери слово", card: h("div", { class: "choice-card v-listen-card" }, play), kind: "ja", say: x.w, hideSay: true,
+    options: shuffle([x.w].concat(others)), answer: x.w, reveal: vReveal(x), onDone: ({ ok }) => onDone(ok) });
+}
+function vTaskSpell(x, onDone) {
+  return choiceTask({ label: "Как пишется правильно?", card: vPicCard(x), kind: "ja", say: x.w, hideSay: true,
+    options: shuffle([x.w].concat(vSpellings(x.w, 3))), answer: x.w, reveal: h("span", {}, vReveal(x), x.trap ? h("div", { class: "muted" }, x.trap) : null), onDone: ({ ok }) => onDone(ok) });
+}
+// Собрать слово из слогов, как во втором упражнении учебника
+function vTaskBuild(x, onDone) {
+  const toks = tokenize(x.w), need = toks.length, picked = [];
+  const dec = new Set();
+  for (const sp of vSpellings(x.w, 6)) tokenize(sp).forEach((t) => { if (!toks.includes(t)) dec.add(t); });
+  const decoys = shuffle([...dec]).slice(0, Math.max(2, 7 - need));
+  const tiles = shuffle(toks.map((t, j) => ({ t, id: "a" + j })).concat(decoys.map((t, j) => ({ t, id: "d" + j }))));
+  const slots = h("div", { class: "num-slots" }), pool = h("div", { class: "num-tiles" });
+  const fb = h("div", { class: "act-bar", hidden: true });
+  let done = false, tries = 0;
+  const draw = () => {
+    slots.replaceChildren(...Array.from({ length: need }, (_, j) => h("button", { class: "num-slot v-slot" + (picked[j] ? " full" : ""), type: "button", lang: "ja", disabled: done || !picked[j], onclick: () => { picked.splice(j, 1); draw(); } }, picked[j] ? kanaText(picked[j].t) : "")));
+    pool.replaceChildren(...tiles.map((tl) => h("button", { class: "num-tile v-tile", type: "button", lang: "ja", disabled: done || picked.includes(tl) || picked.length >= need, onclick: () => { picked.push(tl); draw(); if (picked.length === need) check(); } }, kanaText(tl.t))));
+  };
+  function check() {
+    done = true; tries++; draw();
+    const ok = picked.map((y) => y.t).join("") === x.w;
+    if (ok && tries === 1) award(1);
+    fb.hidden = false;
+    const nextBtn = h("button", { class: "btn primary", type: "button", onclick: () => onDone(tries === 1 && ok) }, "Дальше");
+    const again = h("button", { class: "btn", type: "button", onclick: () => { done = false; picked.length = 0; fb.hidden = true; draw(); } }, "Ещё раз");
+    fb.replaceChildren(h("div", { class: "act-verdict " + (ok ? "ok" : "bad") }, mascot(ok ? "happy" : "sad"),
+      h("div", {}, h("div", { class: "verdict-title" }, jpTitle(ok ? "good" : "oops"), ok ? "Верно" : "Не совсем", ok && tries === 1 ? h("span", { class: "gain" }, "+1 ★") : null),
+        h("div", { class: "act-reveal" }, ok ? vReveal(x) : "Попробуй ещё раз: смотри на маленькие знаки и тэнтэн."))), ok ? nextBtn : again);
+    if (ok) say(x.w);
+  }
+  draw();
+  return h("div", { class: "task" }, h("div", { class: "task-head" }, h("div", { class: "task-label" }, "Собери слово из слогов")), vPicCard(x), slots, pool, fb);
+}
+// Написать слово рукой по знаку
+function vTaskWrite(x, sh, onDone) {
+  const chars = [...x.w];
+  let ci = 0, allOk = true;
+  function one() {
+    const c = chars[ci], small = isSmall(c);
+    const slots = h("div", { class: "slots", "aria-label": "Слово" }, chars.map((y, j) => h("span", { class: "slot" + (j < ci ? "" : " empty") + (j === ci ? " cur" : "") + (isSmall(y) ? " small" : ""), lang: "ja" }, y)));
+    const tip = h("button", { class: "hint-chip as-btn", type: "button", onclick: () => { tip.textContent = `«${x.cyr}»`; tip.disabled = true; } }, "как звучит?");
+    const head = h("div", { class: "v-write-head" }, wordIcon(x.w, "v-pic-s"), h("div", {}, h("div", { class: "task-label" }, "Напиши слово хираганой"), h("div", { class: "v-ru" }, x.ru), h("div", { class: "task-sub" }, tip, sayBtn(x.w))));
+    const task = writeTask({ reward: true, k: c, mode: "memory", allowForgot: true, compact: true,
+      label: small ? `Знак ${ci + 1} из ${chars.length} — маленький, внизу клетки` : `Знак ${ci + 1} из ${chars.length}`,
+      nextLabel: ci + 1 < chars.length ? "Следующий знак" : "Готово",
+      onDone: (r) => { if (!r.firstOk) allOk = false; ci++; if (ci < chars.length) one(); else onDone(allOk); } });
+    sh.set(h("div", { class: "task word-task" }, head, slots, task));
+  }
+  one();
+}
+
+function startVocab(mode, only) {
+  const v = vState();
+  const titles = { learn: "Слова к тесту", review: "Повторение слов", test: "Пробный тест" };
+  const sh = openShell(titles[mode]);
+  const phases = [];
+  if (mode === "learn") {
+    phases.push({ t: "intro" });
+    VOCAB_GROUPS.forEach((_, g) => phases.push({ t: "meet", g }, { t: "quiz", g }, { t: "build", g }, { t: "write", g }));
+    phases.push({ t: "traps" }, { t: "mix" }, { t: "finish" });
+  } else if (mode === "review") phases.push({ t: "review" }, { t: "finish" });
+  else phases.push({ t: "test" }, { t: "testEnd" });
+  const stats = { ok: 0, tot: 0 };
+  let pi = -1, sub = null;
+  const saved = mode === "learn" ? v.resume : null;
+  const keep = (state) => { if (mode !== "learn" || phases[pi].t === "intro" || phases[pi].t === "finish") return; v.resume = { pi, sub: state || null, stats: Object.assign({}, stats), at: Date.now() }; save(); };
+  const next = () => { pi++; sh.progress(pi / (phases.length - 1)); keep(); run(phases[pi]); };
+  const takeSub = () => { const x = sub; sub = null; return x; };
+  const count = (ok, w) => { stats.tot++; if (ok) stats.ok++; if (w) vGrade(w, ok); save(); };
+  const gname = (g) => `${g * 5 + 1}–${g * 5 + 5}`;
+  function run(ph) {
+    sh.count("");
+    ({ intro, meet, quiz, build, write, traps, mix, review, test, finish, testEnd })[ph.t](ph.g);
+  }
+  // очередь заданий: ошибка — задание вернётся через пару шагов
+  function queueRun(stage, st, makeQueue, serveOne, again = true) {
+    let queue, total, doneN;
+    if (st && st.queue) ({ queue, total, doneN } = st); else { queue = makeQueue(); total = queue.length; doneN = 0; }
+    const serve = () => {
+      sh.stage(stage); sh.count(`${doneN} / ${total}`);
+      if (!queue.length) return next();
+      keep({ queue, total, doneN });
+      const it = queue.shift();
+      serveOne(it, (ok) => {
+        count(ok, it.w);
+        if (ok || !again) doneN++; else queue.splice(Math.min(queue.length, 2 + Math.floor(Math.random() * 2)), 0, it);
+        serve();
+      });
+    };
+    serve();
+  }
+  const taskOf = (it, done, pool) => {
+    const x = vByW(it.w);
+    if (it.k === "pk") return sh.set(vTaskPicToKana(x, done, pool));
+    if (it.k === "kr") return sh.set(vTaskKanaToRu(x, done, pool));
+    if (it.k === "ls") return jaVoice ? sh.set(vTaskListen(x, done, pool)) : sh.set(vTaskPicToKana(x, done, pool));
+    if (it.k === "sp") return sh.set(vTaskSpell(x, done));
+    if (it.k === "bd") return sh.set(vTaskBuild(x, done));
+    if (it.k === "wr") return vTaskWrite(x, sh, done);
+  };
+  function intro() {
+    sh.stage("начало");
+    const parts = [h("div", { class: "eyebrow" }, VOCAB_TITLE), h("h2", {}, "20 слов к тесту"),
+      h("div", { class: "v-strip" }, VOCAB_WORDS.map((x) => h("span", { class: vLevel(x.w) >= 3 ? "ok" : "" }, wordIcon(x.w)))),
+      h("p", {}, "Учим по пять слов. С каждым словом: картинка, звук и подсказка, как запомнить. Потом узнаёшь его среди других, собираешь из слогов, как во втором упражнении учебника, и пишешь рукой."),
+      h("p", {}, "В конце — ловушки из рамки «きを つけましょう!»: とけい, とうきょう, おちゃ, ざっし — и все 20 слов вперемешку."),
+      h("p", { class: "muted" }, "Можно выйти в любой момент: продолжишь с того же места.")];
+    const go = h("button", { class: "btn primary", type: "button", onclick: next }, "Начать");
+    if (saved && saved.pi > 0 && saved.pi < phases.length - 1) {
+      go.textContent = "Начать сначала"; go.className = "btn";
+      const resume = () => { Object.assign(stats, saved.stats || {}); pi = Math.min(saved.pi, phases.length - 2); sub = saved.sub; sh.progress(pi / (phases.length - 1)); run(phases[pi]); };
+      parts.unshift(h("div", { class: "resume-note" }, "Ты остановилась посреди занятия. Продолжим с того же места?"));
+      return sh.set(h("div", { class: "task explain" }, parts, h("div", { class: "row" }, h("button", { class: "btn primary", type: "button", onclick: resume }, "Продолжить"), go)));
+    }
+    sh.set(h("div", { class: "task explain" }, parts, h("div", { class: "row" }, go)));
+  }
+  function meet(g) {
+    const st = takeSub(), list = VOCAB_GROUPS[g];
+    let i = st ? st.i || 0 : 0;
+    function show() {
+      sh.stage(`знакомство · ${gname(g)}`); sh.count(`${i} / ${list.length}`);
+      if (i >= list.length) return next();
+      keep({ i });
+      const x = list[i];
+      say(x.w); vState().lv[x.w] = vState().lv[x.w] || 0; save();
+      sh.set(h("div", { class: "task" },
+        h("div", { class: "v-known" }, list.map((y, j) => h("span", { class: j < i ? "seen" : j === i ? "cur" : "" }, wordIcon(y.w), j < i ? h("span", { lang: "ja" }, y.w) : null))),
+        h("div", { class: "meet v-meet" },
+          wordIcon(x.w, "v-pic-big"),
+          h("div", { class: "v-word" + ([...x.w].length > 4 ? " long" : ""), lang: "ja" }, kanaText(x.w)),
+          h("div", { class: "facts" }, h("span", {}, `${x.cyr} · ${x.lat}`), sayBtn(x.w)),
+          h("div", { class: "v-meaning" }, x.ru),
+          vMnemo(x), vTrapNote(x)),
+        h("div", { class: "row", style: "justify-content:center" }, h("button", { class: "btn primary", type: "button", onclick: () => { i++; show(); } }, i + 1 < list.length ? "Следующее слово" : "Проверим себя"))));
+    }
+    show();
+  }
+  function quiz(g) {
+    const list = VOCAB_GROUPS[g];
+    queueRun(`узнаём ${gname(g)}`, takeSub(), () => {
+      const q = shuffle(list.flatMap((x) => [{ w: x.w, k: "pk" }, { w: x.w, k: "kr" }]));
+      for (let j = 1; j < q.length; j++) if (q[j].w === q[j - 1].w) { const z = (j + 2) % q.length; [q[j], q[z]] = [q[z], q[j]]; }
+      return q;
+    }, (it, done) => taskOf(it, done, list));
+  }
+  function build(g) { queueRun(`собираем ${gname(g)}`, takeSub(), () => shuffle(VOCAB_GROUPS[g].map((x) => ({ w: x.w, k: "bd" }))), (it, done) => taskOf(it, done), false); }
+  function write(g) { queueRun(`пишем ${gname(g)}`, takeSub(), () => shuffle(VOCAB_GROUPS[g].map((x) => ({ w: x.w, k: "wr" }))), (it, done) => taskOf(it, done), false); }
+  function traps() {
+    const st = takeSub();
+    const go = () => queueRun("ловушки", { queue: null }, () => shuffle(["とけい", "とうきょう", "おちゃ", "ざっし", pick1(["にほんご", "かぞく", "たまご"]), pick1(["てんぷら", "ふじさん", "やさい"])].map((w) => ({ w, k: "sp" }))), (it, done) => taskOf(it, done));
+    if (st && st.queue) return queueRun("ловушки", st, null, (it, done) => taskOf(it, done));
+    sh.stage("ловушки"); sh.count("");
+    const row = (w, text) => h("div", { class: "v-rule" }, wordIcon(w, "v-pic-s"), h("div", {}, h("b", { lang: "ja" }, kanaText(w)), h("p", {}, text)));
+    sh.set(h("div", { class: "task explain" }, h("div", { class: "eyebrow", lang: "ja" }, "きを つけましょう！"), h("h2", {}, "Ловушки из учебника"),
+      VOCAB_WORDS.filter((x) => x.trap).map((x) => row(x.w, x.trap)),
+      h("div", { class: "row", style: "justify-content:center" }, h("button", { class: "btn primary", type: "button", onclick: go }, "Проверить себя"))));
+  }
+  function mix() {
+    queueRun("все 20 слов", takeSub(), () => shuffle(VOCAB_WORDS.map((x) => ({ w: x.w, k: pick1(jaVoice ? ["pk", "kr", "bd", "ls"] : ["pk", "kr", "bd"]) }))), (it, done) => taskOf(it, done));
+  }
+  function review() {
+    const words = only && only.length ? only.map(vByW) : shuffle(VOCAB_WORDS.slice()).sort((a, b) => vLevel(a.w) - vLevel(b.w)).slice(0, 10);
+    const kinds = jaVoice ? ["pk", "kr", "bd", "ls"] : ["pk", "kr", "bd"];
+    queueRun("повторение", null, () => shuffle(words.map((x, j) => ({ w: x.w, k: j < 3 ? "wr" : x.trap && Math.random() < 0.5 ? "sp" : pick1(kinds) }))), (it, done) => taskOf(it, done));
+  }
+  const misses = [];
+  function test() {
+    // как на тесте: каждое слово по одному разу, без повторов
+    const order = shuffle(VOCAB_WORDS.slice());
+    const kinds = ["kr", "kr", "kr", "kr", "kr", "kr", "pk", "pk", "pk", "pk", "pk", "bd", "bd", "bd", "bd", "sp", "wr", "wr", "wr", jaVoice ? "ls" : "pk"];
+    const tr = order.filter((x) => x.trap), rest = order.filter((x) => !x.trap), q = [];
+    // ловушки — всегда на правописание или сборку
+    tr.forEach((x, j) => q.push({ w: x.w, k: j % 2 ? "bd" : "sp" }));
+    const left = shuffle(kinds.filter((k, j) => !(k === "sp" || (k === "bd" && j < 13)))).slice(0, rest.length);
+    rest.forEach((x, j) => q.push({ w: x.w, k: left[j] || "pk" }));
+    queueRun("20 вопросов", null, () => shuffle(q), (it, done) => taskOf(it, (ok) => { if (!ok) misses.push(it.w); done(ok); }), false);
+  }
+  function testEnd() {
+    sh.stage("итог"); sh.count("");
+    const score = stats.ok, tot = stats.tot;
+    v.last = { score, tot, at: Date.now() };
+    if (!v.best || score > v.best.score) v.best = { score, tot, at: Date.now() };
+    save();
+    const great = score >= tot - 2;
+    sh.set(h("div", { class: "summary" },
+      h("div", { class: "say-row" }, mascot(great ? "happy" : "normal", great), bubble(great ? "congrats" : "cheer", great ? "Ты готова к тесту!" : "Ещё немного — и всё получится")),
+      h("h2", {}, `${score} из ${tot}`),
+      misses.length ? h("div", {}, h("p", { class: "muted" }, "Ошибки — их стоит повторить:"),
+        h("div", { class: "cw-words" }, misses.map((w) => { const x = vByW(w); return h("span", {}, wordIcon(w, "cw-chip-ico"), " ", h("b", { lang: "ja" }, kanaText(w)), " ", x.ru); }))) : h("p", {}, "Без единой ошибки!"),
+      h("div", { class: "row", style: "justify-content:center" },
+        misses.length ? h("button", { class: "btn primary", type: "button", onclick: () => { closeShell(); startVocab("review", misses.slice()); } }, "Повторить ошибки") : null,
+        h("button", { class: misses.length ? "btn" : "btn primary", type: "button", onclick: () => closeShell() }, "Готово"))));
+    if (great) petalBurst(document.querySelector(".summary"));
+  }
+  function finish() {
+    sh.stage("готово"); sh.count("");
+    if (mode === "learn") { v.resume = null; award(10); }
+    save();
+    const n = vKnownN();
+    sh.set(h("div", { class: "summary" },
+      h("div", { class: "say-row" }, mascot("happy", true), bubble("yay", mode === "learn" ? "Все 20 слов пройдены!" : "Повторение готово")),
+      h("div", { class: "big-stats" }, h("div", {}, h("b", {}, stats.tot ? Math.round((100 * stats.ok) / stats.tot) + "%" : "—"), h("span", {}, "верно с первого раза")), h("div", {}, h("b", {}, `${n}/20`), h("span", {}, "слов выучено"))),
+      h("p", { class: "note" }, "Слово считается выученным после трёх верных ответов подряд. Повторяй понемногу каждый день, а накануне теста пройди пробный тест."),
+      h("div", { class: "row", style: "justify-content:center" },
+        h("button", { class: "btn primary", type: "button", onclick: () => { closeShell(); startVocab("test"); } }, "Пробный тест"),
+        h("button", { class: "btn", type: "button", onclick: () => closeShell() }, "Готово"))));
+  }
+  next();
 }
 
 /* Игра «Апорт»: чтение знаков */
@@ -4551,7 +4873,18 @@ function homeView() {
       h("span", { class: "path-t" }, L.title),
       done ? berrySticker("path-badge") : res ? h("span", { class: "path-badge dot", "aria-hidden": "true" }) : null);
   }));
-  return h("div", {}, petStrip(), today, h("h2", { class: "section-title" }, starSticker("#FFB0CD"), "Уроки"), path);
+  return h("div", {}, petStrip(), today, vocabPanel(), h("h2", { class: "section-title" }, starSticker("#FFB0CD"), "Уроки"), path);
+}
+function vocabPanel() {
+  const v = vState(), n = vKnownN();
+  return h("section", { class: "panel vocab-panel" },
+    h("div", { class: "today-top" }, h("div", { class: "eyebrow" }, "Слова к тесту"), h("span", { class: "muted v-sub" }, VOCAB_TITLE + " · 20 слов")),
+    h("div", { class: "v-progress" }, h("span", { style: `width:${(n / 20) * 100}%` })),
+    h("div", { class: "muted v-line" }, `Выучено ${n} из 20` + (v.best ? ` · лучший тест ${v.best.score}/${v.best.tot}` : "")),
+    h("div", { class: "row" },
+      h("button", { class: "btn primary", type: "button", onclick: () => startVocab("learn") }, v.resume ? "Продолжить" : "Учить"),
+      h("button", { class: "btn", type: "button", onclick: () => startVocab("review") }, "Повторить"),
+      h("button", { class: "btn", type: "button", onclick: () => startVocab("test") }, "Тест")));
 }
 function reviewView() {
   const due = dueItems();
