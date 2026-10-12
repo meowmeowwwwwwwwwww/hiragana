@@ -692,7 +692,26 @@ details.how .how-body { display: grid; gap: 10px; margin-top: 12px; max-width: 6
 .num-cell .ja { font-size: 19px; line-height: 1.3; }
 .num-cell small { font-size: 11px; font-weight: 700; color: var(--muted); }
 .task-big.num { font-variant-numeric: tabular-nums; }
-.v-head p { margin: 4px 0 0; }
+.v-actions.three { grid-template-columns: 1fr 1.25fr 1fr; }
+.v-actions.three .btn { padding-left: 6px; padding-right: 6px; }
+.v-progress.thin { height: 5px; margin-top: 4px; display: block; }
+.v-cats { display: grid; gap: 8px; }
+.v-cat { display: grid; grid-template-columns: 52px 1fr auto; align-items: center; gap: 12px; width: 100%; padding: 8px 14px 8px 8px; border-radius: 22px; border: 3px solid #fff; background: rgb(255 255 255 / .88); box-shadow: 0 3px 0 var(--line); text-align: left; color: var(--ink); }
+.v-cat:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--line); }
+.v-cat.done { box-shadow: 0 0 0 2px var(--ok), 0 3px 0 var(--line); }
+.v-cat-ico { width: 52px; height: 52px; }
+.v-cat-main { display: grid; min-width: 0; }
+.v-cat-main b { font-size: 16px; }
+.v-cat-main .muted { font-size: 12px; font-family: var(--kana); }
+.v-cat-n { position: relative; font-size: 16px; font-weight: 800; color: var(--primary); }
+.v-cat-dot { position: absolute; top: -6px; right: -8px; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+.v-dict-h { margin: 8px 4px 0; font-size: 13px; font-weight: 800; letter-spacing: .04em; color: var(--primary); }
+.v-chips { display: grid; gap: 6px; margin: 10px 0 14px; }
+.v-chip { display: grid; grid-template-columns: 36px auto 1fr auto; align-items: center; gap: 10px; padding: 4px 12px 4px 4px; border-radius: 16px; border: 2px solid #fff; background: rgb(255 255 255 / .85); text-align: left; color: var(--ink); }
+.v-chip-ico { width: 36px; height: 36px; }
+.v-chip b { font-family: var(--kana); font-weight: 600; font-size: 18px; }
+.v-chip span:not(.v-dots) { font-size: 13px; font-weight: 700; color: var(--ink-soft); }
+.v-head p { margin: 4px 0 8px; }
 .v-set { display: grid; gap: 8px; margin-top: 12px; }
 .v-set-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
 .v-set-top h3 { margin: 0; font-size: 18px; }
@@ -1518,6 +1537,27 @@ const WordIcons = (() => {
   const head = (fill, ears, extra = "", fx = 50, fy = 60, k = 1, m = 1) => ears + `<circle cx="50" cy="58" r="31" fill="${fill}" ${st()}/>` + extra + face(fx, fy, k, m);
   const snout = (y = 68, c = "#fff") => `<ellipse cx="50" cy="${y}" rx="12" ry="9" fill="${c}" ${st(3.4)}/><ellipse cx="50" cy="${y - 4}" rx="4" ry="2.8" fill="${O}"/>` + wm(50, y + 1, 0.8);
 
+  // человек по пояс: o.long — длинные волосы, o.shirt — цвет одежды, o.eyes = "closed" — закрытые глаза
+  const person = (cx, cy, r, o = {}) => {
+    const hair = o.hair || "#7A4E36", k = r / 30;
+    let s = "";
+    if (o.long) s += `<path d="M${cx - r * 1.08} ${cy + r * 0.1} Q${cx - r * 1.32} ${cy + r * 1.55} ${cx - r * 0.8} ${cy + r * 1.7} H${cx + r * 0.8} Q${cx + r * 1.32} ${cy + r * 1.55} ${cx + r * 1.08} ${cy + r * 0.1} Z" fill="${hair}" ${st()}/>`;
+    s += `<path d="M${cx - r * 1.4} ${cy + r * 2.15} Q${cx - r * 1.4} ${cy + r * 1.08} ${cx} ${cy + r * 1.02} Q${cx + r * 1.4} ${cy + r * 1.08} ${cx + r * 1.4} ${cy + r * 2.15} Z" fill="${o.shirt || "#FFB0CD"}" ${st()}/>`;
+    if (o.collar) s += `<path d="M${cx - r * 0.38} ${cy + r * 1.02} L${cx} ${cy + r * 1.45} L${cx + r * 0.38} ${cy + r * 1.02} Z" fill="${o.collar}" ${st(3)}/>`;
+    if (o.tie) s += `<path d="M${cx - r * 0.3} ${cy + r * 1.2} L${cx + r * 0.3} ${cy + r * 1.42} V${cy + r * 1.2} L${cx - r * 0.3} ${cy + r * 1.42} Z" fill="${o.tie}" ${st(2.6)}/>`;
+    s += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#FFE6D4" ${st()}/>`;
+    s += o.long
+      ? `<path d="M${cx - r} ${cy - r * 0.02} Q${cx - r} ${cy - r * 1.1} ${cx} ${cy - r * 1.1} Q${cx + r} ${cy - r * 1.1} ${cx + r} ${cy - r * 0.02} Q${cx + r * 0.66} ${cy - r * 0.45} ${cx + r * 0.33} ${cy - r * 0.52} Q${cx} ${cy - r * 0.28} ${cx - r * 0.33} ${cy - r * 0.52} Q${cx - r * 0.66} ${cy - r * 0.45} ${cx - r} ${cy - r * 0.02} Z" fill="${hair}" ${st(4)}/>`
+      : `<path d="M${cx - r * 1.03} ${cy - r * 0.05} Q${cx - r * 1.06} ${cy - r * 1.16} ${cx} ${cy - r * 1.13} Q${cx + r * 1.06} ${cy - r * 1.16} ${cx + r * 1.03} ${cy - r * 0.05} Q${cx + r * 0.72} ${cy - r * 0.6} ${cx + r * 0.22} ${cy - r * 0.5} Q${cx - r * 0.3} ${cy - r * 0.76} ${cx - r * 1.03} ${cy - r * 0.05} Z" fill="${hair}" ${st(4)}/>`;
+    s += o.eyes === "closed" ? sleepy(cx, cy + r * 0.2, k) : face(cx, cy + r * 0.2, k);
+    return s;
+  };
+  // рука с указательным пальцем вправо; кончик пальца в (x, y)
+  const hand = (x, y, sleeve = "#FFB0CD") => `<rect x="${x - 40}" y="${y - 10}" width="16" height="24" rx="5" fill="${sleeve}" ${st(4)}/>` +
+    `<rect x="${x - 16}" y="${y - 5}" width="18" height="10" rx="5" fill="#FFE6D4" ${st(3.4)}/>` +
+    `<rect x="${x - 28}" y="${y - 8}" width="18" height="21" rx="7" fill="#FFE6D4" ${st(3.4)}/><path d="M${x - 24} ${y + 4} H${x - 15}" ${st(2.4)}/>`;
+  const spark = (x, y, r, c = "#FFE27A") => `<path d="M${x} ${y - r} Q${x} ${y} ${x + r} ${y} Q${x} ${y} ${x} ${y + r} Q${x} ${y} ${x - r} ${y} Q${x} ${y} ${x} ${y - r} Z" fill="${c}"/>`;
+
   const I = {
     // ---- еда и напитки ----
     "おちゃ": `<path d="M40 22 q-5 -6 0 -12 M56 24 q-5 -7 0 -14" fill="none" stroke="#C9B6C0" stroke-width="4" stroke-linecap="round"/><path d="M20 32 H80 L73 82 Q72 88 64 88 H36 Q28 88 27 82 Z" fill="#BFE8AE" ${st()}/><path d="M22 44 H78" stroke="#8BCB78" stroke-width="5"/>` + face(50, 64, 0.85),
@@ -1602,6 +1642,20 @@ const WordIcons = (() => {
     "ふじさん": `<circle cx="78" cy="26" r="10" fill="#FF9EC0" ${st(4)}/><path d="M6 86 L38 30 Q50 20 62 30 L94 86 Z" fill="#9FC8FF" ${st()}/><path d="M38 30 Q50 20 62 30 L68 40 L60 38 L54 44 L46 38 L38 44 L32 40 Z" fill="#fff" ${st(3.4)}/>`,
     "とうきょう": `<path d="M50 6 V16" ${st(4)}/><path d="M47 34 L48.5 16 H51.5 L53 34 Z" fill="#FF7F9C" ${st(4)}/><path d="M28 92 Q42 66 44 42 H56 Q58 66 72 92 Z" fill="#FF7F9C" ${st()}/><path d="M38 78 H62 M42 62 H58 M44 50 H56" stroke="#fff" stroke-width="3.4" stroke-linecap="round"/><path d="M42 92 Q50 80 58 92" fill="#FFF0F5" ${st(4)}/><rect x="36" y="34" width="28" height="9" rx="3" fill="#fff" ${st(4)}/><rect x="45" y="22" width="10" height="5" rx="2" fill="#fff" ${st(3)}/><path d="M20 18 Q20 26 28 26 Q20 26 20 34 Q20 26 12 26 Q20 26 20 18 Z" fill="#FFB347"/><path d="M82 34 Q82 40 88 40 Q82 40 82 46 Q82 40 76 40 Q82 40 82 34 Z" fill="#FFB347"/>`,
     "かぞく": `<path d="M8 94 Q8 66 30 66 Q50 66 50 94 Z" fill="#AED8FF" ${st()}/><path d="M50 94 Q50 66 70 66 Q92 66 92 94 Z" fill="#FFB0CD" ${st()}/><path d="M56 30 Q52 64 58 66 H84 Q90 60 84 30 Z" fill="#7A4E36" ${st()}/><circle cx="30" cy="40" r="16" fill="#FFE6D4" ${st()}/><path d="M14 38 Q16 22 30 22 Q44 22 46 38 Q36 30 26 32 Q18 32 14 38 Z" fill="#5E3B2A" ${st(4)}/><circle cx="70" cy="40" r="16" fill="#FFE6D4" ${st()}/><path d="M54 40 Q54 22 70 22 Q86 22 86 40 Q78 30 66 30 Q58 32 54 40 Z" fill="#7A4E36" ${st(4)}/>` + face(30, 44, 0.55) + face(70, 44, 0.55) + `<path d="M34 96 Q34 80 50 80 Q66 80 66 96 Z" fill="#FFE27A" ${st()}/><circle cx="50" cy="66" r="13" fill="#FFE6D4" ${st()}/><path d="M37 64 Q38 52 50 52 Q62 52 63 64 Q56 58 50 60 Q44 58 37 64 Z" fill="#5E3B2A" ${st(3.4)}/>` + face(50, 68, 0.45),
+    // ---- слова из учебника: вторая часть ----
+    "あき": `<path d="M50 66 Q52 80 44 92" fill="none" ${st()}/><path d="M50 8 L58 28 L72 20 L68 38 L88 36 L77 50 L87 59 L64 61 L66 76 L50 66 L34 76 L36 61 L13 59 L23 50 L12 36 L32 38 L28 20 L42 28 Z" fill="#FF8A4C" ${st()}/><path d="M50 22 V60 M50 46 L66 36 M50 46 L34 36" fill="none" stroke="#E8663A" stroke-width="3" stroke-linecap="round"/>` + face(50, 50, 0.6) + `<path d="M80 74 q8 -2 10 6 q-8 4 -10 -6 Z" fill="#FFC34D" ${st(3)}/><path d="M14 80 q6 -6 12 0 q-6 6 -12 0 Z" fill="#FFB0CD" ${st(3)}/>`,
+    "まど": `<rect x="14" y="12" width="72" height="68" rx="6" fill="#DDF1FF" ${st()}/><path d="M54 30 q2 -6 8 -4 q4 -4 9 0 q5 0 5 5 H52 Z" fill="#fff"/><path d="M50 12 V80 M14 46 H86" ${st(4)}/><path d="M14 12 H32 Q24 44 32 80 H14 Z M86 12 H68 Q76 44 68 80 H86 Z" fill="#FFB0CD" ${st(4)}/><path d="M38 24 L44 18 M38 34 L46 26" stroke="#fff" stroke-width="3.4" stroke-linecap="round"/><rect x="8" y="78" width="84" height="11" rx="4" fill="#F4C79C" ${st()}/>`,
+    "わたし": person(46, 40, 22, { long: true, shirt: "#FFB0CD" }) + `<g transform="rotate(225 48 52)">` + hand(48, 52, "#FFB0CD") + `</g><path d="M80 20 c-3 -4 -8 -2 -6 2 1 2 6 5 6 5s5 -3 6 -5c2 -4 -3 -6 -6 -2z" fill="#FF7FA8" ${st(2.4)}/>` + spark(16, 22, 6),
+    "わたくし": `<g transform="rotate(-10 50 60)">` + person(50, 42, 22, { long: true, shirt: "#8FA8E8", collar: "#fff", eyes: "closed" }) + `</g>` + spark(18, 22, 7) + spark(84, 30, 6) + spark(80, 12, 4, "#FFB0CD"),
+    "あなた": person(66, 38, 18, { shirt: "#AED8FF" }) + hand(44, 64) + spark(22, 24, 6, "#FFB0CD") + `<path d="M48 54 L56 48 M48 74 L56 80" ${st(3)}/>`,
+    "かれ": person(50, 40, 23, { shirt: "#AED8FF", collar: "#fff" }),
+    "かのじょ": person(50, 40, 23, { long: true, shirt: "#FFB0CD" }) + `<path d="M64 20 l9 -7 v14 Z M64 20 l-9 -7 v14 Z" fill="#FF9EC0" ${st(3)}/><circle cx="64" cy="20" r="3" fill="#FF7FA8" ${st(2.4)}/>`,
+    "あのひと": `<path d="M8 90 Q50 72 92 86" fill="none" stroke="#9FD49A" stroke-width="6" stroke-linecap="round"/>` + person(72, 34, 11, { shirt: "#FFE27A" }) + `<path d="M36 58 L58 42" fill="none" stroke="#FF9EC0" stroke-width="3.4" stroke-dasharray="3 6" stroke-linecap="round"/>` + `<g transform="rotate(-30 30 70)">` + hand(42, 70) + `</g>`,
+    "あのかた": `<path d="M8 90 Q50 72 92 86" fill="none" stroke="#9FD49A" stroke-width="6" stroke-linecap="round"/>` + person(72, 34, 11, { shirt: "#5E6FA8", collar: "#fff", tie: "#FF7FA8", hair: "#3E3A4A" }) + spark(54, 16, 6) + spark(90, 14, 5) + `<path d="M36 58 L58 42" fill="none" stroke="#FF9EC0" stroke-width="3.4" stroke-dasharray="3 6" stroke-linecap="round"/>` + `<g transform="rotate(-30 30 70)">` + hand(42, 70) + `</g>`,
+    "だれ": `<path d="M18 94 Q18 66 50 64 Q82 66 82 94 Z" fill="#D9CCD3" ${st()}/><circle cx="50" cy="40" r="22" fill="#D9CCD3" ${st()}/><text x="50" y="52" font-size="32" text-anchor="middle" font-family="system-ui,sans-serif" font-weight="900" fill="#fff">?</text><path d="M66 10 h24 a6 6 0 0 1 6 6 v14 a6 6 0 0 1 -6 6 h-12 l-6 6 v-6 h-6 a6 6 0 0 1 -6 -6 v-14 a6 6 0 0 1 6 -6 Z" fill="#FF9EC0" ${st(3.4)}/><text x="78" y="31" font-size="18" text-anchor="middle" font-family="system-ui,sans-serif" font-weight="900" fill="#fff">?</text>`,
+    "さん": `<rect x="44" y="12" width="12" height="16" rx="3" fill="#FFE27A" ${st(4)}/><rect x="12" y="24" width="76" height="54" rx="10" fill="#fff" ${st()}/><path d="M12 36 Q12 24 22 24 H78 Q88 24 88 36 V40 H12 Z" fill="#FF9EC0" ${st(4)}/><circle cx="32" cy="59" r="11" fill="#FFE6D4" ${st(3.4)}/><path d="M22 56 Q22 46 32 46 Q42 46 42 56 Q36 51 32 53 Q27 51 22 56 Z" fill="#7A4E36"/><path d="M50 54 H78 M50 66 H70" stroke="#E4D6DD" stroke-width="5" stroke-linecap="round"/>` + spark(84, 84, 7, "#FFB0CD"),
+    "ええ": `<path d="M14 34 q-6 8 0 16 M8 30 q-8 12 0 24" fill="none" stroke="#C9B6C0" stroke-width="3.4" stroke-linecap="round"/><circle cx="40" cy="62" r="26" fill="#FFE6D4" ${st()}/><path d="M28 60 q4 -5 8 0 M44 60 q4 -5 8 0 M34 70 q6 6 12 0" fill="none" ${st(2.6)}/><ellipse cx="25" cy="68" rx="4" ry="2.4" fill="#FFA3BA"/><ellipse cx="55" cy="68" rx="4" ry="2.4" fill="#FFA3BA"/><path d="M62 10 h26 a6 6 0 0 1 6 6 v16 a6 6 0 0 1 -6 6 h-14 l-8 7 v-7 h-4 a6 6 0 0 1 -6 -6 v-16 a6 6 0 0 1 6 -6 Z" fill="#DCF6EC" ${st(3.4)}/><path d="M66 24 L73 31 L86 17" fill="none" stroke="#23A57F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>`,
+    "そう": `<circle cx="40" cy="62" r="26" fill="#FFE6D4" ${st()}/>` + face(40, 64, 0.8) + `<rect x="70" y="56" width="9" height="20" rx="4.5" fill="#FFE6D4" ${st(3)}/><rect x="64" y="68" width="18" height="18" rx="7" fill="#FFE6D4" ${st(3)}/><path d="M60 10 h28 a6 6 0 0 1 6 6 v16 a6 6 0 0 1 -6 6 h-16 l-8 7 v-7 h-4 a6 6 0 0 1 -6 -6 v-16 a6 6 0 0 1 6 -6 Z" fill="#FFF1C4" ${st(3.4)}/><path d="M75 16 V27" stroke="#CF8600" stroke-width="5" stroke-linecap="round"/><circle cx="75" cy="33" r="2.8" fill="#CF8600"/>` + spark(16, 26, 6),
     "みみ": `<path d="M18 40 Q10 50 18 60 M10 32 Q-2 50 10 68" fill="none" stroke="#FF9EC0" stroke-width="4" stroke-linecap="round"/><path d="M46 14 C72 10 86 30 84 50 C82 64 72 66 68 78 C64 92 46 92 44 80 C43 74 48 70 50 64 C38 60 32 48 32 36 C32 24 38 16 46 14 Z" fill="#FFDCC8" ${st()}/><path d="M46 28 C60 24 72 34 70 48 C68 56 60 58 58 50" fill="none" stroke="#E8A890" stroke-width="4.4" stroke-linecap="round"/><ellipse cx="52" cy="46" rx="5" ry="6" fill="#F2B9A0"/><ellipse cx="72" cy="64" rx="4" ry="2.4" fill="#FFA3BA" opacity=".85"/>`,
     "あし": `<path d="M30 46 C30 30 64 30 66 46 C68 60 64 88 46 88 C30 88 30 62 30 46 Z" fill="#FFDCC8" ${st()}/><circle cx="34" cy="26" r="8" fill="#FFDCC8" ${st(4)}/><circle cx="48" cy="20" r="7" fill="#FFDCC8" ${st(4)}/><circle cx="60" cy="22" r="6" fill="#FFDCC8" ${st(4)}/><circle cx="70" cy="28" r="5" fill="#FFDCC8" ${st(4)}/><circle cx="76" cy="38" r="4.4" fill="#FFDCC8" ${st(4)}/>`,
     "くち": `<path d="M10 50 Q30 26 50 38 Q70 26 90 50 Q70 80 50 80 Q30 80 10 50 Z" fill="#FF7F9C" ${st()}/><path d="M14 50 Q50 62 86 50" fill="none" ${st(4)}/>` + shine(36, 40, -10),
@@ -2010,36 +2064,59 @@ function numLookalikes(n, k = 3) {
   for (const x of shuffle(tries)) { if (out.size >= k) break; if (x > 0 && x !== n && x < 100000 && String(x).length >= s.length - 1) out.add(x); }
   return [...out];
 }
-// Слова к тесту: учебник, стр. 24 «ことばを よみましょう». mn — как запомнить (*жирным* — главное), trap — «きを つけましょう!»
-const VOCAB_TITLE = "Учебник, стр. 24";
+// Слова из учебника. mn — как запомнить (*жирным* — главное), trap — «きを つけましょう!». Темы — в VOCAB_CATS
 const VOCAB_WORDS = [
   { w: "あさ", cyr: "аса", lat: "asa", ru: "утро", mn: "Утром я *ас*: всё успеваю — «*аса*»." },
   { w: "ひる", cyr: "хиру", lat: "hiru", ru: "день, полдень", mn: "В полдень у *хиру*рга обед — «*хиру*»." },
   { w: "よる", cyr: "ёру", lat: "yoru", ru: "ночь, вечер", mn: "Ночью *ёр*заю в кровати — «*ёру*»." },
   { w: "いす", cyr: "ису", lat: "isu", ru: "стул", mn: "«*И сю*да садись!» — на стул, «*ису*»." },
-  { w: "おちゃ", cyr: "отя", lat: "ocha", ru: "(зелёный) чай", mn: "В «о*ча*» спрятался *ча*й. お — вежливая приставка.", trap: "ちゃ «ча» — с маленькой ゃ. С большой や вышло бы おちや «отия»." },
+  { w: "おちゃ", cyr: "отя", lat: "ocha", ru: "чай (обычно зелёный)", mn: "В «о*ча*» спрятался *ча*й. お — вежливая приставка.", trap: "ちゃ «ча» — с маленькой ゃ. С большой や вышло бы おちや «отия»." },
   { w: "とけい", cyr: "токэ:", lat: "tokee", ru: "часы", mn: "Часы работают от батарейки — «*ток*э:».", trap: "Долгое «э:» пишется через い: と・け・い. Не とけえ!" },
   { w: "うみ", cyr: "уми", lat: "umi", ru: "море", mn: "У моря — *уми*ротворение: «*уми*»." },
   { w: "やま", cyr: "яма", lat: "yama", ru: "гора", mn: "Наоборот: не *яма*, а гора — «*яма*»." },
   { w: "いぬ", cyr: "ину", lat: "inu", ru: "собака", mn: "Пёс тянет поводок: «*И ну* гулять!» — «*ину*»." },
   { w: "ねこ", cyr: "нэко", lat: "neko", ru: "кошка", mn: "«*Нэ ко*т», а кошка — «*нэко*»." },
   { w: "ざっし", cyr: "дзасси", lat: "zasshi", ru: "журнал", mn: "*Засы*паю над журналом — «*дзасси*».", trap: "Маленькая っ — короткая пауза, согласный удваивается: «дза-сси». С большой つ было бы ざつし «дзацуси»." },
-  { w: "つくえ", cyr: "цукуэ", lat: "tsukue", ru: "стол, парта", mn: "*Цук!* — стучу ручкой по парте: «*цукуэ*»." },
+  { w: "つくえ", cyr: "цукуэ", lat: "tsukue", ru: "письменный стол, парта", mn: "*Цук!* — стучу ручкой по парте: «*цукуэ*»." },
   { w: "にほんご", cyr: "нихонго", lat: "nihongo", ru: "японский язык", mn: "*にほん* — Япония, *ご* — язык. Вместе — японский язык." },
-  { w: "てんぷら", cyr: "тэмпура", lat: "tenpura", ru: "тэмпура", mn: "Как по-русски: *тэмпура* — креветки в кляре. ん перед ぷ звучит как «м»." },
+  { w: "てんぷら", cyr: "тэмпура", lat: "tenpura", ru: "тэмпура (жареное в кляре)", mn: "Как по-русски: *тэмпура* — креветки в кляре. ん перед ぷ звучит как «м»." },
   { w: "ふじさん", cyr: "фудзисан", lat: "Fujisan", ru: "гора Фудзи", mn: "*ふじ* — Фудзи, *さん* здесь значит «гора». Фудзи-гора!" },
   { w: "とうきょう", cyr: "то:кё:", lat: "Tookyoo", ru: "Токио", mn: "Не «Токио», а «*то:-кё:*» — оба «о» долгие.", trap: "Два долгих «о:»: после と и после きょ пишется う. И ょ — маленькая: と・う・きょ・う." },
   { w: "やさい", cyr: "ясай", lat: "yasai", ru: "овощи", mn: "«*Я са*жаю» овощи — «*ясай*»." },
   { w: "さかな", cyr: "сакана", lat: "sakana", ru: "рыба", mn: "Ловлю рыбу *сак*ом — «*сакана*»." },
   { w: "たまご", cyr: "тамаго", lat: "tamago", ru: "яйцо", mn: "*Тамаго*чи вылупился из яйца — «*тамаго*»." },
-  { w: "かぞく", cyr: "кадзоку", lat: "kazoku", ru: "семья", mn: "*Ка-дзо-ку* — три слога, как папа, мама и я: семья." }
+  { w: "かぞく", cyr: "кадзоку", lat: "kazoku", ru: "семья", mn: "*Ка-дзо-ку* — три слога, как папа, мама и я: семья." },
+  { w: "あき", cyr: "аки", lat: "aki", ru: "осень", mn: "Осенью листья красные, *аки* пламя — «*аки*»." },
+  { w: "まど", cyr: "мадо", lat: "mado", ru: "окно", mn: "*Ма*ма *до*ма — смотрит в окно: «*мадо*»." },
+  { w: "わたし", cyr: "ватаси", lat: "watashi", ru: "я", mn: "Я мягкая, как *вата*: «*вата*си». Говоря «я», японцы показывают пальцем на свой нос." },
+  { w: "わたくし", cyr: "ватакуси", lat: "watakushi", ru: "я (вежливо)", mn: "わたし + *く*: слово длиннее — значит вежливее. Так говорят с учителем или на собеседовании." },
+  { w: "あなた", cyr: "аната", lat: "anata", ru: "ты, вы", mn: "Протягиваю тебе подарок: «*А на*, *та*к и быть!» — «*аната*»." },
+  { w: "かれ", cyr: "карэ", lat: "kare", ru: "он", mn: "У него *кар*ие глаза — «*карэ*»." },
+  { w: "かのじょ", cyr: "канодзё", lat: "kanojo", ru: "она", mn: "Она плывёт на *каноэ* — «*кано*дзё».", trap: "じょ «дзё» — с маленькой ょ. С большой よ вышло бы かのじよ «канодзиё»." },
+  { w: "あのひと", cyr: "ано хито", lat: "ano hito", ru: "тот человек", mn: "*あの* — «тот», *ひと* — «человек». Тот человек — вон там." },
+  { w: "あのかた", cyr: "ано ката", lat: "ano kata", ru: "тот человек (вежливо)", mn: "*あの* — «тот», *かた* — вежливое «человек». Так говорят о том, кого уважают." },
+  { w: "だれ", cyr: "дарэ", lat: "dare", ru: "кто", mn: "Кто *дар*ит подарок? — «*дарэ*?»" },
+  { w: "さん", cyr: "сан", lat: "san", ru: "-сан: вежливо после имени", mn: "Как в аниме: Моня-*сан*. О себе так не говорят — только о других." },
+  { w: "ええ", cyr: "э:", lat: "ee", ru: "да", mn: "«*Э-э*, да-да» — кивнула: «*э:*».", trap: "Долгое «э:» здесь пишется двумя え: ええ." },
+  { w: "そう", cyr: "со:", lat: "soo", ru: "так", mn: "«*Со:*, вот *так*!» — «*со:*».", trap: "Долгое «о:» пишется через う: そう, а не そお." }
 ];
-// Наборы слов (раздел «Слова»): новые страницы учебника добавляются сюда отдельными наборами
-const VOCAB_SETS = [{ id: "p24", title: VOCAB_TITLE, jp: "ことばを よみましょう", words: VOCAB_WORDS }];
+// Темы (раздел «Слова»): каждое слово — ровно в одной теме; новые слова добавляются в VOCAB_WORDS и сюда
+const VOCAB_CATS = [
+  { id: "time", title: "Время", jp: "じかん", icon: "あさ", words: ["あさ", "ひる", "よる", "あき"] },
+  { id: "nature", title: "Природа и животные", jp: "しぜん と どうぶつ", icon: "やま", words: ["うみ", "やま", "いぬ", "ねこ"] },
+  { id: "japan", title: "Япония", jp: "にほん", icon: "ふじさん", words: ["ふじさん", "とうきょう", "てんぷら", "にほんご"] },
+  { id: "food", title: "Еда", jp: "たべもの", icon: "おちゃ", words: ["おちゃ", "やさい", "さかな", "たまご"] },
+  { id: "home", title: "Дом и вещи", jp: "いえ の もの", icon: "まど", words: ["まど", "いす", "つくえ", "とけい", "ざっし"] },
+  { id: "people", title: "Люди", jp: "ひと", icon: "かのじょ", words: ["わたし", "わたくし", "あなた", "かれ", "かのじょ", "あのひと", "あのかた", "だれ", "かぞく"] },
+  { id: "short", title: "Короткие слова", jp: "みじかい ことば", icon: "ええ", words: ["さん", "ええ", "そう"] }
+];
+const VOCAB_SETS = VOCAB_CATS.map((c) => Object.assign({}, c, { words: c.words.map((w) => VOCAB_WORDS.find((x) => x.w === w)) }));
 const VOCAB_ALL = VOCAB_SETS.flatMap((x) => x.words);
-const vSet = (id) => VOCAB_SETS.find((x) => x.id === id) || VOCAB_SETS[0];
+const VOCAB_EVERY = { id: "all", title: "Все слова", jp: "ぜんぶ", words: VOCAB_ALL };
+const vSet = (id) => (id === "all" ? VOCAB_EVERY : VOCAB_SETS.find((x) => x.id === id) || VOCAB_EVERY);
+const vCatOf = (w) => (VOCAB_SETS.find((st) => st.words.some((x) => x.w === w)) || VOCAB_EVERY).id;
 // Неверные написания: сначала ловушки из учебника, потом похожие знаки, тэнтэн, маленькие/большие, перестановки
-const VOCAB_TRAPS = { "とけい": ["とけえ", "ときい", "とけ"], "とうきょう": ["ときょう", "とうきよう", "とおきょう"], "おちゃ": ["おちや", "おちょ", "おしゃ"], "ざっし": ["ざつし", "さっし", "ざし"] };
+const VOCAB_TRAPS = { "ええ": ["えい", "え", "いい"], "そう": ["そお", "そ", "さう"], "かのじょ": ["かのじよ", "かのしょ", "かのじゅ"], "とけい": ["とけえ", "ときい", "とけ"], "とうきょう": ["ときょう", "とうきよう", "とおきょう"], "おちゃ": ["おちや", "おちょ", "おしゃ"], "ざっし": ["ざつし", "さっし", "ざし"] };
 const LOOKALIKE = [["ぬ", "め"], ["ね", "れ", "わ"], ["る", "ろ"], ["さ", "ち", "き"], ["は", "ほ"], ["い", "こ", "り"], ["あ", "お"], ["う", "つ"], ["ま", "も"], ["て", "そ"], ["に", "た"], ["く", "へ"], ["す", "む"], ["や", "か"], ["ひ", "ふ"], ["み", "め"], ["よ", "ま"], ["け", "は"], ["ん", "し"]];
 function vSpellings(w, n = 3) {
   const out = new Set(VOCAB_TRAPS[w] || []), ch = [...w];
@@ -3476,6 +3553,8 @@ function whenText(t) {
 // Выезжает снизу; закрывается крестиком, тапом по фону, Esc или смахиванием вниз. Фон под ним не прокручивается.
 let sheetCount = 0;
 const liveSheets = new Set(); // шторки, которые перерисовываются вместе с экраном (магазины)
+const openSheets = new Set();
+const closeAllSheets = () => [...openSheets].forEach((u) => u.close());
 function openSheet(label, build, opts = {}) {
   const back = h("div", { class: "sheet-back" });
   const sheet = h("div", { class: "sheet", role: "dialog", "aria-modal": "true", "aria-label": label });
@@ -3485,7 +3564,7 @@ function openSheet(label, build, opts = {}) {
     if (closed) return;
     closed = true;
     document.removeEventListener("keydown", esc);
-    liveSheets.delete(ui);
+    liveSheets.delete(ui); openSheets.delete(ui);
     sheetCount = Math.max(0, sheetCount - 1);
     if (!sheetCount) document.documentElement.classList.remove("sheet-open");
     sheet.style.transition = ""; sheet.style.transform = "";
@@ -3533,6 +3612,7 @@ function openSheet(label, build, opts = {}) {
   sheet.addEventListener("touchcancel", end);
   const ui = { back, sheet, close, refresh() { const y = sheet.scrollTop; sheet.replaceChildren(grab, ...[].concat(build(close))); sheet.scrollTop = y; } };
   if (opts.live) liveSheets.add(ui);
+  openSheets.add(ui);
   return ui;
 }
 const sheetHead = (eyebrow, title, close) => h("div", { class: "sheet-head" },
@@ -4258,7 +4338,7 @@ function startOrders() {
 
 /* ===================== Кроссворд хираганой ===================== */
 // Слова кроссворда — те же, что в «Словах к тесту»
-const CW_WORDS = VOCAB_WORDS.map((x) => [x.w, x.cyr, x.ru, ""]);
+const CW_WORDS = VOCAB_ALL.map((x) => [x.w, x.cyr, x.ru, ""]);
 const CW_N = 8, CW_ROWS = 9, CW_WORDS_N = 7;
 // Генератор: 7 слов (сначала те, что реже попадались), слова пересекаются по общим знакам,
 // соседние слова не слипаются. Слово без общих знаков с остальными встаёт отдельным островком.
@@ -4441,6 +4521,8 @@ function vState() {
   // перенос из первой версии: одно место и один тест — это набор стр. 24
   if (v.resume !== undefined) { if (v.resume) v.res.p24 = v.resume; delete v.resume; }
   if (v.best !== undefined || v.last !== undefined) { v.tests.p24 = { best: v.best || null, last: v.last || null }; delete v.best; delete v.last; }
+  // набор «стр. 24» разложен по темам: его незаконченное занятие уже не продолжить
+  if (v.res.p24) delete v.res.p24;
   return v;
 }
 const vLevel = (w) => vState().lv[w] || 0;
@@ -4456,19 +4538,19 @@ function vMnemo(x) {
 }
 const vTrapNote = (x) => x.trap ? h("div", { class: "v-trap" }, h("b", { lang: "ja" }, "きを つけて！"), " ", x.trap) : null;
 // --- задания: каждое получает слово и onDone(ok) ---
-function vTaskPicToKana(x, onDone, pool = VOCAB_WORDS) {
+function vTaskPicToKana(x, onDone, pool = VOCAB_ALL) {
   const others = shuffle(pool.filter((y) => y.w !== x.w)).slice(0, 1).map((y) => y.w);
   const wrong = vSpellings(x.w, 3 - others.length).concat(others).slice(0, 3);
   return choiceTask({ label: "Как это по-японски?", card: vPicCard(x), kind: "ja", say: x.w, hideSay: true,
     options: shuffle([x.w].concat(wrong)), answer: x.w, reveal: vReveal(x), onDone: ({ ok }) => onDone(ok) });
 }
-function vTaskKanaToRu(x, onDone, pool = VOCAB_WORDS) {
-  const others = shuffle(pool.filter((y) => y.w !== x.w).concat(VOCAB_WORDS.filter((y) => y.w !== x.w && !pool.includes(y)))).slice(0, 3).map((y) => y.ru);
+function vTaskKanaToRu(x, onDone, pool = VOCAB_ALL) {
+  const others = shuffle(pool.filter((y) => y.w !== x.w).concat(shuffle(VOCAB_ALL.filter((y) => y.w !== x.w && !pool.includes(y))))).slice(0, 3).map((y) => y.ru);
   return choiceTask({ label: "Что это значит?", show: x.w, showJa: true, kind: "txt", say: x.w,
     options: shuffle([x.ru].concat(others)), answer: x.ru, reveal: vReveal(x), onDone: ({ ok }) => onDone(ok) });
 }
-function vTaskListen(x, onDone, pool = VOCAB_WORDS) {
-  const others = shuffle(pool.filter((y) => y.w !== x.w).concat(VOCAB_WORDS.filter((y) => y.w !== x.w && !pool.includes(y)))).slice(0, 3).map((y) => y.w);
+function vTaskListen(x, onDone, pool = VOCAB_ALL) {
+  const others = shuffle(pool.filter((y) => y.w !== x.w).concat(shuffle(VOCAB_ALL.filter((y) => y.w !== x.w && !pool.includes(y))))).slice(0, 3).map((y) => y.w);
   const play = h("button", { class: "btn v-listen", type: "button", onclick: () => say(x.w) }, icon("speaker"), " Послушать ещё");
   setTimeout(() => say(x.w), 300);
   return choiceTask({ label: "Послушай и выбери слово", card: h("div", { class: "choice-card v-listen-card" }, play), kind: "ja", say: x.w, hideSay: true,
@@ -4525,17 +4607,19 @@ function vTaskWrite(x, sh, onDone) {
   one();
 }
 
-function startVocab(mode, only, setId = "p24") {
+function startVocab(mode, only, setId = "all") {
   const SET = vSet(setId), WORDS = SET.words;
   const GROUPS = []; for (let g = 0; g < WORDS.length; g += 5) GROUPS.push(WORDS.slice(g, g + 5));
   const v = vState();
-  const titles = { learn: "Слова к тесту", review: "Повторение слов", test: "Пробный тест" };
+  const titles = { learn: SET.title, review: "Повторение", test: "Тест" };
   const sh = openShell(titles[mode]);
   const phases = [];
   if (mode === "learn") {
     phases.push({ t: "intro" });
     GROUPS.forEach((_, g) => phases.push({ t: "meet", g }, { t: "quiz", g }, { t: "build", g }, { t: "write", g }));
-    phases.push({ t: "traps" }, { t: "mix" }, { t: "finish" });
+    if (WORDS.some((x) => x.trap)) phases.push({ t: "traps" });
+    if (GROUPS.length > 1) phases.push({ t: "mix" });
+    phases.push({ t: "finish" });
   } else if (mode === "review") phases.push({ t: "review" }, { t: "finish" });
   else phases.push({ t: "test" }, { t: "testEnd" });
   const stats = { ok: 0, tot: 0 };
@@ -4545,7 +4629,7 @@ function startVocab(mode, only, setId = "p24") {
   const next = () => { pi++; sh.progress(pi / (phases.length - 1)); keep(); run(phases[pi]); };
   const takeSub = () => { const x = sub; sub = null; return x; };
   const count = (ok, w) => { stats.tot++; if (ok) stats.ok++; if (w) vGrade(w, ok); save(); };
-  const gname = (g) => `${g * 5 + 1}–${g * 5 + 5}`;
+  const gname = (g) => (GROUPS.length > 1 ? `${g * 5 + 1}–${g * 5 + GROUPS[g].length}` : SET.title.toLowerCase());
   function run(ph) {
     sh.count("");
     ({ intro, meet, quiz, build, write, traps, mix, review, test, finish, testEnd })[ph.t](ph.g);
@@ -4578,10 +4662,11 @@ function startVocab(mode, only, setId = "p24") {
   };
   function intro() {
     sh.stage("начало");
-    const parts = [h("div", { class: "eyebrow" }, SET.title), h("h2", {}, `${WORDS.length} слов`),
+    const parts = [h("div", { class: "eyebrow", lang: "ja" }, SET.jp), h("h2", {}, `${SET.title}: ${WORDS.length} ${plural(WORDS.length, "слово", "слова", "слов")}`),
       h("div", { class: "v-strip" }, WORDS.map((x) => h("span", { class: vLevel(x.w) >= 3 ? "ok" : "" }, wordIcon(x.w)))),
-      h("p", {}, "Учим по пять слов. С каждым словом: картинка, звук и подсказка, как запомнить. Потом узнаёшь его среди других, собираешь из слогов, как во втором упражнении учебника, и пишешь рукой."),
-      h("p", {}, `В конце — ловушки из рамки «きを つけましょう!» (${WORDS.filter((x) => x.trap).map((x) => x.w).join(", ")}) и все слова вперемешку.`),
+      h("p", {}, (GROUPS.length > 1 ? "Учим по пять слов. " : "") + "С каждым словом: картинка, звук и подсказка, как запомнить. Потом узнаёшь его среди других, собираешь из слогов, как во втором упражнении учебника, и пишешь рукой."),
+      WORDS.some((x) => x.trap) ? h("p", {}, `Потом — ловушки «きを つけましょう!»: ${WORDS.filter((x) => x.trap).map((x) => x.w).join(", ")}.`) : null,
+      GROUPS.length > 1 ? h("p", {}, "В конце — все слова темы вперемешку.") : null,
       h("p", { class: "muted" }, "Можно выйти в любой момент: продолжишь с того же места.")];
     const go = h("button", { class: "btn primary", type: "button", onclick: next }, "Начать");
     if (saved && saved.pi > 0 && saved.pi < phases.length - 1) {
@@ -4629,7 +4714,7 @@ function startVocab(mode, only, setId = "p24") {
     if (st && st.queue) return queueRun("ловушки", st, null, (it, done) => taskOf(it, done));
     sh.stage("ловушки"); sh.count("");
     const row = (w, text) => h("div", { class: "v-rule" }, wordIcon(w, "v-pic-s"), h("div", {}, h("b", { lang: "ja" }, kanaText(w)), h("p", {}, text)));
-    sh.set(h("div", { class: "task explain" }, h("div", { class: "eyebrow", lang: "ja" }, "きを つけましょう！"), h("h2", {}, "Ловушки из учебника"),
+    sh.set(h("div", { class: "task explain" }, h("div", { class: "eyebrow", lang: "ja" }, "きを つけましょう！"), h("h2", {}, "Ловушки"),
       WORDS.filter((x) => x.trap).map((x) => row(x.w, x.trap)),
       h("div", { class: "row", style: "justify-content:center" }, h("button", { class: "btn primary", type: "button", onclick: go }, "Проверить себя"))));
   }
@@ -4637,20 +4722,21 @@ function startVocab(mode, only, setId = "p24") {
     queueRun(`все ${WORDS.length} слов`, takeSub(), () => shuffle(WORDS.map((x) => ({ w: x.w, k: pick1(jaVoice ? ["pk", "kr", "bd", "ls"] : ["pk", "kr", "bd"]) }))), (it, done) => taskOf(it, done));
   }
   function review() {
-    const words = only && only.length ? only.map(vByW) : shuffle(WORDS.slice()).sort((a, b) => vLevel(a.w) - vLevel(b.w)).slice(0, 10);
+    // все слова темы; письмо — у самых слабых (примерно каждое пятое слово)
+    const words = only && only.length ? only.map(vByW) : shuffle(WORDS.slice()).sort((a, b) => vLevel(a.w) - vLevel(b.w));
+    const nWrite = Math.max(1, Math.round(words.length / 5));
     const kinds = jaVoice ? ["pk", "kr", "bd", "ls"] : ["pk", "kr", "bd"];
-    queueRun("повторение", null, () => shuffle(words.map((x, j) => ({ w: x.w, k: j < 3 ? "wr" : x.trap && Math.random() < 0.5 ? "sp" : pick1(kinds) }))), (it, done) => taskOf(it, done));
+    queueRun(only && only.length ? "повторение" : `${SET.title.toLowerCase()} · все слова`, null, () => shuffle(words.map((x, j) => ({ w: x.w, k: j < nWrite ? "wr" : x.trap && Math.random() < 0.5 ? "sp" : pick1(kinds) }))), (it, done) => taskOf(it, done));
   }
   const misses = [];
   function test() {
     // как на тесте: каждое слово по одному разу, без повторов
     const order = shuffle(WORDS.slice());
-    const kinds = ["kr", "kr", "kr", "kr", "kr", "kr", "pk", "pk", "pk", "pk", "pk", "bd", "bd", "bd", "bd", "sp", "wr", "wr", "wr", jaVoice ? "ls" : "pk"];
+    const pattern = shuffle(["kr", "kr", "pk", "pk", "bd", "wr"].concat(jaVoice ? ["ls"] : []));
     const tr = order.filter((x) => x.trap), rest = order.filter((x) => !x.trap), q = [];
     // ловушки — всегда на правописание или сборку
     tr.forEach((x, j) => q.push({ w: x.w, k: j % 2 ? "bd" : "sp" }));
-    const left = shuffle(kinds.filter((k, j) => !(k === "sp" || (k === "bd" && j < 13)))).slice(0, rest.length);
-    rest.forEach((x, j) => q.push({ w: x.w, k: left[j] || "pk" }));
+    rest.forEach((x, j) => q.push({ w: x.w, k: pattern[j % pattern.length] }));
     queueRun(`${WORDS.length} вопросов`, null, () => shuffle(q), (it, done) => taskOf(it, (ok) => { if (!ok) misses.push(it.w); done(ok); }), false);
   }
   function testEnd() {
@@ -4677,7 +4763,7 @@ function startVocab(mode, only, setId = "p24") {
     save();
     const n = vKnownN(WORDS);
     sh.set(h("div", { class: "summary" },
-      h("div", { class: "say-row" }, mascot("happy", true), bubble("yay", mode === "learn" ? "Все слова пройдены!" : "Повторение готово")),
+      h("div", { class: "say-row" }, mascot("happy", true), bubble("yay", mode === "learn" ? `Тема «${SET.title}» пройдена!` : "Повторение готово")),
       h("div", { class: "big-stats" }, h("div", {}, h("b", {}, stats.tot ? Math.round((100 * stats.ok) / stats.tot) + "%" : "—"), h("span", {}, "верно с первого раза")), h("div", {}, h("b", {}, `${n}/${WORDS.length}`), h("span", {}, "слов выучено"))),
       h("p", { class: "note" }, "Слово считается выученным после трёх верных ответов подряд. Повторяй понемногу каждый день, а накануне теста пройди пробный тест."),
       h("div", { class: "row", style: "justify-content:center" },
@@ -4688,7 +4774,7 @@ function startVocab(mode, only, setId = "p24") {
 }
 
 // Карточки: вспомнить слово по картинке (или значение по слову), перевернуть, отметить «помню / не помню»
-function startCards(setId = "p24") {
+function startCards(setId = "all") {
   const SET = vSet(setId), sh = openShell("Карточки");
   let dir = "pic";
   function choose() {
@@ -4895,30 +4981,50 @@ let wordsFilter = "all";
 const levelDots = (w) => h("span", { class: "v-dots", "aria-label": `уровень ${Math.min(3, vLevel(w))} из 3` }, [0, 1, 2].map((i) => h("i", { class: i < vLevel(w) ? "on" : "" })));
 function wordsView() {
   const v = vState();
-  const total = VOCAB_ALL.length, known = vKnownN();
+  const total = VOCAB_ALL.length, known = vKnownN(), Ta = v.tests.all;
+  const btn = (t, f, primary) => h("button", { class: "btn" + (primary ? " primary" : ""), type: "button", onclick: f }, t);
   const head = h("section", { class: "panel today bowed v-head" },
     h("div", { class: "eyebrow", lang: "ja" }, "ことば"),
     h("h2", {}, "Слова"),
-    h("p", { class: "muted" }, `${total} ${plural(total, "слово", "слова", "слов")} · выучено ${known}`));
-  const sets = VOCAB_SETS.map((st) => {
-    const n = vKnownN(st.words), T = v.tests[st.id], res = v.res[st.id];
-    return h("section", { class: "panel v-set" },
-      h("div", { class: "v-set-top" }, h("div", {}, h("h3", {}, st.title), h("div", { class: "muted v-sub", lang: "ja" }, st.jp)), h("span", { class: "v-count num" }, `${n}/${st.words.length}`)),
-      h("div", { class: "v-progress" }, h("span", { style: `width:${(n / st.words.length) * 100}%` })),
-      T && T.best ? h("div", { class: "muted v-line" }, `Лучший тест: ${T.best.score} из ${T.best.tot}` + (T.last && T.last.at !== T.best.at ? ` · последний ${T.last.score}` : "")) : null,
-      h("div", { class: "v-actions" },
-        h("button", { class: "btn primary", type: "button", onclick: () => startVocab("learn", null, st.id) }, res ? "Продолжить" : "Учить"),
-        h("button", { class: "btn", type: "button", onclick: () => startCards(st.id) }, "Карточки"),
-        h("button", { class: "btn", type: "button", onclick: () => startVocab("review", null, st.id) }, "Повторить"),
-        h("button", { class: "btn", type: "button", onclick: () => startVocab("test", null, st.id) }, "Тест")));
-  });
+    h("p", { class: "muted" }, `${total} ${plural(total, "слово", "слова", "слов")} · выучено ${known}` + (Ta && Ta.best ? ` · лучший тест ${Ta.best.score}/${Ta.best.tot}` : "")),
+    h("div", { class: "v-progress" }, h("span", { style: `width:${(known / total) * 100}%` })),
+    h("div", { class: "v-actions three" },
+      btn("Карточки", () => startCards("all")),
+      btn("Повторить всё", () => startVocab("review", null, "all"), true),
+      btn("Тест", () => startVocab("test", null, "all"))));
+  const cats = h("div", { class: "v-cats" }, VOCAB_SETS.map((st) => {
+    const n = vKnownN(st.words), res = v.res[st.id];
+    return h("button", { class: "v-cat" + (n === st.words.length ? " done" : ""), type: "button", onclick: () => catSheet(st) },
+      wordIcon(st.icon, "v-cat-ico"),
+      h("span", { class: "v-cat-main" }, h("b", {}, st.title), h("span", { class: "muted", lang: "ja" }, st.jp),
+        h("span", { class: "v-progress thin" }, h("span", { style: `width:${(n / st.words.length) * 100}%` }))),
+      h("span", { class: "v-cat-n num" }, `${n}/${st.words.length}`, res ? h("i", { class: "v-cat-dot", title: "Начато" }) : null));
+  }));
   const seg = h("div", { class: "seg v-seg", role: "group", "aria-label": "Какие слова показать" },
     [["all", "Все"], ["learn", "Учу"], ["known", "Выучено"]].map(([k, t]) => h("button", { type: "button", "aria-pressed": String(wordsFilter === k), onclick: () => { wordsFilter = k; render(); } }, t)));
-  const list = VOCAB_ALL.filter((x) => wordsFilter === "all" || (wordsFilter === "known") === (vLevel(x.w) >= 3));
-  const dict = h("div", { class: "v-dict" }, list.length ? list.map((x) => h("button", { class: "v-row", type: "button", onclick: () => wordSheet(x) },
-    wordIcon(x.w, "v-row-ico"), h("span", { class: "v-row-main" }, h("b", { lang: "ja" }, kanaText(x.w)), h("span", { class: "muted" }, x.cyr)), h("span", { class: "v-row-ru" }, x.ru), levelDots(x.w)))
+  const pass = (x) => wordsFilter === "all" || (wordsFilter === "known") === (vLevel(x.w) >= 3);
+  const groups = VOCAB_SETS.map((st) => [st, st.words.filter(pass)]).filter(([, l]) => l.length);
+  const dict = h("div", { class: "v-dict" }, groups.length ? groups.map(([st, l]) => [h("div", { class: "v-dict-h" }, st.title), l.map(wordRow)])
     : h("p", { class: "muted" }, wordsFilter === "known" ? "Пока пусто: слово попадает сюда после трёх верных ответов подряд." : "Все слова выучены!"));
-  return h("div", {}, head, sets, h("h2", { class: "section-title" }, starSticker("#FFB0CD"), "Словарик"), seg, dict);
+  return h("div", {}, head, h("h2", { class: "section-title" }, starSticker("#FFB0CD"), "Темы"), cats, h("h2", { class: "section-title" }, starSticker("#FFB0CD"), "Словарик"), seg, dict);
+}
+const wordRow = (x) => h("button", { class: "v-row", type: "button", onclick: () => wordSheet(x) },
+  wordIcon(x.w, "v-row-ico"), h("span", { class: "v-row-main" }, h("b", { lang: "ja" }, kanaText(x.w)), h("span", { class: "muted" }, x.cyr)), h("span", { class: "v-row-ru" }, x.ru), levelDots(x.w));
+// Тема: слова и занятия по ней
+function catSheet(st) {
+  openSheet(st.title, (close) => {
+    const v = vState(), T = v.tests[st.id], res = v.res[st.id], n = vKnownN(st.words);
+    const go = (f) => () => { close(); setTimeout(f, 60); };
+    return [
+      h("div", { class: "sheet-head" }, h("div", {}, h("div", { class: "eyebrow", lang: "ja" }, st.jp), h("h2", {}, st.title)), h("button", { class: "icon-btn", type: "button", "aria-label": "Закрыть", onclick: close }, icon("close"))),
+      h("div", { class: "muted v-line" }, `${st.words.length} ${plural(st.words.length, "слово", "слова", "слов")} · выучено ${n}` + (T && T.best ? ` · лучший тест ${T.best.score}/${T.best.tot}` : "")),
+      h("div", { class: "v-chips" }, st.words.map((x) => h("button", { class: "v-chip", type: "button", onclick: () => wordSheet(x) }, wordIcon(x.w, "v-chip-ico"), h("b", { lang: "ja" }, kanaText(x.w)), h("span", {}, x.ru), levelDots(x.w)))),
+      h("div", { class: "v-actions" },
+        h("button", { class: "btn primary", type: "button", onclick: go(() => startVocab("learn", null, st.id)) }, res ? "Продолжить" : "Учить"),
+        h("button", { class: "btn", type: "button", onclick: go(() => startCards(st.id)) }, "Карточки"),
+        h("button", { class: "btn", type: "button", onclick: go(() => startVocab("review", null, st.id)) }, `Повторить все ${st.words.length}`),
+        h("button", { class: "btn", type: "button", onclick: go(() => startVocab("test", null, st.id)) }, "Тест"))];
+  });
 }
 function wordSheet(x) {
   openSheet(x.w, (close) => [
@@ -4928,7 +5034,7 @@ function wordSheet(x) {
       h("div", { class: "facts" }, h("span", {}, `${x.cyr} · ${x.lat}`), levelDots(x.w), sayBtn(x.w)),
       vMnemo(x), vTrapNote(x)),
     h("div", { class: "row", style: "justify-content:center" },
-      h("button", { class: "btn primary", type: "button", onclick: () => { close(); startVocab("review", [x.w], (VOCAB_SETS.find((st) => st.words.includes(x)) || VOCAB_SETS[0]).id); } }, "Потренировать"),
+      h("button", { class: "btn primary", type: "button", onclick: () => { closeAllSheets(); setTimeout(() => startVocab("review", [x.w], vCatOf(x.w)), 60); } }, "Потренировать"),
       h("button", { class: "btn", type: "button", onclick: close }, "Закрыть"))]);
 }
 const TAB_ORDER = ["home", "words", "review", "pet", "table"];
