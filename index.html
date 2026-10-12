@@ -758,7 +758,10 @@ details.how .how-body { display: grid; gap: 10px; margin-top: 12px; max-width: 6
 .v-ru { font-size: 20px; font-weight: 800; color: var(--ink); text-align: center; }
 .choice-btn.txt { font-size: 17px; line-height: 1.2; }
 .v-listen-card { min-height: 112px; }
-.v-listen { font-size: 17px; }
+.v-listen { font-size: 17px; white-space: nowrap; }
+.v-listen svg { width: 24px; height: 24px; flex: none; }
+.v-listen-card { gap: 6px; }
+.v-mute { font-size: 14px; min-height: 36px; }
 .v-known { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
 .v-known > span { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px 3px 3px; border-radius: 999px; background: rgb(255 255 255 / .6); font-size: 14px; opacity: .6; }
 .v-known > span.seen { background: #fff; opacity: 1; }
@@ -2514,6 +2517,8 @@ function say(text) {
     speechSynthesis.speak(u);
   } catch (e) {}
 }
+// Задания на слух: выключены в настройках (S.noListen) или на час кнопкой «Не могу слушать» (S.quietUntil)
+const canListen = () => !!jaVoice && !S.noListen && !(S.quietUntil > Date.now());
 function sayBtn(text) {
   const b = h("button", { class: "icon-btn say", type: "button", "aria-label": "Послушать", title: "Послушать", onclick: () => say(text) }, icon("speaker"));
   b.hidden = !jaVoice;
@@ -4552,9 +4557,17 @@ function vTaskKanaToRu(x, onDone, pool = VOCAB_ALL) {
 function vTaskListen(x, onDone, pool = VOCAB_ALL) {
   const others = shuffle(pool.filter((y) => y.w !== x.w).concat(shuffle(VOCAB_ALL.filter((y) => y.w !== x.w && !pool.includes(y))))).slice(0, 3).map((y) => y.w);
   const play = h("button", { class: "btn v-listen", type: "button", onclick: () => say(x.w) }, icon("speaker"), " Послушать ещё");
-  setTimeout(() => say(x.w), 300);
-  return choiceTask({ label: "Послушай и выбери слово", card: h("div", { class: "choice-card v-listen-card" }, play), kind: "ja", say: x.w, hideSay: true,
+  // нельзя включить звук — этот вопрос без звука, и следующий час вопросов на слух не будет
+  const mute = h("button", { class: "btn quiet v-mute", type: "button", onclick: () => {
+    S.quietUntil = Date.now() + 60 * 60 * 1000; save();
+    try { speechSynthesis.cancel(); } catch (e) {}
+    task.replaceWith(vTaskPicToKana(x, onDone, pool));
+  } }, "Не могу слушать");
+  setTimeout(() => { if (task.isConnected) say(x.w); }, 300);
+  const task = choiceTask({ label: "Послушай и выбери слово", card: h("div", { class: "choice-card v-listen-card" }, play, mute), kind: "ja", say: x.w, hideSay: true,
     options: shuffle([x.w].concat(others)), answer: x.w, reveal: vReveal(x), onDone: ({ ok }) => onDone(ok) });
+  task.querySelectorAll(".choice-btn").forEach((b) => b.addEventListener("click", () => { mute.hidden = true; }));
+  return task;
 }
 function vTaskSpell(x, onDone) {
   return choiceTask({ label: "Как пишется правильно?", card: vPicCard(x), kind: "ja", say: x.w, hideSay: true,
@@ -4655,7 +4668,7 @@ function startVocab(mode, only, setId = "all") {
     const x = vByW(it.w);
     if (it.k === "pk") return sh.set(vTaskPicToKana(x, done, pool));
     if (it.k === "kr") return sh.set(vTaskKanaToRu(x, done, pool));
-    if (it.k === "ls") return jaVoice ? sh.set(vTaskListen(x, done, pool)) : sh.set(vTaskPicToKana(x, done, pool));
+    if (it.k === "ls") return canListen() ? sh.set(vTaskListen(x, done, pool)) : sh.set(vTaskPicToKana(x, done, pool));
     if (it.k === "sp") return sh.set(vTaskSpell(x, done));
     if (it.k === "bd") return sh.set(vTaskBuild(x, done));
     if (it.k === "wr") return vTaskWrite(x, sh, done);
@@ -4719,20 +4732,20 @@ function startVocab(mode, only, setId = "all") {
       h("div", { class: "row", style: "justify-content:center" }, h("button", { class: "btn primary", type: "button", onclick: go }, "Проверить себя"))));
   }
   function mix() {
-    queueRun(`все ${WORDS.length} слов`, takeSub(), () => shuffle(WORDS.map((x) => ({ w: x.w, k: pick1(jaVoice ? ["pk", "kr", "bd", "ls"] : ["pk", "kr", "bd"]) }))), (it, done) => taskOf(it, done));
+    queueRun(`все ${WORDS.length} слов`, takeSub(), () => shuffle(WORDS.map((x) => ({ w: x.w, k: pick1(canListen() ? ["pk", "kr", "bd", "ls"] : ["pk", "kr", "bd"]) }))), (it, done) => taskOf(it, done));
   }
   function review() {
     // все слова темы; письмо — у самых слабых (примерно каждое пятое слово)
     const words = only && only.length ? only.map(vByW) : shuffle(WORDS.slice()).sort((a, b) => vLevel(a.w) - vLevel(b.w));
     const nWrite = Math.max(1, Math.round(words.length / 5));
-    const kinds = jaVoice ? ["pk", "kr", "bd", "ls"] : ["pk", "kr", "bd"];
+    const kinds = canListen() ? ["pk", "kr", "bd", "ls"] : ["pk", "kr", "bd"];
     queueRun(only && only.length ? "повторение" : `${SET.title.toLowerCase()} · все слова`, null, () => shuffle(words.map((x, j) => ({ w: x.w, k: j < nWrite ? "wr" : x.trap && Math.random() < 0.5 ? "sp" : pick1(kinds) }))), (it, done) => taskOf(it, done));
   }
   const misses = [];
   function test() {
     // как на тесте: каждое слово по одному разу, без повторов
     const order = shuffle(WORDS.slice());
-    const pattern = shuffle(["kr", "kr", "pk", "pk", "bd", "wr"].concat(jaVoice ? ["ls"] : []));
+    const pattern = shuffle(["kr", "kr", "pk", "pk", "bd", "wr"].concat(canListen() ? ["ls"] : []));
     const tr = order.filter((x) => x.trap), rest = order.filter((x) => !x.trap), q = [];
     // ловушки — всегда на правописание или сборку
     tr.forEach((x, j) => q.push({ w: x.w, k: j % 2 ? "bd" : "sp" }));
@@ -5173,17 +5186,25 @@ function settingsSheet() {
     const setLen = (v) => { S.lenient = v; Recog.setLenient(v); save(); segStrict.setAttribute("aria-pressed", String(!v)); segSoft.setAttribute("aria-pressed", String(v)); };
     segStrict.addEventListener("click", () => setLen(false));
     segSoft.addEventListener("click", () => setLen(true));
+    const segEar = h("button", { type: "button", "aria-pressed": String(!S.noListen) }, "Есть");
+    const segDeaf = h("button", { type: "button", "aria-pressed": String(!!S.noListen) }, "Нет");
+    const setEar = (off) => { S.noListen = off; if (!off) S.quietUntil = 0; save(); segEar.setAttribute("aria-pressed", String(!off)); segDeaf.setAttribute("aria-pressed", String(off)); };
+    segEar.addEventListener("click", () => setEar(false));
+    segDeaf.addEventListener("click", () => setEar(true));
     let armed = false;
     const reset = h("button", { class: "btn", type: "button" }, "Сбросить прогресс");
     reset.addEventListener("click", () => {
       if (!armed) { armed = true; reset.textContent = "Нажми ещё раз, чтобы стереть всё"; setTimeout(() => { armed = false; if (reset.isConnected) reset.textContent = "Сбросить прогресс"; }, 4000); return; }
-      const len = S.lenient; S = defState(); S.lenient = len; ensurePet(); save(); close(); render();
+      const len = S.lenient, ear = S.noListen; S = defState(); S.lenient = len; S.noListen = ear; ensurePet(); save(); close(); render();
     });
     return [sheetHead("せってい", "Настройки", close),
       h("section", { class: "settings" },
         h("div", { class: "setting" }, h("h3", {}, "Проверка рисунка"),
           h("div", { class: "seg", role: "group", "aria-label": "Строгость проверки" }, segStrict, segSoft),
           h("p", { class: "muted" }, "Мягкая прощает неровные пропорции. Это удобно, если пишешь пальцем на телефоне. Число черт, порядок и направление проверяются в обоих режимах, чужой знак не засчитается.")),
+        h("div", { class: "setting" }, h("h3", {}, "Вопросы на слух"),
+          h("div", { class: "seg", role: "group", "aria-label": "Вопросы на слух" }, segEar, segDeaf),
+          h("p", { class: "muted" }, "В словах бывает вопрос «Послушай и выбери слово». Если звук включить нельзя, выбери «Нет» — вместо него будут вопросы по картинке. На один раз хватит кнопки «Не могу слушать» прямо в вопросе: она убирает такие вопросы на час.")),
         transferSection(),
         h("div", { class: "setting" }, h("h3", {}, "Где хранится прогресс"), h("p", { class: "muted", id: "sync-note" }, syncText()), h("div", {}, reset)),
         h("p", { class: "credits" }, "Рукописные формы знаков и порядок черт — из проекта ",
