@@ -769,6 +769,52 @@ details.how .how-body { display: grid; gap: 10px; margin-top: 12px; max-width: 6
 .v-known .word-ico { width: 26px; height: 26px; }
 .v-known [lang] { font-family: var(--kana); }
 .v-meet { gap: 8px; }
+.gr-panel { display: grid; gap: 10px; }
+.gr-panel-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.gr-panel h3 { margin: 0; font-size: 18px; }
+.gr-list { display: grid; gap: 6px; }
+.gr-row { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 10px; width: 100%; padding: 6px 12px 6px 6px; border-radius: 16px; border: 2px solid #fff; background: rgb(255 255 255 / .85); box-shadow: 0 2px 0 var(--line); text-align: left; color: var(--ink); }
+.gr-row:active { transform: translateY(2px); box-shadow: none; }
+.gr-badge { min-width: 44px; padding: 4px 10px; border-radius: 12px; background: var(--surface-2); font-family: var(--kana); font-weight: 600; font-size: 19px; line-height: 1.3; text-align: center; white-space: nowrap; color: var(--primary-deep); }
+.gr-row-main { display: grid; min-width: 0; }
+.gr-row-main b { font-size: 14px; font-weight: 800; line-height: 1.25; }
+.gr-row-main .muted { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; font-size: 12px; }
+.gr-cyr { white-space: nowrap; }
+.gr-badge.long { font-size: 16px; padding: 4px 8px; }
+.gr-task .choice-btn.ja, .gr-tile, .gr-slot, .gr-badge, .gr-line, .gr-form, .gr-pat b, .choice-card.ja { word-break: keep-all; }
+.gr-form { font-family: var(--kana); font-weight: 600; font-size: 72px; line-height: 1.1; color: var(--ink); }
+.gr-form.long { font-size: 40px; }
+.gr-pat { display: grid; gap: 2px; justify-items: center; width: 100%; max-width: 46ch; padding: 10px 16px; border-radius: 18px; background: var(--cream); border: 3px solid #fff; }
+.gr-pat-title { font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--primary); }
+.gr-pat b { font-family: var(--kana); font-weight: 600; font-size: 24px; color: var(--ink); }
+.gr-pat > span { font-size: 15px; font-weight: 700; color: var(--ink-soft); }
+.gr-ab { font-family: system-ui, sans-serif; font-weight: 800; color: var(--muted); }
+.gr-hit { color: var(--primary-deep); background: var(--accent-soft); border-radius: 8px; padding: 0 4px; font-weight: inherit; }
+.gr-about { max-width: 46ch; margin: 0; text-align: left; font-size: 15px; color: var(--ink-soft); }
+.gr-exs { display: grid; gap: 8px; width: 100%; max-width: 46ch; }
+.gr-ex { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px; width: 100%; padding: 10px 12px; border-radius: 18px; background: #fff; border: 3px solid #fff; box-shadow: 0 2px 0 var(--line); text-align: left; }
+.gr-sent { display: grid; gap: 2px; }
+.gr-q { font-family: var(--kana); font-weight: 600; font-size: 15px; color: var(--muted); }
+.gr-line { font-family: var(--kana); font-weight: 600; font-size: 20px; line-height: 1.45; color: var(--ink); }
+.gr-r { font-size: 13px; font-weight: 700; color: var(--muted); }
+.gr-ru { font-size: 14px; font-weight: 700; color: var(--ink-soft); }
+.gr-ru.big { font-size: 20px; font-weight: 800; color: var(--ink); }
+.gr-gap { display: inline-block; width: 2.4em; height: 1.15em; margin: 0 3px; vertical-align: -.2em; border: 2px dashed var(--primary); border-radius: 8px; background: var(--surface-2); }
+.gr-card { display: grid; gap: 8px; justify-items: center; padding: 16px; border-radius: 26px; background: #fff; border: 3px solid #fff; box-shadow: var(--shadow); text-align: center; }
+.gr-card .gr-line { font-size: 26px; }
+.gr-card .gr-q { font-size: 17px; }
+.gr-card .gr-ru { font-size: 16px; }
+.gr-ask { font-size: 22px; text-align: center; color: var(--primary); }
+.gr-task .choice-btn.ja { font-size: 22px; line-height: 1.25; }
+.gr-task .act-reveal .gr-line { font-size: 18px; }
+.gr-slot, .gr-tile { min-width: 52px; font-size: 20px; }
+.gr-meet .v-trap { max-width: 46ch; }
+.gr-meet .facts .v-dots { margin-left: 2px; }
+.gr-known, .gr-strip { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; font-family: var(--kana); font-weight: 600; }
+.gr-known > span, .gr-strip > span { padding: 3px 10px; border-radius: 999px; background: rgb(255 255 255 / .6); font-size: 15px; opacity: .6; }
+.gr-known > span.seen, .gr-strip > span.ok { background: #fff; opacity: 1; }
+.gr-strip > span.ok { box-shadow: 0 0 0 2px var(--ok); }
+.gr-known > span.cur { background: var(--primary); color: #fff; opacity: 1; }
 .v-pic-big { width: 120px; height: 120px; }
 .v-word { font-family: var(--kana); font-weight: 600; font-size: 60px; line-height: 1.1; color: var(--ink); }
 .v-word.long { font-size: 48px; }
@@ -2142,6 +2188,71 @@ const vSet = (id) => (id === "all" ? VOCAB_EVERY : VOCAB_SETS.find((x) => x.id =
 const vCatOf = (w) => (VOCAB_SETS.find((st) => st.words.some((x) => x.w === w)) || VOCAB_EVERY).id;
 // Неверные написания: сначала ловушки из учебника, потом похожие знаки, тэнтэн, маленькие/большие, перестановки
 const VOCAB_TRAPS = { "いしゃ": ["いしや", "いしゅ", "いさ"], "きょうし": ["きようし", "きょし", "きょおし"], "しゅふ": ["しゆふ", "しょふ", "すふ"], "がくせい": ["がくせえ", "がくせ", "かくせい"], "こうこうせい": ["こおこうせい", "こうこせい", "こうこうせえ"], "ええ": ["えい", "え", "いい"], "そう": ["そお", "そ", "さう"], "かのじょ": ["かのじよ", "かのしょ", "かのじゅ"], "とけい": ["とけえ", "ときい", "とけ"], "とうきょう": ["ときょう", "とうきよう", "とおきょう"], "おちゃ": ["おちや", "おちょ", "おしゃ"], "ざっし": ["ざつし", "さっし", "ざし"] };
+// Грамматика из учебника (вкладка «Слова» → «Грамматика»). g — форма, ru — значение, pat — схема и её перевод, about — правило,
+// ex — примеры: в s форма взята в [скобки] (в задании «вставь» там пропуск), q — вопрос собеседника перед ответом, r — как читается.
+// fam — с чем путают (неверные варианты — из той же семьи), same — равнозначная форма (её в неверные варианты не берём)
+const GRAMMAR = [
+  { id: "wa", g: "は", cyr: "ва", ru: "частица темы («что касается…»)", fam: "p", pat: ["A は B です", "A — это B"],
+    about: "Ставится сразу после темы — того, о ком или о чём говорим: «что касается меня — я учащийся». На русский отдельным словом не переводится.",
+    trap: "Частица は читается «ва», хотя знак は — это «ха».",
+    ex: [{ s: "わたし [は] がくせい です。", r: "ватаси ва гакусэ: дэс", ru: "Я — учащийся." },
+      { s: "かれ [は] いしゃ です。", r: "карэ ва ися дэс", ru: "Он — врач." },
+      { s: "たなか さん [は] きょうし です。", r: "Танака-сан ва кё:си дэс", ru: "Танака-сан — преподаватель." }] },
+  { id: "desu", g: "です", cyr: "дэс", ru: "является", fam: "c", pat: ["A は B です", "A — это B"],
+    about: "Вежливая связка в конце предложения: «есть, является». Ставится после слова, о котором говорим, что это такое.",
+    trap: "Читается «дэс»: «у» в конце почти не слышно, но пишется です.",
+    ex: [{ s: "わたし は いしゃ [です]。", r: "ватаси ва ися дэс", ru: "Я — врач." },
+      { s: "あのかた は きょうし [です]。", r: "ано ката ва кё:си дэс", ru: "Тот человек — преподаватель." },
+      { s: "かのじょ は だいがくせい [です]。", r: "канодзё ва дайгакусэ: дэс", ru: "Она — студентка." }] },
+  { id: "ja", g: "じゃ ありません", cyr: "дзя аримасэн", ru: "не является", fam: "c", same: "dewa", pat: ["A は B じゃ ありません", "A — не B"],
+    about: "Отрицание: встаёт на место です. じゃ — разговорное сокращение от では, в речи говорят чаще всего так.",
+    trap: "じゃ — じ с маленькой ゃ: «дзя». С большой や вышло бы じや «дзия».",
+    ex: [{ s: "わたし は いしゃ [じゃ ありません]。", r: "ватаси ва ися дзя аримасэн", ru: "Я не врач." },
+      { s: "かれ は がくせい [じゃ ありません]。", r: "карэ ва гакусэ: дзя аримасэн", ru: "Он не учащийся." },
+      { q: "たなか さん は きょうし ですか。", s: "いいえ、そう [じゃ ありません]。", r: "ииэ, со: дзя аримасэн", ru: "— Танака-сан преподаватель? — Нет, это не так." }] },
+  { id: "dewa", g: "では ありません", cyr: "дэва аримасэн", ru: "не является (официальнее)", fam: "c", same: "ja", pat: ["A は B では ありません", "A — не B"],
+    about: "То же отрицание, что じゃ ありません, только строже: в письме, в учебнике, в официальной речи.",
+    trap: "では читается «дэва»: は здесь опять как «ва».",
+    ex: [{ s: "かのじょ は しゅふ [では ありません]。", r: "канодзё ва сюфу дэва аримасэн", ru: "Она не домохозяйка." },
+      { s: "あのかた は べんごし [では ありません]。", r: "ано ката ва бэнгоси дэва аримасэн", ru: "Тот человек не адвокат." },
+      { s: "わたくし は ぎんこういん [では ありません]。", r: "ватакуси ва гинко:ин дэва аримасэн", ru: "Я не сотрудник банка (очень вежливо)." }] },
+  { id: "ka", g: "か", cyr: "ка", ru: "вопросительная частица", fam: "p", pat: ["… です か", "превращает фразу в вопрос"],
+    about: "Ставится в самом конце и делает предложение вопросом — как наше «ли». Порядок слов не меняется, а знак вопроса японцы обычно не пишут: хватает か.",
+    ex: [{ s: "あのひと は だれ です[か]。", r: "ано хито ва дарэ дэс ка", ru: "Кто тот человек?" },
+      { s: "あなた も がくせい です[か]。", r: "аната мо гакусэ: дэс ка", ru: "Ты тоже учащийся?" },
+      { s: "かれ は こうはい です[か]。", r: "карэ ва ко:хай дэс ка", ru: "Он кохай?" }] },
+  { id: "desuka", g: "ですか", cyr: "дэс ка", ru: "является ли?", fam: "c", pat: ["A は B ですか", "A — это B?"],
+    about: "です + か — вопрос «является ли?». Отвечают はい или ええ — «да», いいえ — «нет».",
+    ex: [{ s: "あなた は がくせい [ですか]。", r: "аната ва гакусэ: дэс ка", ru: "Ты учащийся?" },
+      { s: "かのじょ は いしゃ [ですか]。", r: "канодзё ва ися дэс ка", ru: "Она врач?" },
+      { s: "あのかた は せんぱい [ですか]。", r: "ано ката ва сэмпай дэс ка", ru: "Тот человек — сэмпай?" }] },
+  { id: "soo", g: "そう です", cyr: "со: дэс", ru: "да, так и есть", fam: "c", pat: ["はい、そう です", "Да, так и есть"],
+    about: "Короткий ответ на вопрос с ですか, чтобы не повторять всё предложение. «Нет, не так» — いいえ、そう じゃ ありません.",
+    trap: "そう — долгое «о:», пишется через う: そう, а не そお.",
+    ex: [{ q: "あなた は がくせい ですか。", s: "はい、[そう です]。", r: "хай, со: дэс", ru: "— Ты учащийся? — Да, так и есть." },
+      { q: "かれ は いしゃ ですか。", s: "ええ、[そう です]。", r: "э:, со: дэс", ru: "— Он врач? — Да, верно." },
+      { q: "あのかた は べんごし ですか。", s: "はい、[そう です]。", r: "хай, со: дэс", ru: "— Тот человек — адвокат? — Да, так и есть." }] },
+  { id: "mo", g: "も", cyr: "мо", ru: "тоже", fam: "p", pat: ["A も B です", "A тоже B"],
+    about: "Ставится вместо は, когда хотим сказать «тоже»: «я тоже учащийся». Вместе は и も не ставят.",
+    trap: "Не わたし は も, а просто わたし も: も занимает место は.",
+    ex: [{ s: "わたし [も] がくせい です。", r: "ватаси мо гакусэ: дэс", ru: "Я тоже учащийся." },
+      { s: "かのじょ [も] いしゃ です。", r: "канодзё мо ися дэс", ru: "Она тоже врач." },
+      { s: "やまだ さん [も] べんごし です。", r: "Ямада-сан мо бэнгоси дэс", ru: "Ямада-сан тоже адвокат." }] },
+  { id: "ga", g: "が", cyr: "га", ru: "«именно» (после だれ)", fam: "p", pat: ["だれ が B ですか", "Кто (именно) B?"],
+    about: "После だれ «кто» ставится не は, а が: мы ещё не знаем, о ком речь. В ответе тоже が: わたし が きょうし です — «преподаватель — это (именно) я».",
+    trap: "После だれ никогда не ставят は: не だれ は, а だれ が.",
+    ex: [{ s: "だれ [が] いしゃ ですか。", r: "дарэ га ися дэс ка", ru: "Кто (здесь) врач?" },
+      { s: "だれ [が] せんぱい ですか。", r: "дарэ га сэмпай дэс ка", ru: "Кто сэмпай?" },
+      { q: "だれ が きょうし ですか。", s: "わたし [が] きょうし です。", r: "ватаси га кё:си дэс", ru: "— Кто преподаватель? — Преподаватель — это я." }] }
+];
+// Занятие «Учить» — три порции
+const GRAM_GROUPS = [
+  { title: "Это — …, это не …", short: "это / не это", ids: ["wa", "desu", "ja", "dewa"] },
+  { title: "Вопрос и ответ", short: "вопрос и ответ", ids: ["ka", "desuka", "soo"] },
+  { title: "Тоже и кто именно", short: "тоже и кто", ids: ["mo", "ga"] }
+];
+const grById = (id) => GRAMMAR.find((x) => x.id === id);
+const grPlain = (e) => e.s.replace(/[\[\]]/g, "");
 const LOOKALIKE = [["ぬ", "め"], ["ね", "れ", "わ"], ["る", "ろ"], ["さ", "ち", "き"], ["は", "ほ"], ["い", "こ", "り"], ["あ", "お"], ["う", "つ"], ["ま", "も"], ["て", "そ"], ["に", "た"], ["く", "へ"], ["す", "む"], ["や", "か"], ["ひ", "ふ"], ["み", "め"], ["よ", "ま"], ["け", "は"], ["ん", "し"]];
 function vSpellings(w, n = 3) {
   const out = new Set(VOCAB_TRAPS[w] || []), ch = [...w];
@@ -4864,6 +4975,303 @@ function startCards(setId = "all") {
   choose();
 }
 
+/* ===================== Грамматика: частицы и связки ===================== */
+// S.gram: lv — уровень темы 0…5 (3 и выше — выучено), res — место в «Учить», test — { best, last }
+function gState() {
+  if (!S.gram) S.gram = {};
+  if (!S.gram.lv) S.gram.lv = {};
+  return S.gram;
+}
+const gLevel = (id) => gState().lv[id] || 0;
+function gGrade(id, ok) { const g = gState(); g.lv[id] = Math.max(0, Math.min(5, (g.lv[id] || 0) + (ok ? 1 : -1))); }
+const gKnownN = (list = GRAMMAR) => list.filter((x) => gLevel(x.id) >= 3).length;
+const grSay = (e) => (e.q ? e.q + " " : "") + grPlain(e);
+// слова предложения (форма из скобок — одним кусочком), без знаков препинания
+const grToks = (e) => e.s.replace(/[。、？]/g, " ").match(/\[[^\]]+\]|[^\s\[\]]+/g).map((t) => t.replace(/[\[\]]/g, ""));
+const GR_EX = GRAMMAR.flatMap((x) => x.ex.map((e, ei) => ({ x, e, ei })));
+// неверные варианты: из той же семьи (частицы или связки), без равнозначной формы
+const grMates = (x) => GRAMMAR.filter((y) => y.id !== x.id && y.id !== x.same && (!x.fam || y.fam === x.fam));
+const grOthers = (x) => GRAMMAR.filter((y) => y.id !== x.id && y.id !== x.same);
+// Предложение: форма подсвечена или вместо неё пропуск; сверху — реплика собеседника
+function grSentence(e, o = {}) {
+  const parts = e.s.split(/(\[[^\]]*\])/).filter(Boolean).map((p) => (p[0] === "[" ? (o.gap ? h("span", { class: "gr-gap", "aria-label": "пропуск" }) : h("b", { class: "gr-hit" }, kanaText(p.slice(1, -1)))) : kanaText(p)));
+  return h("div", { class: "gr-sent" },
+    e.q ? h("div", { class: "gr-q", lang: "ja" }, "— ", kanaText(e.q)) : null,
+    h("div", { class: "gr-line", lang: "ja" }, e.q ? "— " : null, parts),
+    o.r ? h("div", { class: "gr-r" }, e.r) : null,
+    o.ru ? h("div", { class: "gr-ru" }, e.ru) : null);
+}
+function grPattern(x) {
+  const [jp, ru] = x.pat, i = jp.indexOf(x.g);
+  const bit = (s) => s.split(/([AB…])/).filter(Boolean).map((p) => (/^[AB…]$/.test(p) ? h("span", { class: "gr-ab" }, p) : kanaText(p)));
+  return h("div", { class: "gr-pat" }, h("div", { class: "gr-pat-title" }, "Схема"),
+    h("b", { lang: "ja" }, i < 0 ? bit(jp) : [bit(jp.slice(0, i)), h("span", { class: "gr-hit" }, kanaText(x.g)), bit(jp.slice(i + x.g.length))]),
+    h("span", {}, ru));
+}
+const grTrap = (x) => (x.trap ? h("div", { class: "v-trap" }, h("b", { lang: "ja" }, "きを つけて！"), " ", x.trap) : null);
+const grExample = (e) => h("div", { class: "gr-ex" }, grSentence(e, { r: true, ru: true }), sayBtn(grSay(e)));
+// Карточка темы: форма, значение, схема, правило, примеры, ловушка
+function grCard(x, dots) {
+  return h("div", { class: "meet gr-meet" },
+    h("div", { class: "gr-form" + ([...x.g].length > 3 ? " long" : ""), lang: "ja" }, kanaText(x.g)),
+    h("div", { class: "facts" }, h("span", {}, `«${x.cyr}»`), dots ? levelDots(null, gLevel(x.id)) : null),
+    h("div", { class: "v-meaning" }, x.ru),
+    grPattern(x),
+    h("p", { class: "gr-about" }, x.about),
+    h("div", { class: "gr-exs" }, x.ex.map(grExample)),
+    grTrap(x));
+}
+const grReveal = (x) => h("span", {}, h("b", { lang: "ja" }, kanaText(x.g)), ` «${x.cyr}» — ${x.ru}`);
+const grTask = (el) => { el.classList.add("gr-task"); return el; };
+const grFormCard = (x) => h("div", { class: "choice-card ja" + ([...x.g].length > 3 ? " long" : ""), lang: "ja" }, h("span", {}, kanaText(x.g)));
+// --- задания: каждое получает тему (и номер примера) и onDone(ok) ---
+function gTaskMean(x, onDone) {
+  return grTask(choiceTask({ label: "Что это значит?", card: grFormCard(x), kind: "txt",
+    options: shuffle([x].concat(shuffle(grOthers(x)).slice(0, 3)).map((y) => y.ru)), answer: x.ru, reveal: grReveal(x), onDone: ({ ok }) => onDone(ok) }));
+}
+function gTaskForm(x, onDone) {
+  return grTask(choiceTask({ label: "Как это по-японски?", card: h("div", { class: "choice-card gr-ask" }, x.ru), kind: "ja",
+    options: shuffle([x].concat(shuffle(grOthers(x)).slice(0, 3)).map((y) => y.g)), answer: x.g, reveal: grReveal(x), onDone: ({ ok }) => onDone(ok) }));
+}
+function gTaskGap(x, ei, onDone) {
+  const e = x.ex[ei];
+  return grTask(choiceTask({ label: "Вставь пропущенное", card: h("div", { class: "gr-card" }, grSentence(e, { gap: true, ru: true })), kind: "ja", say: grSay(e), hideSay: true,
+    options: shuffle([x].concat(shuffle(grMates(x)).slice(0, 3)).map((y) => y.g)), answer: x.g, reveal: grSentence(e, { ru: true }), onDone: ({ ok }) => onDone(ok) }));
+}
+function gTaskTr(x, ei, onDone) {
+  const e = x.ex[ei], mine = new Set(grToks(e));
+  // неверные переводы — от самых похожих предложений
+  const score = (o) => grToks(o.e).filter((t) => mine.has(t)).length + (!!o.e.q === !!e.q ? 2 : 0) + Math.random();
+  const others = [...new Set(GR_EX.filter((o) => o.e.ru !== e.ru).map((o) => [score(o), o.e.ru]).sort((a, b) => b[0] - a[0]).map((p) => p[1]))].slice(0, 3);
+  return grTask(choiceTask({ label: "Что значит эта фраза?", card: h("div", { class: "gr-card" }, grSentence(e), sayBtn(grSay(e))), kind: "txt", say: grSay(e), hideSay: true,
+    options: shuffle([e.ru].concat(others)), answer: e.ru, reveal: grSentence(e, { ru: true }), onDone: ({ ok }) => onDone(ok) }));
+}
+// Собрать предложение из слов
+function gTaskBuild(x, ei, onDone) {
+  const e = x.ex[ei], toks = grToks(e), need = toks.length, picked = [];
+  const decoys = shuffle(grMates(x).map((y) => y.g).filter((g) => !toks.includes(g))).slice(0, 2);
+  const tiles = shuffle(toks.map((t, j) => ({ t, id: "a" + j })).concat(decoys.map((t, j) => ({ t, id: "d" + j }))));
+  const slots = h("div", { class: "num-slots gr-slots" }), pool = h("div", { class: "num-tiles" });
+  const fb = h("div", { class: "act-bar", hidden: true });
+  let done = false, tries = 0;
+  const draw = () => {
+    slots.replaceChildren(...Array.from({ length: need }, (_, j) => h("button", { class: "num-slot gr-slot" + (picked[j] ? " full" : ""), type: "button", lang: "ja", disabled: done || !picked[j], onclick: () => { picked.splice(j, 1); draw(); } }, picked[j] ? kanaText(picked[j].t) : "")));
+    pool.replaceChildren(...tiles.map((tl) => h("button", { class: "num-tile gr-tile", type: "button", lang: "ja", disabled: done || picked.includes(tl) || picked.length >= need, onclick: () => { picked.push(tl); draw(); if (picked.length === need) check(); } }, kanaText(tl.t))));
+  };
+  function check() {
+    done = true; tries++; draw();
+    const ok = picked.map((y) => y.t).join("|") === toks.join("|");
+    if (ok && tries === 1) award(1);
+    fb.hidden = false;
+    const nextBtn = h("button", { class: "btn primary", type: "button", onclick: () => onDone(tries === 1 && ok) }, "Дальше");
+    const again = h("button", { class: "btn", type: "button", onclick: () => { done = false; picked.length = 0; fb.hidden = true; draw(); } }, "Ещё раз");
+    fb.replaceChildren(h("div", { class: "act-verdict " + (ok ? "ok" : "bad") }, mascot(ok ? "happy" : "sad"),
+      h("div", {}, h("div", { class: "verdict-title" }, jpTitle(ok ? "good" : "oops"), ok ? "Верно" : "Не совсем", ok && tries === 1 ? h("span", { class: "gain" }, "+1 ★") : null),
+        h("div", { class: "act-reveal" }, ok ? grSentence(e, { ru: true }) : `Подсказка: ${x.g} — ${x.ru}. Сказуемое (です и его формы) — в конце.`))), ok ? nextBtn : again);
+    if (ok) say(grSay(e));
+  }
+  draw();
+  return h("div", { class: "task gr-task" }, h("div", { class: "task-head" }, h("div", { class: "task-label" }, "Собери предложение")),
+    h("div", { class: "gr-card" }, e.q ? h("div", { class: "gr-q", lang: "ja" }, "— ", kanaText(e.q)) : null, h("div", { class: "gr-ru big" }, e.ru)), slots, pool, fb);
+}
+
+function startGrammar(mode, only) {
+  const g = gState();
+  const titles = { learn: "Грамматика", review: "Повторение", test: "Тест" };
+  const sh = openShell(titles[mode]);
+  const GROUPS = GRAM_GROUPS.map((gr) => Object.assign({}, gr, { items: gr.ids.map(grById) }));
+  const phases = [];
+  if (mode === "learn") {
+    phases.push({ t: "intro" });
+    GROUPS.forEach((_, gi) => phases.push({ t: "meet", g: gi }, { t: "quiz", g: gi }, { t: "gap", g: gi }, { t: "build", g: gi }));
+    phases.push({ t: "mix" }, { t: "finish" });
+  } else if (mode === "review") phases.push({ t: "review" }, { t: "finish" });
+  else phases.push({ t: "test" }, { t: "testEnd" });
+  const stats = { ok: 0, tot: 0 };
+  let pi = -1, sub = null;
+  const saved = mode === "learn" ? g.res : null;
+  const keep = (state) => { if (mode !== "learn" || phases[pi].t === "intro" || phases[pi].t === "finish") return; g.res = { pi, sub: state || null, stats: Object.assign({}, stats), at: Date.now() }; save(); };
+  const next = () => { pi++; sh.progress(pi / (phases.length - 1)); keep(); run(phases[pi]); };
+  const takeSub = () => { const x = sub; sub = null; return x; };
+  const count = (ok, id) => { stats.tot++; if (ok) stats.ok++; if (id) gGrade(id, ok); save(); };
+  function run(ph) {
+    sh.count("");
+    ({ intro, meet, quiz, gap, build, mix, review, test, finish, testEnd })[ph.t](ph.g);
+  }
+  // очередь заданий: ошибка — задание вернётся через пару шагов
+  function queueRun(stage, st, makeQueue, again = true, onAns = null) {
+    let queue, total, doneN;
+    if (st && st.queue) ({ queue, total, doneN } = st); else { queue = makeQueue(); total = queue.length; doneN = 0; }
+    const serve = () => {
+      sh.stage(stage); sh.count(`${doneN} / ${total}`);
+      if (!queue.length) return next();
+      keep({ queue, total, doneN });
+      const it = queue.shift();
+      taskOf(it, (ok) => {
+        count(ok, it.id); if (onAns) onAns(it, ok);
+        if (ok || !again) doneN++; else queue.splice(Math.min(queue.length, 2 + Math.floor(Math.random() * 2)), 0, it);
+        serve();
+      });
+    };
+    serve();
+  }
+  const taskOf = (it, done) => {
+    const x = grById(it.id);
+    if (it.k === "gm") return sh.set(gTaskMean(x, done));
+    if (it.k === "gf") return sh.set(gTaskForm(x, done));
+    if (it.k === "gg") return sh.set(gTaskGap(x, it.ei, done));
+    if (it.k === "gt") return sh.set(gTaskTr(x, it.ei, done));
+    if (it.k === "gb") return sh.set(gTaskBuild(x, it.ei, done));
+  };
+  const rndEx = (x) => Math.floor(Math.random() * x.ex.length);
+  // соседние задания — про разные темы
+  const spread = (q) => { for (let j = 1; j < q.length; j++) if (q[j].id === q[j - 1].id) { const z = (j + 2) % q.length; [q[j], q[z]] = [q[z], q[j]]; } return q; };
+  function intro() {
+    sh.stage("начало");
+    const parts = [h("div", { class: "eyebrow", lang: "ja" }, "ぶんぽう"), h("h2", {}, "Частицы и связки"),
+      h("div", { class: "gr-strip", lang: "ja" }, GRAMMAR.map((x) => h("span", { class: gLevel(x.id) >= 3 ? "ok" : "" }, kanaText(x.g)))),
+      h("p", {}, "Это маленькие слова, на которых держится японское предложение. Учим тремя порциями: " + GROUPS.map((gr) => `«${gr.title}»`).join(", ") + "."),
+      h("p", {}, "С каждой: правило, схема и примеры со словами из учебника. Потом узнаёшь её, вставляешь в предложение и сам собираешь фразу из слов. В конце — всё вперемешку."),
+      h("p", { class: "muted" }, "Можно выйти в любой момент: продолжишь с того же места.")];
+    const go = h("button", { class: "btn primary", type: "button", onclick: next }, "Начать");
+    if (saved && saved.pi > 0 && saved.pi < phases.length - 1) {
+      go.textContent = "Начать сначала"; go.className = "btn";
+      const resume = () => { Object.assign(stats, saved.stats || {}); pi = Math.min(saved.pi, phases.length - 2); sub = saved.sub; sh.progress(pi / (phases.length - 1)); run(phases[pi]); };
+      parts.unshift(h("div", { class: "resume-note" }, "Ты остановилась посреди занятия. Продолжим с того же места?"));
+      return sh.set(h("div", { class: "task explain" }, parts, h("div", { class: "row" }, h("button", { class: "btn primary", type: "button", onclick: resume }, "Продолжить"), go)));
+    }
+    sh.set(h("div", { class: "task explain" }, parts, h("div", { class: "row" }, go)));
+  }
+  function meet(gi) {
+    const st = takeSub(), list = GROUPS[gi].items;
+    let i = st ? st.i || 0 : 0;
+    function show() {
+      sh.stage(`знакомство · ${GROUPS[gi].short}`); sh.count(`${i} / ${list.length}`);
+      if (i >= list.length) return next();
+      keep({ i });
+      const x = list[i];
+      sh.set(h("div", { class: "task" },
+        h("div", { class: "gr-known", lang: "ja" }, list.map((y, j) => h("span", { class: j < i ? "seen" : j === i ? "cur" : "" }, kanaText(y.g)))),
+        grCard(x),
+        h("div", { class: "row", style: "justify-content:center" }, h("button", { class: "btn primary", type: "button", onclick: () => { i++; show(); } }, i + 1 < list.length ? "Дальше" : "Проверим себя"))));
+    }
+    show();
+  }
+  function quiz(gi) {
+    queueRun(`узнаём · ${GROUPS[gi].short}`, takeSub(), () => spread(shuffle(GROUPS[gi].items.flatMap((x) => [{ id: x.id, k: "gm" }, { id: x.id, k: "gf" }]))));
+  }
+  function gap(gi) {
+    queueRun(`вставляем · ${GROUPS[gi].short}`, takeSub(), () => spread(shuffle(GROUPS[gi].items.flatMap((x) => shuffle([0, 1, 2]).slice(0, 2).map((ei) => ({ id: x.id, k: "gg", ei }))))));
+  }
+  function build(gi) {
+    queueRun(`собираем · ${GROUPS[gi].short}`, takeSub(), () => shuffle(GROUPS[gi].items.map((x) => ({ id: x.id, k: pick1(["gb", "gt"]), ei: rndEx(x) }))), false);
+  }
+  function mix() {
+    queueRun(`всё вперемешку`, takeSub(), () => spread(shuffle(GRAMMAR.map((x) => ({ id: x.id, k: pick1(["gg", "gg", "gt", "gb"]), ei: rndEx(x) })))));
+  }
+  function review() {
+    // одна тема — все её примеры; все темы — по два задания, слабые первыми
+    const items = only && only.length ? only.map(grById) : GRAMMAR.slice();
+    const q = only && only.length
+      ? items.flatMap((x) => x.ex.map((_, ei) => ({ id: x.id, k: "gg", ei })).concat([{ id: x.id, k: "gt", ei: rndEx(x) }, { id: x.id, k: "gb", ei: rndEx(x) }]))
+      : items.flatMap((x) => [{ id: x.id, k: "gg", ei: rndEx(x) }, { id: x.id, k: pick1(["gt", "gb", "gm", "gf"]), ei: rndEx(x) }]);
+    queueRun(only && only.length === 1 ? items[0].g : "все темы", null, () => spread(shuffle(q)));
+  }
+  const misses = [];
+  function test() {
+    // каждая тема — два вопроса: пропуск и ещё один, без повторов
+    const q = GRAMMAR.flatMap((x) => { const a = rndEx(x); return [{ id: x.id, k: "gg", ei: a }, { id: x.id, k: pick1(["gt", "gb", "gf"]), ei: (a + 1) % x.ex.length }]; });
+    queueRun(`${q.length} вопросов`, null, () => spread(shuffle(q)), false, (it, ok) => { if (!ok) misses.push(it.id); });
+  }
+  function testEnd() {
+    sh.stage("итог"); sh.count("");
+    const score = stats.ok, tot = stats.tot;
+    const T = g.test || (g.test = { best: null, last: null });
+    T.last = { score, tot, at: Date.now() };
+    if (!T.best || score > T.best.score) T.best = { score, tot, at: Date.now() };
+    save();
+    const great = score >= tot - 2;
+    const missed = [...new Set(misses)].map(grById);
+    sh.set(h("div", { class: "summary" },
+      h("div", { class: "say-row" }, mascot(great ? "happy" : "normal", great), bubble(great ? "congrats" : "cheer", great ? "Грамматика в порядке!" : "Ещё немного — и всё получится")),
+      h("h2", {}, `${score} из ${tot}`),
+      missed.length ? h("div", {}, h("p", { class: "muted" }, "Стоит повторить:"),
+        h("div", { class: "cw-words" }, missed.map((x) => h("span", {}, h("b", { lang: "ja" }, kanaText(x.g)), " ", x.ru)))) : h("p", {}, "Без единой ошибки!"),
+      h("div", { class: "row", style: "justify-content:center" },
+        missed.length ? h("button", { class: "btn primary", type: "button", onclick: () => { closeShell(); startGrammar("review", missed.map((x) => x.id)); } }, "Повторить ошибки") : null,
+        h("button", { class: missed.length ? "btn" : "btn primary", type: "button", onclick: () => closeShell() }, "Готово"))));
+    if (great) petalBurst(document.querySelector(".summary"));
+  }
+  function finish() {
+    sh.stage("готово"); sh.count("");
+    if (mode === "learn") { delete g.res; award(10); }
+    save();
+    sh.set(h("div", { class: "summary" },
+      h("div", { class: "say-row" }, mascot("happy", true), bubble("yay", mode === "learn" ? "Частицы и связки пройдены!" : "Повторение готово")),
+      h("div", { class: "big-stats" }, h("div", {}, h("b", {}, stats.tot ? Math.round((100 * stats.ok) / stats.tot) + "%" : "—"), h("span", {}, "верно с первого раза")), h("div", {}, h("b", {}, `${gKnownN()}/${GRAMMAR.length}`), h("span", {}, "тем выучено"))),
+      h("p", { class: "note" }, "Тема считается выученной после трёх верных ответов подряд. Шпаргалка со всеми правилами — на вкладке «Слова»."),
+      h("div", { class: "row", style: "justify-content:center" },
+        h("button", { class: "btn primary", type: "button", onclick: () => { closeShell(); startGrammar("test"); } }, "Пробный тест"),
+        h("button", { class: "btn", type: "button", onclick: () => closeShell() }, "Готово"))));
+  }
+  next();
+}
+
+// Карточки: форма → значение или значение → форма; на обороте — схема и пример
+function startGramCards() {
+  const sh = openShell("Карточки");
+  let dir = "form";
+  function choose() {
+    sh.stage("начало"); sh.count(""); sh.progress(0);
+    const opt = (d, title, text) => h("button", { class: "panel v-mode", type: "button", onclick: () => { dir = d; start(); } }, h("b", {}, title), h("span", { class: "muted" }, text));
+    sh.set(h("div", { class: "task explain" }, h("div", { class: "eyebrow" }, "Грамматика"), h("h2", {}, "Карточки"),
+      h("p", {}, "Посмотри на карточку и вспомни ответ, потом переверни её и честно отметь, вспомнила или нет. Что не вспомнилось — вернётся в конце."),
+      opt("form", "Частица → значение", "Видишь は, も, です…, вспоминаешь, что они значат."),
+      opt("ru", "Значение → частица", "Видишь значение, вспоминаешь японскую форму.")));
+  }
+  function start() {
+    const queue = shuffle(GRAMMAR.slice()).sort((a, b) => gLevel(a.id) - gLevel(b.id));
+    const total = queue.length; let known = 0, firstOk = 0; const tried = new Set();
+    function show() {
+      sh.stage(dir === "form" ? "частица → значение" : "значение → частица"); sh.count(`${known} / ${total}`); sh.progress(known / total);
+      if (!queue.length) return end();
+      const x = queue[0], e = pick1(x.ex);
+      const front = dir === "form" ? [h("div", { class: "gr-form" + ([...x.g].length > 3 ? " long" : ""), lang: "ja" }, kanaText(x.g))] : [h("div", { class: "v-meaning" }, x.ru)];
+      const back = [h("div", { class: "gr-form" + ([...x.g].length > 3 ? " long" : ""), lang: "ja" }, kanaText(x.g)), h("div", { class: "facts" }, h("span", {}, `«${x.cyr}»`)),
+        h("div", { class: "v-meaning" }, x.ru), grPattern(x), h("div", { class: "gr-ex" }, grSentence(e, { r: true, ru: true }))];
+      const cardEl = h("button", { class: "v-flash", type: "button", "aria-label": "Перевернуть карточку" }, h("div", { class: "v-face" }, front, h("span", { class: "muted v-tap" }, "нажми, чтобы перевернуть")));
+      const bar = h("div", { class: "row v-flash-bar" });
+      const mark = (ok) => {
+        if (!tried.has(x.id)) { tried.add(x.id); gGrade(x.id, ok); if (ok) firstOk++; save(); }
+        queue.shift();
+        if (ok) known++; else queue.push(x);
+        show();
+      };
+      const flip = () => {
+        if (cardEl.classList.contains("flipped")) return;
+        cardEl.classList.add("flipped"); say(grSay(e));
+        cardEl.replaceChildren(h("div", { class: "v-face" }, back));
+        bar.replaceChildren(h("button", { class: "btn v-no", type: "button", onclick: () => mark(false) }, "Не помню"), h("button", { class: "btn primary", type: "button", onclick: () => mark(true) }, "Помню"));
+      };
+      cardEl.addEventListener("click", flip);
+      bar.append(h("button", { class: "btn primary", type: "button", onclick: flip }, "Перевернуть"));
+      sh.set(h("div", { class: "task v-cards" }, cardEl, bar));
+    }
+    show();
+    function end() {
+      sh.stage("готово"); sh.count(""); sh.progress(1);
+      if (firstOk) award(Math.min(3, Math.ceil(firstOk / 3)));
+      sh.set(h("div", { class: "summary" },
+        h("div", { class: "say-row" }, mascot("happy", true), bubble("yay", `Вспомнила сразу ${firstOk} из ${total}`)),
+        h("div", { class: "big-stats" }, h("div", {}, h("b", {}, `${gKnownN()}/${total}`), h("span", {}, "тем выучено"))),
+        h("div", { class: "row", style: "justify-content:center" },
+          h("button", { class: "btn primary", type: "button", onclick: () => start() }, "Ещё раз"),
+          h("button", { class: "btn", type: "button", onclick: () => closeShell() }, "Готово"))));
+    }
+  }
+  choose();
+}
+
 /* Игра «Апорт»: чтение знаков */
 function startFetch() {
   const pool = learned();
@@ -5013,7 +5421,7 @@ function updateBadge() {
 }
 /* ===================== Вкладка «Слова» ===================== */
 let wordsFilter = "all";
-const levelDots = (w) => h("span", { class: "v-dots", "aria-label": `уровень ${Math.min(3, vLevel(w))} из 3` }, [0, 1, 2].map((i) => h("i", { class: i < vLevel(w) ? "on" : "" })));
+const levelDots = (w, n = vLevel(w)) => h("span", { class: "v-dots", "aria-label": `уровень ${Math.min(3, n)} из 3` }, [0, 1, 2].map((i) => h("i", { class: i < n ? "on" : "" })));
 function wordsView() {
   const v = vState();
   const total = VOCAB_ALL.length, known = vKnownN(), Ta = v.tests.all;
@@ -5041,7 +5449,35 @@ function wordsView() {
   const groups = VOCAB_SETS.map((st) => [st, st.words.filter(pass)]).filter(([, l]) => l.length);
   const dict = h("div", { class: "v-dict" }, groups.length ? groups.map(([st, l]) => [h("div", { class: "v-dict-h" }, st.title), l.map(wordRow)])
     : h("p", { class: "muted" }, wordsFilter === "known" ? "Пока пусто: слово попадает сюда после трёх верных ответов подряд." : "Все слова выучены!"));
-  return h("div", {}, head, h("h2", { class: "section-title" }, starSticker("#FFB0CD"), "Темы"), cats, h("h2", { class: "section-title" }, starSticker("#FFB0CD"), "Словарик"), seg, dict);
+  return h("div", {}, head, h("h2", { class: "section-title" }, starSticker("#FFB0CD"), "Темы"), cats,
+    h("h2", { class: "section-title" }, starSticker("#FFB0CD"), "Грамматика"), gramPanel(),
+    h("h2", { class: "section-title" }, starSticker("#FFB0CD"), "Словарик"), seg, dict);
+}
+// Грамматика: шпаргалка (строчка открывает правило с примерами) и занятия
+function gramPanel() {
+  const g = gState(), n = gKnownN(), T = g.test;
+  const btn = (t, f, primary) => h("button", { class: "btn" + (primary ? " primary" : ""), type: "button", onclick: f }, t);
+  return h("section", { class: "panel gr-panel" },
+    h("div", { class: "gr-panel-top" },
+      h("div", {}, h("div", { class: "eyebrow", lang: "ja" }, "ぶんぽう"), h("h3", {}, "Частицы и связки")),
+      h("span", { class: "v-cat-n num" }, `${n}/${GRAMMAR.length}`, g.res ? h("i", { class: "v-cat-dot", title: "Начато" }) : null)),
+    h("div", { class: "muted v-line" }, "Нажми на строчку — там правило и примеры." + (T && T.best ? ` Лучший тест ${T.best.score}/${T.best.tot}.` : "")),
+    h("div", { class: "gr-list" }, GRAMMAR.map((x) => h("button", { class: "gr-row", type: "button", onclick: () => gramSheet(x) },
+      h("span", { class: "gr-badge" + ([...x.g].length > 4 ? " long" : ""), lang: "ja" }, kanaText(x.g)),
+      h("span", { class: "gr-row-main" }, h("b", {}, x.ru), h("span", { class: "muted" }, h("span", { class: "gr-cyr" }, `«${x.cyr}»`), levelDots(null, gLevel(x.id))))))),
+    h("div", { class: "v-actions" },
+      btn(g.res ? "Продолжить" : "Учить", () => startGrammar("learn"), true),
+      btn("Карточки", () => startGramCards()),
+      btn("Повторить", () => startGrammar("review")),
+      btn("Тест", () => startGrammar("test"))));
+}
+function gramSheet(x) {
+  openSheet(x.g, (close) => [
+    h("div", { class: "sheet-head" }, h("div", {}, h("div", { class: "eyebrow" }, "Грамматика"), h("h2", {}, x.fam === "p" ? "Частица" : "Конец предложения")), h("button", { class: "icon-btn", type: "button", "aria-label": "Закрыть", onclick: close }, icon("close"))),
+    grCard(x, true),
+    h("div", { class: "row", style: "justify-content:center" },
+      h("button", { class: "btn primary", type: "button", onclick: () => { closeAllSheets(); setTimeout(() => startGrammar("review", [x.id]), 60); } }, "Потренировать"),
+      h("button", { class: "btn", type: "button", onclick: close }, "Закрыть"))]);
 }
 const wordRow = (x) => h("button", { class: "v-row", type: "button", onclick: () => wordSheet(x) },
   wordIcon(x.w, "v-row-ico"), h("span", { class: "v-row-main" }, h("b", { lang: "ja" }, kanaText(x.w)), h("span", { class: "muted" }, x.cyr)), h("span", { class: "v-row-ru" }, x.ru), levelDots(x.w));
