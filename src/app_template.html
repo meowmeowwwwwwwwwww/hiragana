@@ -478,6 +478,20 @@ body.in-session .star-toast { bottom: calc(24px + env(safe-area-inset-bottom, 0p
 .pet-strip-bars { flex: 1; display: grid; gap: 4px; min-width: 0; }
 .pet-strip .dev-meter { background: none; padding: 0; }
 .pet-strip .stars-pill { padding: 3px 10px; font-size: 14px; }
+/* Выбор азбуки на главной */
+.script-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0 0 12px; }
+.script-switch button { position: relative; display: grid; justify-items: center; gap: 1px; padding: 9px 6px 8px; border-radius: 22px; border: 3px solid #fff; background: rgb(255 255 255 / .85); box-shadow: 0 3px 0 var(--line); color: var(--ink); min-width: 0; }
+.script-switch button:active { transform: translateY(2px); }
+.script-switch button[aria-pressed="true"] { background: linear-gradient(180deg, var(--primary-2), var(--primary)); color: #fff; box-shadow: 0 3px 0 var(--primary-deep); }
+.ss-jp { font-family: var(--kana); font-weight: 600; font-size: 22px; line-height: 1.2; }
+.ss-ru { font-size: 13px; font-weight: 800; }
+.ss-n { font-size: 11px; font-weight: 700; color: var(--muted); }
+.script-switch button[aria-pressed="true"] .ss-n { color: rgb(255 255 255 / .9); }
+.ss-due { position: absolute; top: -7px; right: -4px; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 999px; background: var(--accent); color: #fff; font-size: 12px; font-weight: 800; line-height: 18px; border: 2px solid #fff; }
+.other-due { width: 100%; display: flex; align-items: center; gap: 10px; margin: -14px 0 22px; padding: 10px 14px; border-radius: 20px; border: 3px solid #fff; background: rgb(255 255 255 / .85); box-shadow: 0 3px 0 var(--line); text-align: left; color: var(--ink); font-size: 14px; font-weight: 700; }
+.other-due > span:first-child { font-family: var(--kana); font-weight: 600; font-size: 18px; color: var(--primary-deep); }
+.other-due > span:nth-child(2) { flex: 1; min-width: 0; }
+.other-due b { color: var(--primary-deep); white-space: nowrap; }
 .path { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 7px; margin-bottom: 2px; }
 .path-tile { position: relative; display: grid; justify-items: center; align-content: center; gap: 0; min-height: 70px; padding: 8px 4px 6px; border-radius: 20px; border: 3px solid #fff; background: rgb(255 255 255 / .92); box-shadow: 0 3px 0 var(--line); min-width: 0; }
 .path-tile:active { transform: translateY(2px); }
@@ -492,6 +506,7 @@ body.in-session .star-toast { bottom: calc(24px + env(safe-area-inset-bottom, 0p
 .table-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
 .table-head .section-title { margin-bottom: 8px; }
 .table-seg { margin-bottom: 12px; }
+.table-segs { display: flex; flex-wrap: wrap; gap: 0 8px; }
 .table-seg button { font-family: var(--kana); font-size: 16px; }
 .gojuon.cols { grid-auto-flow: column; grid-template-rows: repeat(5, auto); max-width: 460px; }
 .table-tip { font-size: 13px; margin-bottom: 12px; }
@@ -961,7 +976,7 @@ html.sheet-open, html.sheet-open body { overflow: hidden; }
     <div class="brand">
       <span id="brand-mascot"></span>
       <div>
-        <h1>Тетрадь хираганы</h1>
+        <h1 id="brand-t">Тетрадь хираганы</h1>
         <p><span id="brand-n">13</span> уроков с <span id="brand-pet">Моней</span> <span class="kao">(&gt;ᴗ&lt;)♡</span></p>
       </div>
     </div>
@@ -980,6 +995,7 @@ html.sheet-open, html.sheet-open body { overflow: hidden; }
 "use strict";
 const IS_PWA = __IS_PWA__;
 const KANA = __KANA__;
+const KATA_DATA = __KATA__; // катакана и черта долготы ー: эталоны AnimCJK в том же формате
 __RECOG__
 __STAB__
 __PUPPY__
@@ -1178,6 +1194,143 @@ const LESSONS = [
     tip: "Числа учим порциями: 1–5, 6–10, потом сто, тысяча и десять тысяч. А из этих слов, как из конструктора, складывается любое число.",
     words: [] }
 ];
+// ===== Катакана =====
+const KATA_LESSONS = [
+  { title: "Гласные", kana: "アイウエオ",
+    tip: "Катакана — угловатая сестра хираганы: те же звуки, но черты прямые и резкие. Ею пишут слова из других языков, имена и названия.",
+    also: "Длинную гласную в катакане обозначает черта ー: エー «э:». Её не нужно учить отдельно, она будет в словах.",
+    words: [["エイ","эй","ei","скат (рыба)"],["アイ","ай","ai","Ай (японское имя)"],["エーアイ","э:ай","ēai","ИИ, искусственный интеллект"],["イエーイ","иэ:й","iēi","йе-е! (возглас радости)"]] },
+  { title: "Ряд К", kana: "カキクケコ",
+    tip: "カ и キ похожи на か и き, только без лишних черт. ク — две черты, не путай её с ケ.",
+    words: [["イカ","ика","ika","кальмар"],["ココア","кокоа","kokoa","какао (напиток)"],["ケーキ","кэ:ки","kēki","торт"],["キウイ","киуи","kiui","киви"],["カカオ","какао","kakao","какао-бобы"],["オーケー","о:кэ:","ōkē","окей"]] },
+  { title: "Ряд С", kana: "サシスセソ",
+    tip: "シ и ソ — самая коварная пара (а ещё ツ и ン). Смотри, откуда идёт длинная черта: у シ — снизу вверх, у ソ — сверху вниз.",
+    words: [["アイス","айсу","aisu","мороженое"],["スキー","суки:","sukī","лыжи"],["ソース","со:су","sōsu","соус"],["スイス","суйсу","suisu","Швейцария"],["ケース","кэ:су","kēsu","футляр, кейс"],["シーソー","си:со:","shīsō","качели-доска"]] },
+  { title: "Ряд Т", kana: "タチツテト",
+    tip: "ツ — три черты сверху вниз, капли стоят в ряд сверху. Сравни с シ: у неё капли слева.",
+    words: [["テスト","тэсуто","tesuto","тест"],["スーツ","су:цу","sūtsu","костюм"],["タクシー","такуси:","takushī","такси"],["トースト","то:суто","tōsuto","тост"],["セーター","сэ:та:","sētā","свитер"],["テキスト","тэкисуто","tekisuto","учебник, текст"]] },
+  { title: "Ряд Н", kana: "ナニヌネノ",
+    tip: "ニ — японская двойка: две черты. ヌ похожа на ス, но у ヌ черта пересекает изгиб.",
+    words: [["ノート","но:то","nōto","тетрадь"],["テニス","тэнису","tenisu","теннис"],["カヌー","кану:","kanū","каноэ"],["サウナ","сауна","sauna","сауна"],["ネクタイ","нэкутай","nekutai","галстук"],["ナイス","найсу","naisu","отлично!"]] },
+  { title: "Ряд Х", kana: "ハヒフヘホ",
+    tip: "ヘ почти не отличается от へ. フ — одна черта. В катакане ф-звук иностранных слов тоже пишут через フ.",
+    words: [["ハート","ха:то","hāto","сердечко"],["コーヒー","ко:хи:","kōhī","кофе"],["ナイフ","найфу","naifu","нож"],["ヘア","хэа","hea","причёска"],["ハスキー","хасуки:","hasukī","хаски"],["ヒーター","хи:та:","hītā","обогреватель"]] },
+  { title: "Ряд М", kana: "マミムメモ",
+    tip: "モ похожа на も, а ミ — три наклонные чёрточки. マ и ア не путай: у マ вторая черта короткая и смотрит к центру.",
+    words: [["メモ","мэмо","memo","записка"],["ハム","хаму","hamu","ветчина"],["トマト","томато","tomato","помидор"],["アニメ","анимэ","anime","аниме"],["マスク","масуку","masuku","маска"],["チーム","ти:му","chīmu","команда"]] },
+  { title: "Я, ю, ё и последние знаки", kana: "ヤユヨワヲン",
+    tip: "ヲ в катакане почти не встречается: частицу «о» всегда пишут хираганой を. ン и ソ не путай: у ン длинная черта идёт снизу вверх.",
+    words: [["ワイン","вайн","wain","вино"],["ヨーヨー","ё:ё:","yōyō","йо-йо"],["タイヤ","тайя","taiya","шина"],["ユーモア","ю:моа","yūmoa","юмор"],["ミシン","мисин","mishin","швейная машинка"],["カーテン","ка:тэн","kāten","штора"]] },
+  { title: "Ряд Р", kana: "ラリルレロ",
+    tip: "リ похожа на り, ロ — квадратик, レ — одна черта. В катакане «р» и «л» иностранных слов пишутся одинаково.",
+    words: [["ロシア","росиа","roshia","Россия"],["カメラ","камэра","kamera","фотоаппарат"],["ホテル","хотэру","hoteru","гостиница"],["ラーメン","ра:мэн","rāmen","рамэн (лапша)"],["レモン","рэмон","remon","лимон"],["トイレ","тойрэ","toire","туалет"],["コアラ","коара","koara","коала"]] },
+  { title: "Звонкие: г и дз", kana: "ガギグゲゴザジズゼゾ", kind: "dakuten",
+    tip: "Тэнтэн ゛ работает так же, как в хирагане: к → г, с → дз.",
+    words: [["ゲーム","гэ:му","gēmu","игра"],["ギター","гита:","gitā","гитара"],["ゼロ","дзэро","zero","ноль"],["チーズ","ти:дзу","chīzu","сыр"],["ゴリラ","горира","gorira","горилла"],["ジーンズ","дзи:ндзу","jīnzu","джинсы"]] },
+  { title: "Звонкие: д, б и п", kana: "ダヂヅデドバビブベボパピプペポ", kind: "dakuten",
+    tip: "Тэнтэн превращает т → д, х → б. Кружок ゜ (мару) превращает х → п.",
+    words: [["パン","пан","pan","хлеб"],["バス","басу","basu","автобус"],["ペン","пэн","pen","ручка"],["バナナ","банана","banana","банан"],["テレビ","тэрэби","terebi","телевизор"],["ピアノ","пиано","piano","пианино"],["デパート","дэпа:то","depāto","универмаг"]] },
+  { title: "Слияния, маленькая ッ и итоговая проверка", kana: "", kind: "yoon",
+    tip: "Маленькие ャ ュ ョ сливаются с предыдущим знаком, маленькая ッ удваивает согласный, а ァ ィ ゥ ェ ォ помогают записать чужие звуки. В конце — 15 случайных знаков по памяти.",
+    words: [["シャツ","сяцу","shatsu","рубашка"],["カップ","каппу","kappu","чашка"],["ベッド","бэддо","beddo","кровать"],["メニュー","мэню:","menyū","меню"],["ジュース","дзю:су","jūsu","сок"],["サッカー","сакка:","sakkā","футбол"],["フォーク","фо:ку","fōku","вилка"],["パーティー","па:ти:","pātī","вечеринка"],["チョコレート","тёкорэ:то","chokorēto","шоколад"],["コンピューター","компю:та:","konpyūtā","компьютер"]] }
+];
+Object.assign(HINT, { "オ": "гласная", "ヲ": "редкий", "ジ": "от シ", "ヂ": "от チ", "ズ": "от ス", "ヅ": "от ツ" });
+Object.assign(NOTES, {
+  "ア": "Две черты: перекладина с крючком и наклонная вниз влево. Не путай с マ.",
+  "イ": "Две черты: наклонная и вертикаль, которая начинается с её середины.",
+  "ウ": "Три черты: чёрточка сверху, короткая вертикаль слева и крыша с хвостом вниз.",
+  "エ": "Три черты: верхняя горизонталь, вертикаль и нижняя горизонталь — она длиннее верхней.",
+  "オ": "Сначала горизонталь, потом вертикаль с крючком, последней — наклонная влево.",
+  "カ": "Две черты: горизонталь с крючком и наклонная. У か есть ещё третья.",
+  "キ": "Три черты: две горизонтали и вертикаль насквозь. У き есть ещё нижняя дуга.",
+  "ク": "Две черты: короткая наклонная и угол. У ケ горизонталь, у タ черта внутри.",
+  "ケ": "Наклонная, горизонталь вправо и длинная черта вниз влево от её середины.",
+  "コ": "Две черты: верх с правым углом и нижняя горизонталь.",
+  "サ": "Горизонталь, короткая вертикаль и длинная, которая загибается влево.",
+  "シ": "Две капли слева, одна под другой. Последняя черта идёт снизу вверх. У ツ капли сверху, а черта сверху вниз.",
+  "ス": "Две черты: горизонталь с изгибом вниз влево и короткая черта вправо вниз.",
+  "セ": "Горизонталь с крючком вниз и вертикаль, которая внизу поворачивает вправо.",
+  "ソ": "Капля и длинная черта, обе пишутся сверху вниз. У ン длинная черта идёт снизу вверх.",
+  "タ": "Как ク, но с третьей чертой внутри.",
+  "チ": "Наклонная сверху, горизонталь и вертикаль, которая уходит влево.",
+  "ツ": "Две капли в ряд сверху и длинная черта сверху вниз. У シ капли слева.",
+  "テ": "Короткая горизонталь, длинная горизонталь и черта вниз влево.",
+  "ト": "Вертикаль и короткая черта вправо от её середины.",
+  "ナ": "Горизонталь и вертикаль, которая уходит влево.",
+  "ニ": "Две горизонтали, нижняя длиннее.",
+  "ヌ": "Как フ, и сквозь её изгиб — короткая черта. Не путай с ス.",
+  "ネ": "Четыре черты: точка, изгиб, вертикаль и капля справа.",
+  "ノ": "Одна черта сверху вниз влево.",
+  "ハ": "Две черты расходятся влево и вправо и не касаются друг друга.",
+  "ヒ": "Горизонталь, потом вертикаль с плавным поворотом вправо.",
+  "フ": "Одна черта: горизонталь и дуга вниз влево.",
+  "ヘ": "Одна черта, почти как へ в хирагане.",
+  "ホ": "Горизонталь, вертикаль с крючком и две капли по бокам.",
+  "マ": "Горизонталь с изгибом вниз влево и короткая черта к центру.",
+  "ミ": "Три наклонные чёрточки сверху вниз.",
+  "ム": "Угол вниз и вправо, справа капля.",
+  "メ": "Длинная черта вниз влево и короткая поперёк неё.",
+  "モ": "Две горизонтали и вертикаль, которая внизу поворачивает вправо.",
+  "ヤ": "Горизонталь с крючком и длинная наклонная через неё.",
+  "ユ": "Угол вниз и длинная нижняя горизонталь.",
+  "ヨ": "Три горизонтали, справа их соединяет вертикаль.",
+  "ラ": "Короткая горизонталь сверху, под ней フ.",
+  "リ": "Две вертикали, правая длиннее и уходит влево.",
+  "ル": "Две черты: левая вниз влево, правая вниз и вверх.",
+  "レ": "Одна черта: вниз и вверх вправо.",
+  "ロ": "Три черты: левая стенка, верх с правой стенкой и дно.",
+  "ワ": "Короткая вертикаль слева и крышка с дугой вниз.",
+  "ヲ": "Три черты: две горизонтали и наклонная вниз влево. Встречается очень редко.",
+  "ン": "Капля и длинная черта снизу вверх. У ソ длинная черта идёт сверху вниз."
+});
+Object.assign(MNEMO, {
+  "ア": "*А*! — топорик: сверху лезвие, вниз уходит топорище.",
+  "イ": "*И*ва у воды: наклонная — ветка, вертикаль — ствол.",
+  "ウ": "Похожа на う: сверху та же чёрточка, а дуга стала угловатой крышей. *У*гол вместо дуги.",
+  "エ": "Рельс в разрезе, как у *э*стакады: две перекладины и стойка между ними.",
+  "オ": "お без петли: крестик и наклонная влево. Скажи «*о*» — а кружок остался у хираганы.",
+  "カ": "Как か, только без третьей чёрточки: *ка*чок поставил гантельку на пол.",
+  "キ": "Как き без нижней дуги: *ки*т нырнул, над водой остались струи фонтана.",
+  "ク": "Голова *ку*кушки сбоку: короткая черта — хохолок, угол — клюв.",
+  "ケ": "*Ке*дровая ветка: наклонная — веточка, перекладина — сук, длинная черта — ствол.",
+  "コ": "*Ко*робка без одной стенки: крышка с боком и дно.",
+  "サ": "*Са*нки вверх полозьями: перекладина — полоз, а две черты — ножки, правая длиннее.",
+  "シ": "Смайлик повернулся боком: глазки слева, улыбка снизу вверх. «*Си*!» — улыбается он.",
+  "ス": "Человечек бежит: «*су*!» — и ноги в разные стороны.",
+  "セ": "Как せ, только угловатая: *се*но на вилах уложили ровнее.",
+  "ソ": "Чёлка *со*бачки: короткая прядь и длинная, обе падают сверху вниз.",
+  "タ": "*Та*нцовщица: ク — голова и платье, черта внутри — пояс. Без пояса будет ク.",
+  "チ": "Человечек в шляпке: шляпка, руки и длинная нога. *Ти*-ти — шагает.",
+  "ツ": "*Цу*нами: брызги летят в ряд сверху, а волна падает вниз.",
+  "テ": "Как て с крышей: сверху чёрточка, ниже перекладина и изгиб провода *те*лефона.",
+  "ト": "*То*рчит столбик, а на нём сбоку флажок.",
+  "ナ": "Крестик в начале な — это и есть ナ. *На*чало знакомо!",
+  "ニ": "Японская двойка 二: «*ни*» значит «два». Совсем как правая часть に.",
+  "ヌ": "*Ну*длы: フ — миска, а палочка пересекает её наискосок.",
+  "ネ": "*Нэ*ко сидит столбиком: сверху ушко, изгиб — лапки, внизу хвост и лапа.",
+  "ノ": "Один взмах — и готово. Это начало の: «*но*»!",
+  "ハ": "«ハハハ» — так в Японии пишут смех: *ха*-ха-ха! Две черты — смеющийся рот.",
+  "ヒ": "Ложечка боком: «*хи*-хи», всё съели. Сверху ручка, снизу черпачок.",
+  "フ": "Подножка: горизонталь и дуга вниз. «*Фу*, споткнулась!»",
+  "ヘ": "Та же крыша пирамиды *Хе*опса, что и в хирагане: へ и ヘ почти одинаковые.",
+  "ホ": "Ёлочка с подарками по бокам: «*Хо*-хо-хо!» — говорит Дед Мороз.",
+  "マ": "*Ма*ленький рожок мороженого: стаканчик вниз, внутри ложечка.",
+  "ミ": "Три чёрточки — три котёнка спят друг над другом: *ми*-ми-ми.",
+  "ム": "Нос коровы с ноздрёй-капелькой: «*му*-у».",
+  "メ": "Глаз め зажмурился — осталось перекрестье ресниц. *Мэ*!",
+  "モ": "Как も, только прямая: *мо*рской крючок выпрямился.",
+  "ヤ": "Как や без отдельной чёрточки: *я*хта сложила парус.",
+  "ユ": "Угловатая U, лежащая на боку. Читается «*ю*», как английское «you».",
+  "ヨ": "Зеркальная латинская E. *Ё*! Буква-перевёртыш.",
+  "ラ": "Как ら, только угловатая: чёрточка сверху и крючок. *Ра*кушка стала квадратной.",
+  "リ": "Совсем как り: два колоска *ри*са, правый длиннее.",
+  "ル": "Две ножки: левая шагает прямо, правая подпрыгивает. «*Ру*-ру», — напевает человечек.",
+  "レ": "Галочка ✓ одной чертой: «*ре*шено!»",
+  "ロ": "Квадратный *ро*тик: ロ похожа на кандзи 口 «рот».",
+  "ワ": "Кастрюлька с крышкой: «*ва*ри!» У ウ сверху есть ещё ручка-чёрточка.",
+  "ヲ": "フ с перекладиной. Встречается редко, а читается «*о*».",
+  "ン": "Как ソ, но длинная черта идёт снизу вверх: «*н*-н», — кивает и поднимает голову."
+});
 // Числа: [цифры, хирагана, чтение кириллицей, латиницей, другие чтения]
 const NUMS = [
   ["1", "いち", "ити", "ichi"], ["2", "に", "ни", "ni"], ["3", "さん", "сан", "san"], ["4", "よん", "ён", "yon", "し «си» — реже"],
@@ -1402,9 +1555,26 @@ const DAKUTEN = [
   ["が","ぎ","ぐ","げ","ご"],["ざ","じ","ず","ぜ","ぞ"],["だ","ぢ","づ","で","ど"],["ば","び","ぶ","べ","ぼ"],["ぱ","ぴ","ぷ","ぺ","ぽ"]
 ];
 const ALL_KANA = Object.keys(KANA);
+// Катакана: те же звуки, что у хираганы (код знака больше на 0x60), свои эталоны черт.
+// ー (черта долготы) можно писать, но в таблицу, счётчики и повторение она не входит.
+const toHira = (s) => String(s).replace(/[\u30A1-\u30F6]/g, (c) => String.fromCharCode(c.charCodeAt(0) - 0x60));
+const toKata = (s) => String(s).replace(/[\u3041-\u3096]/g, (c) => String.fromCharCode(c.charCodeAt(0) + 0x60));
+const isKata = (s) => /[\u30A1-\u30FA\u30FC]/.test(s);
+Object.assign(KANA, KATA_DATA);
+const KATA_KANA = ALL_KANA.map(toKata);
+for (const k of ALL_KANA) { const kk = toKata(k); INFO[kk] = INFO[k]; if (ALT[k]) ALT[kk] = ALT[k]; }
+INFO["ー"] = ["долгота", "ー"];
+const KATA_GOJUON = GOJUON.map((r) => r.map(toKata)), KATA_DAKUTEN = DAKUTEN.map((r) => r.map(toKata));
+const KATA_YOON = YOON.map(toKata);
+// звуки, которых нет в хирагане: катакана пишет их с маленькими ァィゥェォ
+const KATA_EXT = ["ファ", "フィ", "フェ", "フォ", "ティ", "ディ", "ウィ", "ウェ", "ウォ", "シェ", "ジェ", "チェ"];
+const EXT_READ = { "ふぁ": [["фа"], ["fa"]], "ふぃ": [["фи"], ["fi"]], "ふぇ": [["фэ"], ["fe"]], "ふぉ": [["фо"], ["fo"]], "てぃ": [["ти"], ["ti"]], "でぃ": [["ди"], ["di"]],
+  "とぅ": [["ту"], ["tu"]], "どぅ": [["ду"], ["du"]], "うぃ": [["уи", "ви"], ["wi", "ui"]], "うぇ": [["уэ", "вэ"], ["we", "ue"]], "うぉ": [["уо", "во"], ["wo", "uo"]],
+  "しぇ": [["сэ", "шэ"], ["she"]], "じぇ": [["дзэ", "джэ"], ["je"]], "ちぇ": [["тэ", "чэ"], ["che"]] };
 // Маленькие ゃゅょっ: эталон — обычный знак, уменьшенный и опущенный вниз клетки, как пишут в японских тетрадях.
 // Добавляются в KANA после ALL_KANA, поэтому в таблицу и счётчики знаков не попадают.
-const SMALL = { "ゃ": "や", "ゅ": "ゆ", "ょ": "よ", "っ": "つ" };
+const SMALL = { "ゃ": "や", "ゅ": "ゆ", "ょ": "よ", "っ": "つ", "ャ": "ヤ", "ュ": "ユ", "ョ": "ヨ", "ッ": "ツ", "ァ": "ア", "ィ": "イ", "ゥ": "ウ", "ェ": "エ", "ォ": "オ" };
+const SMALL_RU = { "ゃ": "я", "ゅ": "ю", "ょ": "ё", "っ": "цу", "ぁ": "а", "ぃ": "и", "ぅ": "у", "ぇ": "э", "ぉ": "о" };
 (() => {
   const S0 = 0.62, DX = -6, DY = 15, C = 54.5;
   const tp = ([x, y]) => [+(C + S0 * (x - C) + DX).toFixed(1), +(C + S0 * (y - C) + DY).toFixed(1)];
@@ -1422,12 +1592,14 @@ const SMALL = { "ゃ": "や", "ゅ": "ゆ", "ょ": "よ", "っ": "つ" };
   };
   for (const [sm, big] of Object.entries(SMALL)) {
     KANA[sm] = KANA[big].map((st) => ({ p: st.p.map(tp), n: tp(st.n), parts: st.parts.map((pt) => Object.assign({}, pt, { o: tpath(pt.o) })) }));
-    INFO[sm] = ["маленькая " + { "ゃ": "я", "ゅ": "ю", "ょ": "ё", "っ": "цу" }[sm], "small " + INFO[big][1]];
+    INFO[sm] = ["маленькая " + SMALL_RU[toHira(sm)], "small " + INFO[big][1]];
   }
 })();
 const isSmall = (k) => !!SMALL[k];
 // для проверки «похоже на другой знак» — только обычные знаки (маленькие повторяют форму больших)
 const BASE_KANA = Object.fromEntries(ALL_KANA.map((k) => [k, KANA[k]]));
+const KATA_BASE = Object.fromEntries(KATA_KANA.concat("ー").map((k) => [k, KANA[k]]));
+const othersFor = (k) => (isKata(k) ? KATA_BASE : BASE_KANA); // с чем сравнивать «похоже на другой знак»
 
 /* ===================== Ответы на чтение ===================== */
 function norm(s) {
@@ -1440,6 +1612,9 @@ const isCyr = (s) => /[а-яё]/i.test(s);
 const YOON_CONS = { "き":["к"], "し":["с","ш"], "ち":["т","ч"], "に":["н"], "ひ":["х"], "み":["м"], "り":["р"], "ぎ":["г"], "じ":["дз","дж"], "び":["б"], "ぴ":["п"] };
 const YOON_LAT = { "き":["ky"], "し":["sh","sy"], "ち":["ch","ty","cy"], "に":["ny"], "ひ":["hy"], "み":["my"], "り":["ry"], "ぎ":["gy"], "じ":["j","zy","jy"], "び":["by"], "ぴ":["py"] };
 function sylOpts(tok, script) {
+  tok = toHira(tok);
+  if (tok === "ー") return [""];
+  if (EXT_READ[tok]) return EXT_READ[tok][script];
   if (tok.length === 2) {
     const c = tok[0], sm = tok[1];
     const soft = { "ゃ":"я", "ゅ":"ю", "ょ":"ё" }[sm], hard = { "ゃ":"а", "ゅ":"у", "ょ":"о" }[sm], lat = { "ゃ":"a", "ゅ":"u", "ょ":"o" }[sm];
@@ -1453,14 +1628,14 @@ function sylOpts(tok, script) {
 function tokenize(w) {
   const t = [];
   for (let i = 0; i < w.length; i++) {
-    if (w[i + 1] && "ゃゅょ".includes(w[i + 1])) { t.push(w[i] + w[i + 1]); i++; }
+    if (w[i + 1] && ("ゃゅょ".includes(w[i + 1]) || EXT_READ[w[i] + w[i + 1]])) { t.push(w[i] + w[i + 1]); i++; }
     else t.push(w[i]);
   }
   return t;
 }
 function answersFor(word, manualCyr, manualLat) {
   const set = new Set();
-  const toks = tokenize(word);
+  const toks = tokenize(toHira(word));
   for (const script of [0, 1]) {
     let acc = [""];
     toks.forEach((tok, i) => {
@@ -1491,7 +1666,7 @@ const LS_KEY = "hiragana-notebook-v1";
 const DAY = 86400000;
 const INTERVALS = [0, 1, 2, 4, 8, 16];
 function defPet() { return { name: "Моня", food: 85, joy: 85, last: 0, stars: 0, owned: [], wear: [], game: { day: "", stars: 0 }, pat: 0, kp: 0, gacha: { n: 0, pity: 0 }, kpDay: "", kpStreak: "", room: { owned: [], on: [] } }; }
-function defState() { return { v: 1, updatedAt: 0, lessons: {}, cards: {}, notes: {}, days: [], lenient: false, pet: defPet() }; }
+function defState() { return { v: 1, updatedAt: 0, lessons: {}, klessons: {}, script: "hira", cards: {}, notes: {}, days: [], lenient: false, pet: defPet() }; }
 function ensurePet() {
   S.pet = Object.assign(defPet(), S.pet || {});
   if (!S.pet.game) S.pet.game = { day: "", stars: 0 };
@@ -1595,18 +1770,23 @@ function grade(k, sk, ok) {
   if (before < 5 && level(k) === 5) awardKp(1, `${k} выучен на 5-й уровень!`, 1000);
 }
 const level = (k) => { const c = S.cards[k]; return c ? Math.min(c.w.b || 0, c.r.b || 0) : 0; };
-const learned = () => ALL_KANA.filter((k) => S.cards[k] && (S.cards[k].w.b || S.cards[k].r.b));
-function dueItems() {
+// Азбука, которую сейчас учим: "hira" или "kata". От неё зависят уроки, повторение и таблица.
+const curScript = () => (S.script === "kata" ? "kata" : "hira");
+const scriptKana = (sc = curScript()) => (sc === "all" ? ALL_KANA.concat(KATA_KANA) : sc === "kata" ? KATA_KANA : ALL_KANA);
+const SCRIPT_NAME = { hira: ["ひらがな", "Хирагана", "хираганы", "хирагане"], kata: ["カタカナ", "Катакана", "катаканы", "катакане"] };
+const learned = (sc) => scriptKana(sc).filter((k) => S.cards[k] && (S.cards[k].w.b || S.cards[k].r.b));
+function dueItems(sc) {
   const now = Date.now(), out = [];
-  for (const k of ALL_KANA) {
+  for (const k of scriptKana(sc)) {
     const c = S.cards[k]; if (!c) continue;
     for (const sk of ["w", "r"]) if (c[sk].b > 0 && c[sk].due <= now) out.push({ k, sk });
   }
   return out;
 }
-function nextDue() {
+function nextDue(sc) {
   let m = Infinity;
-  for (const k in S.cards) for (const sk of ["w", "r"]) { const c = S.cards[k][sk]; if (c.b > 0 && c.due > Date.now()) m = Math.min(m, c.due); }
+  const only = new Set(scriptKana(sc));
+  for (const k in S.cards) if (only.has(k)) for (const sk of ["w", "r"]) { const c = S.cards[k][sk]; if (c.b > 0 && c.due > Date.now()) m = Math.min(m, c.due); }
   return m;
 }
 function streak() {
@@ -1615,10 +1795,13 @@ function streak() {
   while (set.has(dayKey(t))) { n++; t -= DAY; }
   return n;
 }
-const lessonDone = (i) => !!(S.lessons[i + 1] && S.lessons[i + 1].done);
+// Уроки хираганы — LESSONS и S.lessons, катаканы — KATA_LESSONS и S.klessons (ключ — номер урока)
+const lessonList = (sc = curScript()) => (sc === "kata" ? KATA_LESSONS : LESSONS);
+const lessonStore = (sc = curScript()) => (sc === "kata" ? S.klessons || (S.klessons = {}) : S.lessons);
+const lessonDone = (i, sc) => { const r = lessonStore(sc)[i + 1]; return !!(r && r.done); };
 // Незаконченный урок: где остановилась (хранится в записи урока, поле resume)
-const lessonResume = (i) => (S.lessons[i + 1] && S.lessons[i + 1].resume) || null;
-const nextLessonIndex = () => { for (let i = 0; i < LESSONS.length; i++) if (!lessonDone(i)) return i; return -1; };
+const lessonResume = (i, sc) => { const r = lessonStore(sc)[i + 1]; return (r && r.resume) || null; };
+const nextLessonIndex = (sc) => { const L = lessonList(sc); for (let i = 0; i < L.length; i++) if (!lessonDone(i, sc)) return i; return -1; };
 
 /* ===================== Мелочи для DOM ===================== */
 function h(tag, attrs, ...kids) {
@@ -2121,7 +2304,7 @@ function writeTask(opts) {
   const hint = HINT[k] ? h("span", { class: "hint-chip" }, HINT[k]) : null;
   // compact: над клеткой только одна строчка — когда сверху уже есть своя карточка (диктант, заказы)
   const head = opts.compact ? h("div", { class: "task-label compact-label" }, opts.label, " ", h("span", { class: "muted" }, "· " + Recog.cherta(KANA[k].length))) : h("div", { class: "task-head" },
-    h("div", { class: "task-label" }, opts.label || (trace ? "Обведи знак по розовому образцу" : "Напиши по памяти")),
+    h("div", { class: "task-label" }, opts.label || (trace ? "Обведи знак по розовому образцу" : isKata(k) ? "Напиши катаканой по памяти" : "Напиши по памяти")),
     trace ? h("div", { class: "task-big ja", lang: "ja" }, k) : h("div", { class: "task-big" }, INFO[k][0]),
     h("div", { class: "task-sub" }, trace ? readingLine(k) : INFO[k][1], hint, sayBtn(k), trace ? null : h("span", { class: "muted" }, "· " + Recog.cherta(KANA[k].length)))
   );
@@ -2140,7 +2323,7 @@ function writeTask(opts) {
     opts.onDone({ firstOk: !!firstOk, helped, skipped: !!skipped, attempts });
   }
   function check() {
-    const res = Recog.evaluate(pad.strokes, KANA[k], BASE_KANA);
+    const res = Recog.evaluate(pad.strokes, KANA[k], othersFor(k));
     // маленькую ゃゅょっ надо писать мельче: не больше ~ двух третей клетки
     if (res.pass && isSmall(k)) {
       const xs = pad.strokes.flat().map((p) => p[0]), ys = pad.strokes.flat().map((p) => p[1]);
@@ -2225,7 +2408,7 @@ function readTask(opts) {
   const nch = [...opts.show].length, multi = opts.big !== false && nch > 1;
   const card = h("div", { class: "read-card" + (opts.big === false ? " word" : "") + (multi ? " multi" : ""), lang: "ja", style: multi ? `font-size:${nch === 2 ? 100 : 72}px` : null },
     // маленькие ゃゅょっ делаем заметно меньше: きゃ «кя» и きや «кия» — разные слова
-    h("span", { class: "read-text" }, [...opts.show].map((c) => "ゃゅょっぁぃぅぇぉゎ".includes(c) ? h("span", { class: "small-kana" }, c) : c)));
+    h("span", { class: "read-text" }, [...opts.show].map((c) => "ゃゅょっぁぃぅぇぉゎャュョッァィゥェォヮ".includes(c) ? h("span", { class: "small-kana" }, c) : c)));
   const el = h("div", { class: "task" },
     h("div", { class: "task-head" }, h("div", { class: "task-label" }, opts.label || "Как это читается?"), opts.sayText ? sayBtn(opts.sayText) : null),
     card,
@@ -2324,8 +2507,9 @@ function closeShell() {
 /* ===================== Урок ===================== */
 function lessonWords(L) { return L.words; }
 function startLesson(li) {
-  const L = LESSONS[li];
-  const sh = openShell(`Урок ${li + 1}`);
+  const sc = curScript(), isK = sc === "kata", LL = lessonList(sc), store = lessonStore(sc);
+  const L = LL[li];
+  const sh = openShell(isK ? `Катакана ${li + 1}` : `Урок ${li + 1}`);
   const kana = [...L.kana];
   const light = L.kind === "dakuten";
   const phases = [];
@@ -2349,14 +2533,14 @@ function startLesson(li) {
   phases.push({ t: "finish" });
   const stats = { wOk: 0, wTot: 0, rOk: 0, rTot: 0 };
   let pi = -1;
-  let saved = lessonResume(li);
+  let saved = lessonResume(li, sc);
   // урок «Цифры» переделан: старое место внутри него не подходит к новым этапам
   if (saved && L.kind === "numbers" && saved.nv !== 2) saved = null;
   let sub = null; // где продолжить внутри этапа
   // Запоминаем место в уроке после каждого шага, чтобы можно было выйти и вернуться
   const keep = (state) => {
     if (phases[pi].t === "intro" || phases[pi].t === "finish") return;
-    S.lessons[li + 1] = Object.assign(S.lessons[li + 1] || {}, { resume: { pi, stats: Object.assign({}, stats), sub: state || null, at: Date.now(), nv: 2 } });
+    store[li + 1] = Object.assign(store[li + 1] || {}, { resume: { pi, stats: Object.assign({}, stats), sub: state || null, at: Date.now(), nv: 2 } });
     save();
   };
   const next = () => { pi++; sh.progress(pi / (phases.length - 1)); keep(); runPhase(phases[pi]); };
@@ -2397,19 +2581,27 @@ function startLesson(li) {
   }
   function intro() {
     sh.stage("начало");
-    const parts = [h("div", { class: "eyebrow" }, `Урок ${li + 1} из ${LESSONS.length}`), h("h2", {}, L.title)];
+    const parts = [h("div", { class: "eyebrow" }, `${isK ? "Катакана · " : ""}Урок ${li + 1} из ${LL.length}`), h("h2", {}, L.title)];
     if (kana.length) parts.push(h("div", { class: "kana-chips" }, kana.map((k) => h("span", { lang: "ja" }, k))));
     parts.push(h("p", {}, L.tip));
     if (L.kind === "dakuten") {
       const pairs = kana.map((k) => { const base = k.normalize("NFD")[0]; return h("span", { class: "pair" }, h("span", { class: "ja", lang: "ja" }, `${base}→${k}`), h("span", {}, `${INFO[base][0]} → ${INFO[k][0]}`)); });
       parts.push(h("div", { class: "pairs" }, pairs));
       parts.push(h("p", {}, "Тэнтэн и кружок пишут последними: сначала весь знак, потом штрихи слева направо или кружок."));
-      if (L.kana.includes("ぢ") || L.kana.includes("じ")) parts.push(h("p", {}, "じ и ぢ читаются одинаково — «дзи», ず и づ — «дзу». В словах почти всегда пишут じ и ず, а ぢ и づ встречаются редко."));
+      const [ji, dji, zu, dzu] = [..."じぢずづ"].map((c) => (isK ? toKata(c) : c));
+      if (L.kana.includes(ji) || L.kana.includes(dji)) parts.push(h("p", {}, `${ji} и ${dji} читаются одинаково — «дзи», ${zu} и ${dzu} — «дзу». В словах почти всегда пишут ${ji} и ${zu}, а ${dji} и ${dzu} встречаются редко.`));
       parts.push(h("p", { class: "muted" }, "Для каждого знака: посмотри анимацию и сразу напиши по памяти. Потом закрепление, слова и короткий диктант."));
     } else if (L.kind === "numbers") {
       parts.push(h("div", { class: "num-plan" }, ["1–5", "6–10", "до 99", "100 · 1000 · 10 000", "сотни и тысячи"].map((x, i) => h("span", {}, h("b", { class: "num" }, String(i + 1)), x))),
         h("p", {}, "С каждым числом сначала знакомишься: слово, звук и подсказка, как запомнить. Потом узнаёшь его среди других и пишешь рукой. Так за раз нужно удержать в голове только пять слов."),
         h("p", { class: "muted" }, "Все знаки ты уже знаешь по урокам. Здесь главное — запомнить, какое слово за каким числом."));
+    } else if (L.kind === "yoon" && isK) {
+      parts.push(h("p", {}, "キ + маленькая ャ = キャ «кя». Слияния устроены так же, как в хирагане."),
+        h("div", { class: "pairs" }, ["キャ", "シュ", "チョ", "ジャ", "リョ"].map((y) => h("span", { class: "pair" }, h("span", { class: "ja", lang: "ja" }, y), h("span", {}, sylOpts(y, 0)[0] + " · " + sylOpts(y, 1)[0])))),
+        h("p", {}, "Маленькая ッ удваивает следующий согласный: カップ «каппу», ベッド «бэддо». Черта ー тянет гласную: コーヒー «ко:хи:»."),
+        h("p", {}, "Для звуков, которых нет в японском, катакана берёт маленькие ァ ィ ゥ ェ ォ:"),
+        h("div", { class: "pairs" }, ["ファ", "ティ", "ウィ", "シェ", "フォ"].map((y) => h("span", { class: "pair" }, h("span", { class: "ja", lang: "ja" }, y), h("span", {}, sylOpts(y, 0)[0] + " · " + sylOpts(y, 1)[0])))),
+        h("p", { class: "muted" }, "В этом уроке ты читаешь слияния и слова, а в конце пишешь по памяти 15 случайных знаков катаканы из уже пройденных."));
     } else if (L.kind === "yoon") {
       parts.push(h("p", {}, "き + маленькая ゃ = きゃ «кя». Маленькие ゃ ゅ ょ пишут в пол-клетки, ниже и ближе к предыдущему знаку."),
         h("div", { class: "pairs" }, ["きゃ", "しゅ", "ちょ", "じゃ", "りょ"].map((y) => h("span", { class: "pair" }, h("span", { class: "ja", lang: "ja" }, y), h("span", {}, sylOpts(y, 0)[0] + " · " + sylOpts(y, 1)[0])))),
@@ -2417,6 +2609,7 @@ function startLesson(li) {
         h("p", {}, "Долгие гласные: う после «о» продлевает «о» — がっこう «гакко:», い после «э» часто продлевает «э» — せんせい «сэнсэ:»."),
         h("p", { class: "muted" }, "В этом уроке ты читаешь слияния и слова, а в конце пишешь по памяти 15 случайных знаков из уже пройденных."));
     } else {
+      if (isK && L.also) parts.push(h("p", {}, L.also));
       parts.push(h("p", { class: "muted" }, "Для каждого знака три шага: посмотри порядок черт, обведи по образцу, напиши по памяти. Потом закрепление вперемешку, чтение слов и короткий диктант."));
     }
     const go = h("button", { class: "btn primary", type: "button", onclick: next }, "Начать");
@@ -2471,7 +2664,7 @@ function startLesson(li) {
     if (st && Array.isArray(st.queue)) { queue = st.queue; total = st.total; doneCount = st.doneCount; }
     else {
       for (const k of kana) { queue.push({ k, sk: "w", need: light ? 1 : 2 }); queue.push({ k, sk: "r", need: light ? 1 : 2 }); }
-      const prev = learned().filter((k) => !kana.includes(k)).sort((a, b) => level(a) - level(b)).slice(0, 3);
+      const prev = learned(sc).filter((k) => !kana.includes(k)).sort((a, b) => level(a) - level(b)).slice(0, 3);
       for (const k of prev) queue.push({ k, sk: Math.random() < 0.5 ? "w" : "r", need: 1, review: true, graded: false });
       shuffle(queue);
       for (let i = 1; i < queue.length; i++) if (queue[i].k === queue[i - 1].k) { const j = (i + 2) % queue.length; [queue[i], queue[j]] = [queue[j], queue[i]]; }
@@ -2498,7 +2691,7 @@ function startLesson(li) {
 
   function yoonDrill() {
     const st = takeSub();
-    const items = st && st.items ? st.items : shuffle(YOON.slice()).slice(0, 12);
+    const items = st && st.items ? st.items : isK ? shuffle(shuffle(KATA_YOON.slice()).slice(0, 8).concat(shuffle(KATA_EXT.slice()).slice(0, 4))) : shuffle(YOON.slice()).slice(0, 12);
     let i = st ? st.i || 0 : 0;
     const serve = () => {
       sh.stage("слияния"); sh.count(`${i} / ${items.length}`);
@@ -2537,7 +2730,7 @@ function startLesson(li) {
       function one() {
         const slots = h("div", { class: "slots", "aria-label": "Слово" }, chars.map((c, j) => h("span", { class: "slot" + (j < ci ? "" : " empty") + (j === ci ? " cur" : ""), lang: "ja" }, c)));
         const head = h("div", { class: "task-head" }, h("div", { class: "task-label" }, `Запиши слово: знак ${ci + 1} из ${chars.length}`), h("div", { class: "task-big" }, w[1]), h("div", { class: "task-sub" }, `${w[2]} — ${w[3]}`, sayBtn(w[0])));
-        const task = writeTask({ reward: true, compact: true, k: chars[ci], mode: "memory", label: `Какой знак даёт «${INFO[chars[ci]][0]}»?`, nextLabel: ci + 1 < chars.length ? "Следующий знак" : "Готово", onDone: (r) => { stats.wTot++; if (r.firstOk) stats.wOk++; ci++; if (ci < chars.length) one(); else { wi++; word(); } } });
+        const task = writeTask({ reward: true, compact: true, k: chars[ci], mode: "memory", label: chars[ci] === "ー" ? "Тянем гласную: какой знак?" : `Какой знак ${isK ? "катаканы " : ""}даёт «${INFO[chars[ci]][0]}»?`, nextLabel: ci + 1 < chars.length ? "Следующий знак" : "Готово", onDone: (r) => { stats.wTot++; if (r.firstOk) stats.wOk++; ci++; if (ci < chars.length) one(); else { wi++; word(); } } });
         sh.set(h("div", { class: "task word-task" }, head, slots, task));
       }
       one();
@@ -2727,8 +2920,8 @@ function startLesson(li) {
 
   function finalTest() {
     const st = takeSub();
-    const pool = learned().filter((k) => KANA[k]);
-    const items = st && st.items ? st.items : shuffle(pool.length ? pool : ALL_KANA.slice(0, 46)).slice(0, 15);
+    const pool = learned(sc).filter((k) => KANA[k]);
+    const items = st && st.items ? st.items : shuffle(pool.length ? pool : scriptKana(sc).slice(0, 46)).slice(0, 15);
     let i = st ? st.i || 0 : 0;
     const serve = () => {
       sh.stage("итоговая проверка"); sh.count(`${i} / ${items.length}`);
@@ -2742,8 +2935,8 @@ function startLesson(li) {
 
   function finish() {
     sh.stage("готово"); sh.count("");
-    const firstTime = !(S.lessons[li + 1] && S.lessons[li + 1].done);
-    S.lessons[li + 1] = { done: true, at: Date.now() };
+    const firstTime = !(store[li + 1] && store[li + 1].done);
+    store[li + 1] = { done: true, at: Date.now() };
     save();
     award(firstTime ? 10 : 3);
     if (firstTime) awardKp(3, "за новый урок", 1100);
@@ -2756,7 +2949,7 @@ function startLesson(li) {
       h("div", { class: "big-stats" },
         h("div", {}, h("b", {}, pct(stats.wOk, stats.wTot)), h("span", {}, "письмо с первой попытки")),
         h("div", {}, h("b", {}, pct(stats.rOk, stats.rTot)), h("span", {}, "чтение"))),
-      h("p", { class: "note" }, L.kind === "numbers" ? "Числа пройдены! Если в задании попадётся число вроде 47, складывай его по кусочкам: よん じゅう なな." : kana.length ? `Новые знаки попали в повторение. Завтра начни с него: так знаки переходят в долгую память.` : "Хирагана пройдена целиком. Дальше — только повторение по расписанию."),
+      h("p", { class: "note" }, L.kind === "numbers" ? "Числа пройдены! Если в задании попадётся число вроде 47, складывай его по кусочкам: よん じゅう なな." : kana.length ? `Новые знаки попали в повторение. Завтра начни с него: так знаки переходят в долгую память.` : `${SCRIPT_NAME[sc][1]} пройдена целиком. Дальше — только повторение по расписанию.`),
       h("div", { class: "row", style: "justify-content:center" },
         h("button", { class: "btn primary", type: "button", onclick: () => closeShell() }, "К урокам"),
         nxt >= 0 && nxt !== li ? h("button", { class: "btn", type: "button", onclick: () => { closeShell(); startLesson(nxt); } }, `Урок ${nxt + 1}`) : null)));
@@ -2971,7 +3164,7 @@ const STAGES = [
   { min: 46, jp: "せんせい", ru: "сэнсэй", scale: 1.04 }
 ];
 function stageInfo() {
-  const n = learned().length;
+  const n = learned("hira").length;
   let i = 0;
   STAGES.forEach((st, j) => { if (n >= st.min) i = j; });
   return Object.assign({ i, left: STAGES[i + 1] ? STAGES[i + 1].min - n : 0 }, STAGES[i]);
@@ -3243,7 +3436,7 @@ function petView() {
       h("div", { class: "dev-money" }, h("span", { class: "stars-pill num" }, "★ ", String(S.pet.stars)), h("span", { class: "kp-pill num" }, kpIcon(), String(S.pet.kp || 0)))),
     h("div", { class: "dev-row" },
       btn("food", "Еда", openFoodSheet, n.food < 40),
-      btn("games", "Игры", openGamesSheet, n.joy < 40 && learned().length >= 4),
+      btn("games", "Игры", openGamesSheet, n.joy < 40 && learned("hira").length >= 4),
       btn("wear", "Гардероб", openWearSheet)),
     h("div", { class: "dev-screen" }, roomScene(([jp, ru]) => setSay(jp, ru))),
     say,
@@ -3261,7 +3454,7 @@ function openFoodSheet() {
 }
 function openGamesSheet() {
   openSheet("Игры", (close) => {
-    const canPlay = learned().length >= 4;
+    const canPlay = learned("hira").length >= 4;
     const cwOk = cwPool().length >= 8, cwOn = S.pet.cw && !S.pet.cw.done;
     const cwCard = h("section", { class: "panel play-card" },
       h("div", { class: "play-ico" }, svgNode(CW_ICON)),
@@ -4398,7 +4591,7 @@ function startGramCards() {
 
 /* Игра «Апорт»: чтение знаков */
 function startFetch() {
-  const pool = learned();
+  const pool = learned("hira");
   if (pool.length < 4) return;
   const sh = openShell("Апорт");
   const today = dayKey();
@@ -4638,7 +4831,8 @@ function viewFor(t) { return t === "home" ? homeView() : t === "words" ? wordsVi
 function renderChrome() {
   const pt = document.getElementById("pet-tab"); if (pt) pt.textContent = S.pet.name;
   const bp = document.getElementById("brand-pet"); if (bp) bp.textContent = petCase("ins");
-  const bn = document.getElementById("brand-n"); if (bn) bn.textContent = String(LESSONS.length);
+  const bn = document.getElementById("brand-n"); if (bn) bn.textContent = String(lessonList().length);
+  const bt = document.getElementById("brand-t"); if (bt) bt.textContent = `Тетрадь ${SCRIPT_NAME[curScript()][2]}`;
   const bm = document.getElementById("brand-mascot"); if (bm) bm.replaceChildren(mascot(petMood()));
   document.querySelectorAll(".tab").forEach((t) => t.setAttribute("aria-selected", String(t.dataset.tab === tab)));
   updateBadge();
@@ -4681,11 +4875,29 @@ function petStrip() {
     h("span", { class: "pet-strip-bars" }, meter("foodS", n.food, "food", "Сытость"), meter("joyS", n.joy, "joy", "Настроение")),
     h("span", { class: "stars-pill num" }, "★ ", String(S.pet.stars)));
 }
+// Выбор азбуки: уроки, повторение и таблица у хираганы и катаканы свои
+function setScript(sc) {
+  if (curScript() === sc) return;
+  S.script = sc; save();
+  scrollMem.review = scrollMem.table = 0;
+  render();
+}
+function scriptSwitch() {
+  return h("div", { class: "script-switch", role: "group", "aria-label": "Что учим" }, ["hira", "kata"].map((sc) => {
+    const L = lessonList(sc), done = L.filter((_, i) => lessonDone(i, sc)).length, due = dueItems(sc).length, on = curScript() === sc;
+    return h("button", { type: "button", "aria-pressed": String(on), onclick: () => setScript(sc) },
+      h("span", { class: "ss-jp", lang: "ja" }, SCRIPT_NAME[sc][0]),
+      h("span", { class: "ss-ru" }, SCRIPT_NAME[sc][1]),
+      h("span", { class: "ss-n num" }, `${done}/${L.length} уроков`),
+      !on && due ? h("span", { class: "ss-due num", "aria-label": `${due} на повторение` }, String(due)) : null);
+  }));
+}
 function homeView() {
   const due = dueItems();
   const ni = nextLessonIndex();
   const nLearned = learned().length;
-  const nDone = LESSONS.filter((_, i) => lessonDone(i)).length;
+  const LL = lessonList();
+  const nDone = LL.filter((_, i) => lessonDone(i)).length;
   const st = streak();
   const today = h("section", { class: "panel today compact bowed" });
   today.append(h("div", { class: "today-top" }, h("div", { class: "eyebrow" }, "Сегодня"), h("button", { class: "link-btn", type: "button", onclick: howSheet }, "Как это работает?")));
@@ -4695,49 +4907,56 @@ function homeView() {
     actions.append(h("button", { class: "btn primary", type: "button", onclick: () => startReview(due, true) }, "Начать повторение"));
     if (ni >= 0) actions.append(h("button", { class: "btn", type: "button", onclick: () => startLesson(ni) }, lessonResume(ni) ? `Продолжить урок ${ni + 1}` : `Урок ${ni + 1}`));
   } else if (ni >= 0) {
-    const L = LESSONS[ni];
+    const L = lessonList()[ni];
     today.append(h("h2", {}, `Урок ${ni + 1}. ${L.title}`),
-      h("div", { class: "lesson-kana", lang: "ja" }, L.kana || (L.kind === "numbers" ? "いち に さん … まん" : "きゃ きゅ きょ っ")),
+      h("div", { class: "lesson-kana", lang: "ja" }, L.kana || (L.kind === "numbers" ? "いち に さん … まん" : curScript() === "kata" ? "キャ キュ キョ ッ ー" : "きゃ きゅ きょ っ")),
       h("p", { class: "muted" }, "Около 20 минут."));
     actions.append(h("button", { class: "btn primary", type: "button", onclick: () => startLesson(ni) }, lessonResume(ni) ? `Продолжить урок ${ni + 1}` : ni === 0 ? "Начать первый урок" : `Начать урок ${ni + 1}`));
   } else {
     const nd = nextDue();
     today.append(h("h2", {}, "Все уроки пройдены"), h("p", { class: "muted" }, isFinite(nd) ? `Следующее повторение — ${whenText(nd)}.` : "Можно тренировать знаки в таблице."));
+    if (curScript() === "hira" && nextLessonIndex("kata") === 0) actions.append(h("button", { class: "btn primary", type: "button", onclick: () => setScript("kata") }, "Начать катакану"));
   }
   today.append(actions);
   today.append(h("div", { class: "stats num" },
-    h("span", {}, "Знаков: ", h("b", {}, `${nLearned}/${ALL_KANA.length}`)),
-    h("span", {}, "Уроков: ", h("b", {}, `${nDone}/${LESSONS.length}`)),
+    h("span", {}, "Знаков: ", h("b", {}, `${nLearned}/${scriptKana().length}`)),
+    h("span", {}, "Уроков: ", h("b", {}, `${nDone}/${LL.length}`)),
     st ? h("span", {}, "Дней подряд: ", h("b", {}, String(st))) : null));
   // карта уроков: 12 плиток вместо длинного списка
-  const path = h("div", { class: "path" }, LESSONS.map((L, i) => {
+  const path = h("div", { class: "path" }, LL.map((L, i) => {
     const done = lessonDone(i), res = lessonResume(i), next = i === ni;
-    const kana = [...(L.kana || (L.kind === "numbers" ? "いちにさん" : "きゃっ"))];
+    const kana = [...(L.kana || (L.kind === "numbers" ? "いちにさん" : curScript() === "kata" ? "キャッ" : "きゃっ"))];
     return h("button", { class: "path-tile" + (done ? " done" : "") + (next ? " next" : ""), type: "button", onclick: () => startLesson(i), "aria-label": `Урок ${i + 1}. ${L.title}${done ? ", пройден" : res ? ", начат" : next ? ", следующий" : ""}` },
       h("span", { class: "path-no" }, String(i + 1)),
       h("span", { class: "path-kana", lang: "ja" }, kana.slice(0, 3).join("") + (kana.length > 3 ? "…" : "")),
       h("span", { class: "path-t" }, L.title),
       done ? berrySticker("path-badge") : res ? h("span", { class: "path-badge dot", "aria-hidden": "true" }) : null);
   }));
-  return h("div", {}, petStrip(), today, h("h2", { class: "section-title" }, starSticker("#FFB0CD"), "Уроки"), path);
+  return h("div", {}, scriptSwitch(), petStrip(), today, h("h2", { class: "section-title" }, starSticker("#FFB0CD"), `Уроки ${SCRIPT_NAME[curScript()][2]}`), path);
 }
 function reviewView() {
   const due = dueItems();
+  const sc = curScript(), other = sc === "kata" ? "hira" : "kata", otherDue = dueItems(other).length;
+  const eyebrow = `По расписанию · ${SCRIPT_NAME[sc][1].toLowerCase()}`;
   const box = h("section", { class: "panel today" });
   if (due.length) {
     const kset = [...new Set(due.map((d) => d.k))];
-    box.append(h("div", { class: "eyebrow" }, "По расписанию"),
+    box.append(h("div", { class: "eyebrow" }, eyebrow),
       h("h2", {}, `${due.length} ${plural(due.length, "задание", "задания", "заданий")}`),
       h("div", { class: "kana-chips" }, kset.map((k) => h("span", { lang: "ja" }, k))),
       h("p", { class: "muted" }, "Каждый знак встретится в своём виде: где-то нужно прочитать, где-то написать по памяти."),
       h("div", { class: "row" }, h("button", { class: "btn primary", type: "button", onclick: () => startReview(due, true) }, "Начать повторение")));
   } else {
     const nd = nextDue();
-    box.append(h("div", { class: "eyebrow" }, "По расписанию"),
+    box.append(h("div", { class: "eyebrow" }, eyebrow),
       h("div", { class: "say-row" }, mascot("happy"), bubble("yay", "Сейчас повторять нечего")),
       h("p", { class: "muted" }, learned().length ? `Следующее повторение — ${whenText(nd)}.` : "Повторение появится после первого урока."));
     box.classList.add("bowed");
   }
+  const otherBox = otherDue ? h("button", { class: "other-due", type: "button", onclick: () => setScript(other) },
+    h("span", { lang: "ja" }, SCRIPT_NAME[other][0]),
+    h("span", {}, `По ${SCRIPT_NAME[other][3]} тоже ждут ${otherDue} ${plural(otherDue, "задание", "задания", "заданий")}`),
+    h("b", {}, "Перейти")) : null;
   const pool = learned();
   const extra = h("section", { class: "today" },
     h("h2", { class: "section-title" }, "Тренировка вне расписания"),
@@ -4750,16 +4969,15 @@ function reviewView() {
     h("div", { class: "row" },
       h("button", { class: "btn primary", type: "button", disabled: pool.length === 0, onclick: () => startReview(shuffle(pool.map((k) => ({ k, sk: Math.random() < 0.5 ? "w" : "r" }))), false) }, "Повторить всё"),
       h("button", { class: "btn", type: "button", disabled: pool.length === 0, onclick: () => startReview(shuffle(pool.map((k) => ({ k, sk: "w" }))), false) }, "Только письмо")));
-  return h("div", {}, box, extra);
+  return h("div", {}, box, otherBox, extra);
 }
 function weakest(pool, sk) {
   return shuffle(pool.slice()).sort((a, b) => (S.cards[a][sk].b || 0) - (S.cards[b][sk].b || 0)).slice(0, 10).map((k) => ({ k, sk }));
 }
-const TABLE_PAGES = [
-  { name: "あ–な", rows: GOJUON.slice(0, 5) },
-  { name: "は–ん", rows: GOJUON.slice(5) },
-  { name: "が–ぽ", rows: DAKUTEN }
-];
+const TABLE_PAGES = {
+  hira: [{ name: "あ–な", rows: GOJUON.slice(0, 5) }, { name: "は–ん", rows: GOJUON.slice(5) }, { name: "が–ぽ", rows: DAKUTEN }],
+  kata: [{ name: "ア–ナ", rows: KATA_GOJUON.slice(0, 5) }, { name: "ハ–ン", rows: KATA_GOJUON.slice(5) }, { name: "ガ–ポ", rows: KATA_DAKUTEN }]
+};
 let tablePage = 0;
 function settingsSheet() {
   openSheet("Настройки", (close) => {
@@ -4777,7 +4995,7 @@ function settingsSheet() {
     const reset = h("button", { class: "btn", type: "button" }, "Сбросить прогресс");
     reset.addEventListener("click", () => {
       if (!armed) { armed = true; reset.textContent = "Нажми ещё раз, чтобы стереть всё"; setTimeout(() => { armed = false; if (reset.isConnected) reset.textContent = "Сбросить прогресс"; }, 4000); return; }
-      const len = S.lenient, ear = S.noListen; S = defState(); S.lenient = len; S.noListen = ear; ensurePet(); save(); close(); render();
+      const len = S.lenient, ear = S.noListen, sc = S.script; S = defState(); S.lenient = len; S.noListen = ear; S.script = sc; ensurePet(); save(); close(); render();
     });
     return [sheetHead("せってい", "Настройки", close),
       h("section", { class: "settings" },
@@ -4805,11 +5023,12 @@ function tableView() {
     [0, 1, 2, 3, 4, 5].map((lv) => h("i", { style: lv === 0 ? "border-style:dashed;border-color:var(--grid-faint)" : `background:${["", "#FFF0F5", "#FFDCE8", "#FFC2D7", "#FF9EC0", "var(--primary)"][lv]}` })),
     h("span", {}, "выучен"));
   const grid = h("div", { class: "gojuon cols" });
-  const segBtns = TABLE_PAGES.map((pg, i) => h("button", { type: "button", lang: "ja", "aria-pressed": String(i === tablePage), onclick: () => show(i) }, pg.name));
+  const pages = TABLE_PAGES[curScript()];
+  const segBtns = pages.map((pg, i) => h("button", { type: "button", lang: "ja", "aria-pressed": String(i === tablePage), onclick: () => show(i) }, pg.name));
   function show(i) {
     tablePage = i;
     segBtns.forEach((b, j) => b.setAttribute("aria-pressed", String(j === i)));
-    const rows = TABLE_PAGES[i].rows;
+    const rows = pages[i].rows;
     grid.style.gridTemplateColumns = `repeat(${rows.length}, minmax(0, 1fr))`;
     grid.replaceChildren(...rows.flat().map(cellFor));
   }
@@ -4817,8 +5036,11 @@ function tableView() {
   return h("div", {},
     h("div", { class: "table-head" },
       h("h2", { class: "section-title" }, starSticker("#FFE27A"), "Таблица"),
-      h("span", { class: "muted num" }, `выучено ${learned().length} из ${ALL_KANA.length}`)),
-    h("div", { class: "seg table-seg", role: "group", "aria-label": "Страница таблицы" }, segBtns),
+      h("span", { class: "muted num" }, `выучено ${learned().length} из ${scriptKana().length}`)),
+    h("div", { class: "table-segs" },
+      h("div", { class: "seg table-seg", role: "group", "aria-label": "Азбука" }, ["hira", "kata"].map((sc) =>
+        h("button", { type: "button", lang: "ja", "aria-pressed": String(curScript() === sc), "aria-label": SCRIPT_NAME[sc][1], onclick: () => setScript(sc) }, SCRIPT_NAME[sc][0]))),
+      h("div", { class: "seg table-seg", role: "group", "aria-label": "Страница таблицы" }, segBtns)),
     grid,
     scale,
     h("p", { class: "muted table-tip" }, "Нажми на знак, чтобы потренировать его отдельно."),
@@ -4988,8 +5210,8 @@ render();
   const hello = document.getElementById("sp-hello");
   [...jp].forEach((ch, i) => hello.append(h("span", { style: `animation-delay:${0.5 + i * 0.09}s` }, ch)));
   document.getElementById("sp-read").textContent = `«${rd}» — ${ru}`;
-  const due = dueItems().length, nm = S.pet.name;
-  document.getElementById("sp-sub").textContent = !learned().length ? `${nm} ждёт первый урок ♡` : due ? `Сегодня ждут ${due} ${plural(due, "повторение", "повторения", "повторений")}` : `С возвращением! ${nm} ${isNight() ? "уже спит" : "рад тебя видеть"} ♡`;
+  const due = dueItems("all").length, nm = S.pet.name;
+  document.getElementById("sp-sub").textContent = !learned("all").length ? `${nm} ждёт первый урок ♡` : due ? `Сегодня ждут ${due} ${plural(due, "повторение", "повторения", "повторений")}` : `С возвращением! ${nm} ${isNight() ? "уже спит" : "рад тебя видеть"} ♡`;
   let gone = false;
   const hide = () => { if (gone) return; gone = true; sp.classList.add("out"); setTimeout(() => sp.remove(), 500); };
   const t0 = Date.now();

@@ -6,7 +6,7 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 OUT = '..'  # корень репозитория — оттуда GitHub Pages раздаёт сайт
 rd = lambda f: open(f, encoding='utf-8').read()
 t = rd('app_template.html')
-parts = {'__KANA__': rd('kana2.json'), '__RECOG__': rd('recognizer.js'), '__STAB__': rd('stabilizer.js'),
+parts = {'__KANA__': rd('kana2.json'), '__KATA__': rd('kata.json'), '__RECOG__': rd('recognizer.js'), '__STAB__': rd('stabilizer.js'),
          '__PUPPY__': rd('puppy.js'), '__ROOM__': rd('room.js'), '__ICONS__': rd('icons.js'), '__PICS__': rd('pics.js')}
 def fill(tpl, pwa):
     out = tpl.replace('__IS_PWA__', 'true' if pwa else 'false', 1)
