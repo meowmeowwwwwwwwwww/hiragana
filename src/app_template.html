@@ -813,6 +813,32 @@ details.how .how-body { display: grid; gap: 10px; margin-top: 12px; max-width: 6
 .gr-task .act-reveal .gr-line { font-size: 18px; }
 .gr-slot, .gr-tile { min-width: 52px; font-size: 20px; }
 .gr-meet .v-trap { max-width: 46ch; }
+/* Фразы */
+.ph-row { grid-template-columns: 44px 1fr auto; }
+.ph-row .v-row-main { gap: 1px; }
+.ph-row .v-row-main b { font-size: 19px; }
+.ph-row-ru { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; font-size: 14px; font-weight: 800; line-height: 1.25; }
+.ph-row-ru .ph-reg { font-style: normal; font-size: 11px; padding: 0 7px; }
+.ph-form { font-family: var(--kana); font-weight: 600; word-break: keep-all; }
+.ph-opt { opacity: .45; }
+.ph-pre { color: var(--muted); }
+.ph-big { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 10px; }
+.ph-big .ph-form { font-size: 40px; line-height: 1.2; color: var(--ink); }
+.ph-form.ph-q { font-size: 32px; line-height: 1.25; color: var(--ink); text-align: center; }
+.ph-reg { padding: 1px 9px; border-radius: 999px; font-size: 12px; font-weight: 800; background: var(--surface-2); color: var(--primary-deep); }
+.ph-reg.p { background: #E6F0FF; color: #3D5FA8; }
+.ph-when { text-align: center; }
+.ph-answer { font-size: 15px; font-weight: 700; color: var(--ink-soft); }
+.ph-answer b { font-family: var(--kana); font-weight: 600; font-size: 19px; color: var(--primary-deep); }
+.ph-dlg { display: grid; gap: 8px; width: 100%; max-width: 46ch; }
+.ph-say { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px; max-width: 88%; padding: 8px 10px 8px 14px; border-radius: 20px 20px 20px 6px; background: #fff; border: 3px solid #fff; box-shadow: 0 2px 0 var(--line); text-align: left; }
+.ph-say.b { justify-self: end; border-radius: 20px 20px 6px 20px; background: var(--accent-soft); }
+.ph-say .gr-line { font-size: 18px; }
+.ph-sit { gap: 6px; }
+.ph-heard { grid-template-columns: auto 1fr auto; align-items: center; text-align: left; justify-items: start; }
+.ph-heard .gr-line { font-size: 24px; }
+.ph-task .choice-btn.ja { font-size: 19px; }
+.ph-front-sit, .ph-back-when { max-width: 34ch; font-size: 14px; font-weight: 700; }
 .gr-meet .facts .v-dots { margin-left: 2px; }
 .gr-known, .gr-strip { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; font-family: var(--kana); font-weight: 600; }
 .gr-known > span, .gr-strip > span { padding: 3px 10px; border-radius: 999px; background: rgb(255 255 255 / .6); font-size: 15px; opacity: .6; }
@@ -1529,6 +1555,115 @@ const GRAM_GROUPS = [
   { title: "Тоже и кто именно", short: "тоже и кто", ids: ["mo", "ga"] }
 ];
 const grById = (id) => GRAMMAR.find((x) => x.id === id);
+// Вежливые фразы из учебника (вкладка «Слова» → «Фразы»). jp — фраза целиком, opt — хвост, который можно опустить (おやすみ(なさい)),
+// pre — что стоит перед фразой (… です), cyr — чтение, ru — перевод, reg — "f" по-дружески / "p" вежливо, when — когда говорят,
+// note — на что обратить внимание, reply — чем отвечают на эту фразу, sit — ситуации для задания «Что сказать?»,
+// dlg — короткий диалог [фраза, перевод], spell — неверные написания, say — что озвучить вместо jp
+const PHRASES = [
+  { id: "ohayo", jp: "おはよう", cyr: "охайо:", ru: "Доброе утро", reg: "f", reply: "ohayo",
+    when: "Утром, примерно до 10–11 часов — с семьёй, друзьями, младшими.",
+    note: "В конце долгое «о:» — пишется через う: おはよう, а не おはよお.",
+    sit: ["Утро. Ты заходишь на кухню, там мама", "Утром встречаешь подругу у школы"],
+    dlg: [["おはよう！", "Доброе утро!"], ["おはよう。", "Доброе утро."]], spell: ["おはよお", "おわよう", "おはやう"] },
+  { id: "ohayog", jp: "おはよう ございます", cyr: "охайо: годзаимас", ru: "Доброе утро (вежливо)", reg: "p", reply: "ohayog",
+    when: "Утром — учителю, старшим, на работе, малознакомым людям.",
+    note: "ございます делает фразу вежливой. Последнее «у» почти не слышно: «годзаимас».",
+    sit: ["Утро. Ты входишь в класс, у доски учитель", "Утром в лифте встречаешь пожилую соседку"],
+    dlg: [["せんせい、おはよう ございます。", "Доброе утро, учитель."], ["おはよう ございます。", "Доброе утро."]], spell: ["おはよお ございます", "おはよう こざいます", "おはよう ございまず"] },
+  { id: "konnichiwa", jp: "こんにちは", cyr: "конничива", ru: "Добрый день, здравствуйте", reply: "konnichiwa",
+    when: "Днём, с позднего утра до вечера. Подходит почти для любого человека.",
+    note: "Последний знак — は, но читается «ва», как частица は. Писать こんにちわ — ошибка.",
+    sit: ["Днём встречаешь знакомую на улице", "После обеда заходишь в гости к однокласснице, открывает её мама"],
+    dlg: [["こんにちは！", "Здравствуйте!"], ["あ、こんにちは。", "О, добрый день."]], spell: ["こんにちわ", "こにちは", "こんいちは"] },
+  { id: "konbanwa", jp: "こんばんは", cyr: "комбанва", ru: "Добрый вечер", reply: "konbanwa",
+    when: "Вечером, когда стемнело, при встрече.",
+    note: "Тоже は в конце читается «ва». ん перед ば звучит как «м»: «комбанва».",
+    sit: ["Вечером, уже темно, встречаешь соседа у подъезда", "Вечером приходишь на ужин к друзьям семьи"],
+    dlg: [["こんばんは。", "Добрый вечер."], ["こんばんは。さむい ですね。", "Добрый вечер. Холодно, да?"]], spell: ["こんばんわ", "こばんは", "こんぱんは"] },
+  { id: "sayonara", jp: "さようなら", cyr: "саё:нара", ru: "До свидания", reply: "sayonara",
+    when: "Прощаясь надолго или в конце школьного дня — учителю и одноклассникам. С друзьями чаще говорят じゃあね «пока».",
+    note: "Долгое «ё:» пишется よう: さようなら.",
+    sit: ["Уроки кончились, ты прощаешься с учителем", "Провожаешь гостя, который уезжает надолго"],
+    dlg: [["せんせい、さようなら。", "До свидания, учитель."], ["さようなら。また あした。", "До свидания. До завтра."]], spell: ["さよおなら", "さようらな", "さゆうなら"] },
+  { id: "oyasumi", jp: "おやすみなさい", opt: "なさい", cyr: "оясуми(насай)", ru: "Спокойной ночи", reply: "oyasumi",
+    when: "Перед сном или поздно вечером, расставаясь.",
+    note: "Коротко おやすみ — для своих, полностью おやすみなさい — вежливее.",
+    sit: ["Ты идёшь спать и заглядываешь к родителям", "Подруга осталась у тебя с ночёвкой, вы гасите свет"],
+    dlg: [["おやすみなさい。", "Спокойной ночи."], ["おやすみ。", "Спокойной ночи."]], spell: ["おやずみなさい", "おやすみなせい", "おやすみさない"] },
+  { id: "arigato", jp: "ありがとう", cyr: "аригато:", ru: "Спасибо", reg: "f", reply: "iie",
+    when: "Поблагодарить друга, родных, ровесника.",
+    note: "Долгое «о:» в конце — через う: ありがとう.",
+    sit: ["Подруга одолжила тебе ручку", "Младший брат принёс тебе стакан воды"],
+    dlg: [["はい、どうぞ。", "Вот, держи."], ["ありがとう！", "Спасибо!"]], spell: ["ありがとお", "ありかとう", "ありがどう"] },
+  { id: "arigatog", jp: "ありがとう ございます", cyr: "аригато: годзаимас", ru: "Большое спасибо (вежливо)", reg: "p", reply: "iie",
+    when: "Поблагодарить учителя, старшего, продавца, незнакомого человека.",
+    note: "Та же ございます, что в おはよう ございます, — она делает фразу вежливой.",
+    sit: ["Учитель помог тебе разобраться с заданием", "Продавщица отдаёт тебе покупку и сдачу"],
+    dlg: [["どうぞ。", "Пожалуйста, возьмите."], ["ありがとう ございます。", "Большое спасибо."]], spell: ["ありがとお ございます", "ありかとう ございます", "ありがとう ごさいます"] },
+  { id: "sumimasen", jp: "すみません", cyr: "сумимасэн", ru: "Извините; простите", reply: "iie",
+    when: "Извиниться, если что-то не так, или обратиться к незнакомому: «простите, можно вас?»",
+    note: "Последнее «н» — это ん. Иногда すみません говорят и вместо «спасибо», когда человеку пришлось потрудиться ради тебя.",
+    sit: ["Ты нечаянно наступила кому-то на ногу в автобусе", "Хочешь подозвать официанта в кафе"],
+    dlg: [["あっ、すみません！", "Ой, извините!"], ["いいえ。", "Ничего страшного."]], spell: ["すみまぜん", "すにません", "すみませ"] },
+  { id: "iie", jp: "いいえ", cyr: "ииэ", ru: "Нет; не за что, ничего страшного",
+    when: "Ответ «нет» на вопрос. А ещё вежливый ответ на «спасибо» и «извините»: «не за что», «ничего страшного».",
+    note: "Две い подряд: いいえ. А いえ — это «дом».",
+    sit: ["Тебя благодарят за помощь, а ты отвечаешь «не за что»", "Перед тобой извинились, а ты отвечаешь «ничего страшного»"],
+    dlg: [["ありがとう ございます。", "Большое спасибо."], ["いいえ。", "Не за что."]], spell: ["いいい", "いええ", "えいい"] },
+  { id: "ittekimasu", jp: "いってきます", cyr: "иттэкимас", ru: "Я пошла (и скоро вернусь)", reply: "itterasshai",
+    when: "Тот, кто уходит из дома (в школу, на работу), говорит тем, кто остаётся. Буквально: «пойду и вернусь».",
+    note: "Двойное «тт» пишется маленькой っ: いってきます.",
+    sit: ["Утром ты обуваешься и выходишь из дома в школу", "Папа уходит на работу и говорит это с порога"],
+    dlg: [["いってきます！", "Я пошла!"], ["いってらっしゃい！", "Счастливо, возвращайся!"]], spell: ["いてきます", "いってぎます", "いっできます"] },
+  { id: "itterasshai", jp: "いってらっしゃい", cyr: "иттэрасяй", ru: "Счастливо, возвращайся",
+    when: "Ответ тем, кто уходит из дома: «иди и возвращайся».",
+    note: "Две маленькие っ и одна маленькая ゃ: いってらっしゃい.",
+    sit: ["Брат уходит в школу, а ты остаёшься дома", "Мама с порога сказала いってきます. Что ты ей ответишь?"],
+    dlg: [["いってきます。", "Я пошла."], ["いってらっしゃい！", "Счастливо, возвращайся!"]], spell: ["いってらしゃい", "いてらっしゃい", "いってらっしやい"] },
+  { id: "tadaima", jp: "ただいま", cyr: "тадаима", ru: "Я дома!", reply: "okaeri",
+    when: "Говорят, когда возвращаются домой, — прямо с порога.",
+    note: "た и だ: сначала без тэнтэн, потом с ним.",
+    sit: ["Ты вернулась из школы и открываешь дверь квартиры", "Папа пришёл с работы и снимает обувь в прихожей"],
+    dlg: [["ただいま！", "Я дома!"], ["おかえりなさい！", "С возвращением!"]], spell: ["たたいま", "だたいま", "ただいも"] },
+  { id: "okaeri", jp: "おかえりなさい", opt: "なさい", cyr: "окаэри(насай)", ru: "С возвращением",
+    when: "Ответ тому, кто вернулся домой и сказал ただいま.",
+    note: "Коротко おかえり — по-домашнему, おかえりなさい — полностью.",
+    sit: ["Мама вернулась с работы, а ты её встречаешь", "Сестра крикнула из прихожей ただいま！ Что ответишь?"],
+    dlg: [["ただいま！", "Я дома!"], ["おかえり！", "С возвращением!"]], spell: ["おかいりなさい", "おがえりなさい", "おかえりなさえ"] },
+  { id: "itadakimasu", jp: "いただきます", cyr: "итадакимас", ru: "Приятного аппетита (перед едой)",
+    when: "Прямо перед тем, как начать есть, обычно сложив ладони. Это благодарность за еду — «с благодарностью принимаю».",
+    note: "た без тэнтэн, だ — с тэнтэн, き — без: いただきます.",
+    sit: ["Еда на столе, ты берёшь палочки и сейчас начнёшь есть", "Перед обедом в школе весь класс складывает ладони и говорит…"],
+    dlg: [["どうぞ。", "Угощайся."], ["いただきます！", "Приятного аппетита!"]], spell: ["いただぎます", "いたたきます", "いただきまず"] },
+  { id: "gochisosama", jp: "ごちそうさまでした", opt: "でした", cyr: "готисо:сама(дэсита)", ru: "Спасибо, было очень вкусно (после еды)",
+    when: "Когда доела. Благодарность тому, кто приготовил или угостил.",
+    note: "Коротко ごちそうさま — дома и с друзьями, с でした — вежливее. Долгое «о:» — через う: ごちそう.",
+    sit: ["Ты доела ужин и встаёшь из-за стола", "Подруга угостила тебя обедом, и ты благодаришь, когда доела"],
+    dlg: [["ごちそうさまでした。", "Спасибо, было очень вкусно."], ["いいえ。", "Не за что."]], spell: ["ごちそおさまでした", "こちそうさまでした", "ごちそうさまでじた"] },
+  { id: "hajimemashite", jp: "はじめまして", cyr: "хадзимэмаситэ", ru: "Приятно познакомиться (при первой встрече)", reply: "hajimemashite",
+    when: "Самое первое слово при знакомстве. Буквально: «впервые».",
+    note: "じ — это し с тэнтэн («дзи»). Здесь は читается как обычно, «ха».",
+    sit: ["Тебя впервые знакомят с новой одноклассницей — с чего начнёшь?", "Ты впервые встречаешь подругу по переписке"],
+    dlg: [["はじめまして。たなか です。", "Приятно познакомиться. Я Танака."], ["はじめまして。", "Приятно познакомиться."]], spell: ["はしめまして", "はじめましで", "はぢめまして"] },
+  { id: "desu", jp: "です", pre: "… ", cyr: "… дэс", ru: "Я — … (называю себя)", say: "たなか です",
+    when: "После своего имени, когда представляешься: たなか です — «Я Танака».",
+    note: "«У» в конце почти не слышно: «дэс». Слово «я» (わたし は) обычно не говорят — и так понятно.",
+    sit: ["Ты представляешься и называешь своё имя", "После はじめまして ты говоришь, как тебя зовут"],
+    dlg: [["はじめまして。たなか です。", "Приятно познакомиться. Я Танака."], ["やまだ です。", "Я Ямада."]], spell: ["でず", "てす", "ですう"] },
+  { id: "yoroshiku", jp: "よろしく おねがい します", cyr: "ёросику онэгай симас", ru: "Рада знакомству (прошу любить и жаловать)", reply: "yoroshiku",
+    when: "В конце знакомства, после того как назвала себя. Ещё говорят, когда просят о чём-то: «очень на вас рассчитываю».",
+    note: "Буквально: «прошу хорошо (ко мне относиться)». Среди друзей хватает короткого よろしく.",
+    sit: ["Ты назвала своё имя новому классу и заканчиваешь знакомство", "Ты познакомилась с новым тренером и хочешь закончить вежливо"],
+    dlg: [["たなか です。よろしく おねがい します。", "Я Танака. Рада знакомству."], ["こちらこそ、よろしく おねがい します。", "Я тоже, рада знакомству."]], spell: ["よろしく おねかい します", "よろじく おねがい します", "よろしく おねがい しまず"] }
+];
+// Занятие «Учить» — четыре порции
+const PHR_GROUPS = [
+  { title: "Привет и пока", short: "привет и пока", ids: ["ohayo", "ohayog", "konnichiwa", "konbanwa", "sayonara", "oyasumi"] },
+  { title: "Спасибо и извините", short: "спасибо", ids: ["arigato", "arigatog", "sumimasen", "iie"] },
+  { title: "Дома и за столом", short: "дома", ids: ["ittekimasu", "itterasshai", "tadaima", "okaeri", "itadakimasu", "gochisosama"] },
+  { title: "Знакомство", short: "знакомство", ids: ["hajimemashite", "desu", "yoroshiku"] }
+];
+const phById = (id) => PHRASES.find((x) => x.id === id);
 const grPlain = (e) => e.s.replace(/[\[\]]/g, "");
 const LOOKALIKE = [["ぬ", "め"], ["ね", "れ", "わ"], ["る", "ろ"], ["さ", "ち", "き"], ["は", "ほ"], ["い", "こ", "り"], ["あ", "お"], ["う", "つ"], ["ま", "も"], ["て", "そ"], ["に", "た"], ["く", "へ"], ["す", "む"], ["や", "か"], ["ひ", "ふ"], ["み", "め"], ["よ", "ま"], ["け", "は"], ["ん", "し"]];
 function vSpellings(w, n = 3) {
@@ -4589,6 +4724,325 @@ function startGramCards() {
   choose();
 }
 
+/* ===================== Фразы: приветствия и вежливые слова ===================== */
+// S.phr: lv — уровень фразы 0…5 (3 и выше — выучено), res — место в «Учить», test — { best, last }
+function pState() {
+  if (!S.phr) S.phr = {};
+  if (!S.phr.lv) S.phr.lv = {};
+  return S.phr;
+}
+const pLevel = (id) => pState().lv[id] || 0;
+function pGrade(id, ok) { const p = pState(); p.lv[id] = Math.max(0, Math.min(5, (p.lv[id] || 0) + (ok ? 1 : -1))); }
+const pKnownN = (list = PHRASES) => list.filter((x) => pLevel(x.id) >= 3).length;
+const phText = (x) => (x.pre || "") + x.jp;
+const phSay = (x) => x.say || x.jp;
+const phGroup = (x) => PHR_GROUPS.find((g) => g.ids.includes(x.id));
+// пары «по-дружески — вежливо» и фразы, которые в ответе тоже не ошибка (их в неверные варианты не берём)
+const PH_CLOSE = { ohayo: ["ohayog"], ohayog: ["ohayo"], arigato: ["arigatog"], arigatog: ["arigato"], hajimemashite: ["yoroshiku"], yoroshiku: ["hajimemashite"] };
+// на что отвечают этой фразой: おかえり ← ただいま и т. п.
+const phPrompts = (y) => PHRASES.filter((x) => x.reply === y.id);
+const PH_REG = { f: "по-дружески", p: "вежливо" };
+// Фраза: необязательный хвост (なさい, でした) — бледнее
+function phForm(x, cls = "") {
+  const main = x.opt ? x.jp.slice(0, -x.opt.length) : x.jp;
+  return h("span", { class: "ph-form " + cls, lang: "ja" }, x.pre ? h("span", { class: "ph-pre" }, x.pre) : null, kanaText(main), x.opt ? h("span", { class: "ph-opt" }, kanaText(x.opt)) : null);
+}
+const phRegChip = (x) => (x.reg ? h("span", { class: "ph-reg " + x.reg }, PH_REG[x.reg]) : null);
+const phDialog = (x) => h("div", { class: "ph-dlg" }, x.dlg.map(([jp, ru], i) => h("div", { class: "ph-say " + (i ? "b" : "a") },
+  h("div", {}, h("div", { class: "gr-line", lang: "ja" }, kanaText(jp)), h("div", { class: "gr-ru" }, ru)), sayBtn(jp))));
+// Карточка фразы: картинка, фраза, чтение, перевод, когда говорят, диалог, на что смотреть
+function phCard(x, dots) {
+  return h("div", { class: "meet gr-meet ph-meet" },
+    wordIcon(x.jp, "v-pic-big"),
+    h("div", { class: "ph-big" }, phForm(x), sayBtn(phSay(x))),
+    h("div", { class: "facts" }, h("span", {}, `«${x.cyr}»`), phRegChip(x), dots ? levelDots(null, pLevel(x.id)) : null),
+    h("div", { class: "v-meaning" }, x.ru),
+    h("div", { class: "gr-pat ph-when" }, h("div", { class: "gr-pat-title" }, "Когда говорят"), h("span", {}, x.when)),
+    x.reply && x.reply !== x.id ? h("div", { class: "ph-answer" }, "В ответ: ", h("b", { lang: "ja" }, kanaText(phById(x.reply).jp)), ` — ${phById(x.reply).ru.toLowerCase()}`) : null,
+    phDialog(x),
+    x.note ? h("div", { class: "v-trap" }, h("b", { lang: "ja" }, "ポイント"), " ", x.note) : null);
+}
+const phReveal = (x) => h("span", {}, h("b", { lang: "ja" }, kanaText(phText(x))), ` «${x.cyr}» — ${x.ru}` + (x.reg ? ` (${PH_REG[x.reg]})` : ""));
+const phTask = (el) => { el.classList.add("gr-task", "ph-task"); return el; };
+const phOthers = (x, n = 3, skip = []) => {
+  const bad = new Set([x.id, ...skip]);
+  const near = shuffle(PHRASES.filter((y) => !bad.has(y.id) && phGroup(y) === phGroup(x)));
+  const far = shuffle(PHRASES.filter((y) => !bad.has(y.id) && phGroup(y) !== phGroup(x)));
+  return near.slice(0, 2).concat(far).slice(0, n).concat(near.slice(2)).slice(0, n);
+};
+const phPicCard = (x) => h("div", { class: "v-card" }, wordIcon(x.jp, "v-pic"), h("div", { class: "v-ru" }, x.ru));
+// --- задания: фраза и onDone(ok) ---
+function pTaskMean(x, onDone) {
+  return phTask(choiceTask({ label: "Что значит эта фраза?", card: h("div", { class: "gr-card" }, phForm(x, "ph-q"), sayBtn(phSay(x))), kind: "txt", say: phSay(x), hideSay: true,
+    options: shuffle([x].concat(phOthers(x)).map((y) => y.ru)), answer: x.ru, reveal: phReveal(x), onDone: ({ ok }) => onDone(ok) }));
+}
+function pTaskForm(x, onDone) {
+  return phTask(choiceTask({ label: "Как это сказать по-японски?", card: phPicCard(x), kind: "ja", say: phSay(x), hideSay: true,
+    options: shuffle([x].concat(phOthers(x)).map(phText)), answer: phText(x), reveal: phReveal(x), onDone: ({ ok }) => onDone(ok) }));
+}
+// Ситуация → что сказать; в вариантах — пара «по-дружески / вежливо», если есть
+function pTaskSit(x, onDone) {
+  const twin = (PH_CLOSE[x.id] || []).filter((id) => phGroup(phById(id)) === phGroup(x) && x.reg).map(phById);
+  const opts = [x].concat(twin, phOthers(x, 3 - twin.length, twin.map((y) => y.id)));
+  return phTask(choiceTask({ label: "Что ты скажешь?", card: h("div", { class: "gr-card ph-sit" }, h("div", { class: "gr-pat-title" }, "Ситуация"), h("div", { class: "gr-ru big" }, pick1(x.sit))), kind: "ja", say: phSay(x), hideSay: true,
+    options: shuffle(opts.map(phText)), answer: phText(x), reveal: h("span", {}, phReveal(x), h("div", { class: "muted" }, x.when)), onDone: ({ ok }) => onDone(ok) }));
+}
+// Тебе говорят фразу — выбери ответ (x — правильный ответ)
+function pTaskReply(x, onDone) {
+  const from = pick1(phPrompts(x));
+  const skip = (PH_CLOSE[x.id] || []);
+  return phTask(choiceTask({ label: "Тебе говорят. Что ответишь?", card: h("div", { class: "gr-card ph-heard" }, wordIcon(from.jp, "v-pic-s"), h("div", {}, h("div", { class: "gr-line", lang: "ja" }, "— ", kanaText(phText(from))), h("div", { class: "gr-ru" }, from.ru)), sayBtn(phSay(from))),
+    kind: "ja", say: phSay(x), hideSay: true,
+    options: shuffle([x].concat(phOthers(x, 3, skip)).map(phText)), answer: phText(x), reveal: h("span", {}, "— ", h("b", { lang: "ja" }, kanaText(phText(from))), " — ", phReveal(x)), onDone: ({ ok }) => onDone(ok) }));
+}
+function pTaskSpell(x, onDone) {
+  return phTask(choiceTask({ label: "Как пишется правильно?", card: phPicCard(x), kind: "ja", say: phSay(x), hideSay: true,
+    options: shuffle([x.jp].concat(x.spell)).map((s) => (x.pre || "") + s), answer: phText(x), reveal: h("span", {}, phReveal(x), h("div", { class: "muted" }, x.note)), onDone: ({ ok }) => onDone(ok) }));
+}
+function pTaskListen(x, onDone) {
+  const play = h("button", { class: "btn v-listen", type: "button", onclick: () => say(phSay(x)) }, icon("speaker"), " Послушать ещё");
+  const mute = h("button", { class: "btn quiet v-mute", type: "button", onclick: () => {
+    S.quietUntil = Date.now() + 60 * 60 * 1000; save();
+    try { speechSynthesis.cancel(); } catch (e) {}
+    task.replaceWith(pTaskForm(x, onDone));
+  } }, "Не могу слушать");
+  setTimeout(() => { if (task.isConnected) say(phSay(x)); }, 300);
+  const task = phTask(choiceTask({ label: "Послушай и выбери фразу", card: h("div", { class: "choice-card v-listen-card" }, play, mute), kind: "ja", say: phSay(x), hideSay: true,
+    options: shuffle([x].concat(phOthers(x)).map(phText)), answer: phText(x), reveal: phReveal(x), onDone: ({ ok }) => onDone(ok) }));
+  task.querySelectorAll(".choice-btn").forEach((b) => b.addEventListener("click", () => { mute.hidden = true; }));
+  return task;
+}
+// Собрать фразу из слогов — для коротких фраз без пробелов
+const phCanBuild = (x) => !x.pre && !x.jp.includes(" ") && tokenize(x.jp).length <= 9;
+function pTaskBuild(x, onDone) {
+  const toks = tokenize(x.jp), need = toks.length, picked = [];
+  const dec = new Set();
+  x.spell.forEach((sp) => tokenize(sp).forEach((t) => { if (!toks.includes(t) && t !== " ") dec.add(t); }));
+  const decoys = shuffle([...dec]).slice(0, Math.max(2, 9 - need));
+  const tiles = shuffle(toks.map((t, j) => ({ t, id: "a" + j })).concat(decoys.map((t, j) => ({ t, id: "d" + j }))));
+  const slots = h("div", { class: "num-slots" }), pool = h("div", { class: "num-tiles" });
+  const fb = h("div", { class: "act-bar", hidden: true });
+  let done = false, tries = 0;
+  const draw = () => {
+    slots.replaceChildren(...Array.from({ length: need }, (_, j) => h("button", { class: "num-slot v-slot" + (picked[j] ? " full" : ""), type: "button", lang: "ja", disabled: done || !picked[j], onclick: () => { picked.splice(j, 1); draw(); } }, picked[j] ? kanaText(picked[j].t) : "")));
+    pool.replaceChildren(...tiles.map((tl) => h("button", { class: "num-tile v-tile", type: "button", lang: "ja", disabled: done || picked.includes(tl) || picked.length >= need, onclick: () => { picked.push(tl); draw(); if (picked.length === need) check(); } }, kanaText(tl.t))));
+  };
+  function check() {
+    done = true; tries++; draw();
+    const ok = picked.map((y) => y.t).join("") === x.jp;
+    if (ok && tries === 1) award(1);
+    fb.hidden = false;
+    const nextBtn = h("button", { class: "btn primary", type: "button", onclick: () => onDone(tries === 1 && ok) }, "Дальше");
+    const again = h("button", { class: "btn", type: "button", onclick: () => { done = false; picked.length = 0; fb.hidden = true; draw(); } }, "Ещё раз");
+    fb.replaceChildren(h("div", { class: "act-verdict " + (ok ? "ok" : "bad") }, mascot(ok ? "happy" : "sad"),
+      h("div", {}, h("div", { class: "verdict-title" }, jpTitle(ok ? "good" : "oops"), ok ? "Верно" : "Не совсем", ok && tries === 1 ? h("span", { class: "gain" }, "+1 ★") : null),
+        h("div", { class: "act-reveal" }, ok ? phReveal(x) : `Подсказка: «${x.cyr}». ${x.note || ""}`))), ok ? nextBtn : again);
+    if (ok) say(phSay(x));
+  }
+  draw();
+  return h("div", { class: "task ph-task" }, h("div", { class: "task-head" }, h("div", { class: "task-label" }, "Собери фразу из слогов"), sayBtn(phSay(x))), phPicCard(x), slots, pool, fb);
+}
+
+function startPhrases(mode, only) {
+  const p = pState();
+  const titles = { learn: "Фразы", review: "Повторение", test: "Тест" };
+  const sh = openShell(titles[mode]);
+  const GROUPS = PHR_GROUPS.map((gr) => Object.assign({}, gr, { items: gr.ids.map(phById) }));
+  const phases = [];
+  if (mode === "learn") {
+    phases.push({ t: "intro" });
+    GROUPS.forEach((_, gi) => phases.push({ t: "meet", g: gi }, { t: "quiz", g: gi }, { t: "situ", g: gi }, { t: "write", g: gi }));
+    phases.push({ t: "mix" }, { t: "finish" });
+  } else if (mode === "review") phases.push({ t: "review" }, { t: "finish" });
+  else phases.push({ t: "test" }, { t: "testEnd" });
+  const stats = { ok: 0, tot: 0 };
+  let pi = -1, sub = null;
+  const saved = mode === "learn" ? p.res : null;
+  const keep = (state) => { if (mode !== "learn" || phases[pi].t === "intro" || phases[pi].t === "finish") return; p.res = { pi, sub: state || null, stats: Object.assign({}, stats), at: Date.now() }; save(); };
+  const next = () => { pi++; sh.progress(pi / (phases.length - 1)); keep(); run(phases[pi]); };
+  const takeSub = () => { const x = sub; sub = null; return x; };
+  const count = (ok, id) => { stats.tot++; if (ok) stats.ok++; if (id) pGrade(id, ok); save(); };
+  function run(ph) {
+    sh.count("");
+    ({ intro, meet, quiz, situ, write, mix, review, test, finish, testEnd })[ph.t](ph.g);
+  }
+  // очередь заданий: ошибка — задание вернётся через пару шагов
+  function queueRun(stage, st, makeQueue, again = true, onAns = null) {
+    let queue, total, doneN;
+    if (st && st.queue) ({ queue, total, doneN } = st); else { queue = makeQueue(); total = queue.length; doneN = 0; }
+    const serve = () => {
+      sh.stage(stage); sh.count(`${doneN} / ${total}`);
+      if (!queue.length) return next();
+      keep({ queue, total, doneN });
+      const it = queue.shift();
+      taskOf(it, (ok) => {
+        count(ok, it.id); if (onAns) onAns(it, ok);
+        if (ok || !again) doneN++; else queue.splice(Math.min(queue.length, 2 + Math.floor(Math.random() * 2)), 0, it);
+        serve();
+      });
+    };
+    serve();
+  }
+  const taskOf = (it, done) => {
+    const x = phById(it.id);
+    if (it.k === "pm") return sh.set(pTaskMean(x, done));
+    if (it.k === "pf") return sh.set(pTaskForm(x, done));
+    if (it.k === "ps") return sh.set(pTaskSit(x, done));
+    if (it.k === "pr") return sh.set(phPrompts(x).length ? pTaskReply(x, done) : pTaskSit(x, done));
+    if (it.k === "pw") return sh.set(pTaskSpell(x, done));
+    if (it.k === "pb") return sh.set(phCanBuild(x) ? pTaskBuild(x, done) : pTaskSpell(x, done));
+    if (it.k === "pl") return sh.set(canListen() ? pTaskListen(x, done) : pTaskForm(x, done));
+  };
+  // какие задания подходят к фразе
+  const kindsFor = (x, base) => base.filter((k) => (k !== "pr" || phPrompts(x).length) && (k !== "pb" || phCanBuild(x)) && (k !== "pl" || canListen()));
+  const spread = (q) => { for (let j = 1; j < q.length; j++) if (q[j].id === q[j - 1].id) { const z = (j + 2) % q.length; [q[j], q[z]] = [q[z], q[j]]; } return q; };
+  function intro() {
+    sh.stage("начало");
+    const parts = [h("div", { class: "eyebrow", lang: "ja" }, "あいさつ"), h("h2", {}, "Вежливые фразы"),
+      h("div", { class: "gr-strip", lang: "ja" }, PHRASES.map((x) => h("span", { class: pLevel(x.id) >= 3 ? "ok" : "" }, kanaText(x.jp)))),
+      h("p", {}, "Без этих фраз в Японии ни шагу: здороваются, благодарят, уходя из дома и садясь за стол. Учим четырьмя порциями: " + GROUPS.map((gr) => `«${gr.title}»`).join(", ") + "."),
+      h("p", {}, "С каждой фразой: когда её говорят и что отвечают. Потом узнаёшь её, выбираешь, что сказать в разных ситуациях, отвечаешь собеседнику и собираешь фразу из слогов. В конце — всё вперемешку."),
+      h("p", { class: "muted" }, "Можно выйти в любой момент: продолжишь с того же места.")];
+    const go = h("button", { class: "btn primary", type: "button", onclick: next }, "Начать");
+    if (saved && saved.pi > 0 && saved.pi < phases.length - 1) {
+      go.textContent = "Начать сначала"; go.className = "btn";
+      const resume = () => { Object.assign(stats, saved.stats || {}); pi = Math.min(saved.pi, phases.length - 2); sub = saved.sub; sh.progress(pi / (phases.length - 1)); run(phases[pi]); };
+      parts.unshift(h("div", { class: "resume-note" }, "Ты остановилась посреди занятия. Продолжим с того же места?"));
+      return sh.set(h("div", { class: "task explain" }, parts, h("div", { class: "row" }, h("button", { class: "btn primary", type: "button", onclick: resume }, "Продолжить"), go)));
+    }
+    sh.set(h("div", { class: "task explain" }, parts, h("div", { class: "row" }, go)));
+  }
+  function meet(gi) {
+    const st = takeSub(), list = GROUPS[gi].items;
+    let i = st ? st.i || 0 : 0;
+    function show() {
+      sh.stage(`знакомство · ${GROUPS[gi].short}`); sh.count(`${i} / ${list.length}`);
+      if (i >= list.length) return next();
+      keep({ i });
+      const x = list[i];
+      sh.set(h("div", { class: "task" },
+        h("div", { class: "gr-known", lang: "ja" }, list.map((y, j) => h("span", { class: j < i ? "seen" : j === i ? "cur" : "" }, kanaText(phText(y))))),
+        phCard(x),
+        h("div", { class: "row", style: "justify-content:center" }, h("button", { class: "btn primary", type: "button", onclick: () => { i++; show(); } }, i + 1 < list.length ? "Дальше" : "Проверим себя"))));
+      setTimeout(() => { if (shell === sh) say(phSay(x)); }, 350);
+    }
+    show();
+  }
+  function quiz(gi) {
+    queueRun(`узнаём · ${GROUPS[gi].short}`, takeSub(), () => spread(shuffle(GROUPS[gi].items.flatMap((x) => [{ id: x.id, k: "pm" }, { id: x.id, k: pick1(kindsFor(x, ["pf", "pf", "pl"])) }]))));
+  }
+  function situ(gi) {
+    queueRun(`что сказать · ${GROUPS[gi].short}`, takeSub(), () => spread(shuffle(GROUPS[gi].items.flatMap((x) => [{ id: x.id, k: "ps" }].concat(phPrompts(x).length ? [{ id: x.id, k: "pr" }] : [])))));
+  }
+  function write(gi) {
+    queueRun(`пишем · ${GROUPS[gi].short}`, takeSub(), () => shuffle(GROUPS[gi].items.map((x) => ({ id: x.id, k: phCanBuild(x) ? "pb" : "pw" }))), false);
+  }
+  function mix() {
+    queueRun(`всё вперемешку`, takeSub(), () => spread(shuffle(PHRASES.map((x) => ({ id: x.id, k: pick1(kindsFor(x, ["ps", "ps", "pr", "pm", "pf", "pw", "pl"])) })))));
+  }
+  function review() {
+    // одна фраза — все виды заданий; все фразы — по два задания, слабые первыми
+    const items = only && only.length ? only.map(phById) : PHRASES.slice();
+    const q = only && only.length === 1
+      ? kindsFor(items[0], ["pm", "ps", "pr", "pb", "pw", "pf"]).map((k) => ({ id: items[0].id, k }))
+      : items.flatMap((x) => [{ id: x.id, k: "ps" }, { id: x.id, k: pick1(kindsFor(x, ["pm", "pf", "pr", "pw", "pb", "pl"])) }]);
+    queueRun(only && only.length === 1 ? phText(items[0]) : `${items.length} ${plural(items.length, "фраза", "фразы", "фраз")}`, null, () => spread(only ? shuffle(q) : shuffle(q).sort((a, b) => pLevel(a.id) - pLevel(b.id))));
+  }
+  const misses = [];
+  function test() {
+    // каждая фраза — один вопрос; половина — «что сказать в ситуации»
+    const q = PHRASES.map((x, i) => ({ id: x.id, k: i % 2 ? "ps" : pick1(kindsFor(x, ["pm", "pf", "pr", "pw"])) }));
+    queueRun(`${q.length} вопросов`, null, () => spread(shuffle(q)), false, (it, ok) => { if (!ok) misses.push(it.id); });
+  }
+  function testEnd() {
+    sh.stage("итог"); sh.count("");
+    const score = stats.ok, tot = stats.tot;
+    const T = p.test || (p.test = { best: null, last: null });
+    T.last = { score, tot, at: Date.now() };
+    if (!T.best || score > T.best.score) T.best = { score, tot, at: Date.now() };
+    save();
+    const great = score >= tot - 2;
+    const missed = [...new Set(misses)].map(phById);
+    sh.set(h("div", { class: "summary" },
+      h("div", { class: "say-row" }, mascot(great ? "happy" : "normal", great), bubble(great ? "congrats" : "cheer", great ? "Вежливость на высоте!" : "Ещё немного — и всё получится")),
+      h("h2", {}, `${score} из ${tot}`),
+      missed.length ? h("div", {}, h("p", { class: "muted" }, "Стоит повторить:"),
+        h("div", { class: "cw-words" }, missed.map((x) => h("span", {}, h("b", { lang: "ja" }, kanaText(phText(x))), " ", x.ru)))) : h("p", {}, "Без единой ошибки!"),
+      h("div", { class: "row", style: "justify-content:center" },
+        missed.length ? h("button", { class: "btn primary", type: "button", onclick: () => { closeShell(); startPhrases("review", missed.map((x) => x.id)); } }, "Повторить ошибки") : null,
+        h("button", { class: missed.length ? "btn" : "btn primary", type: "button", onclick: () => closeShell() }, "Готово"))));
+    if (great) petalBurst(document.querySelector(".summary"));
+  }
+  function finish() {
+    sh.stage("готово"); sh.count("");
+    if (mode === "learn") { delete p.res; award(10); }
+    save();
+    sh.set(h("div", { class: "summary" },
+      h("div", { class: "say-row" }, mascot("happy", true), bubble("yay", mode === "learn" ? "Все фразы пройдены!" : "Повторение готово")),
+      h("div", { class: "big-stats" }, h("div", {}, h("b", {}, stats.tot ? Math.round((100 * stats.ok) / stats.tot) + "%" : "—"), h("span", {}, "верно с первого раза")), h("div", {}, h("b", {}, `${pKnownN()}/${PHRASES.length}`), h("span", {}, "фраз выучено"))),
+      h("p", { class: "note" }, "Фраза считается выученной после трёх верных ответов подряд. Разговорник со всеми фразами — на вкладке «Слова»."),
+      h("div", { class: "row", style: "justify-content:center" },
+        h("button", { class: "btn primary", type: "button", onclick: () => { closeShell(); startPhrases("test"); } }, "Пробный тест"),
+        h("button", { class: "btn", type: "button", onclick: () => closeShell() }, "Готово"))));
+  }
+  next();
+}
+
+// Карточки: фраза → перевод или перевод → фраза; на обороте — картинка, когда говорят и диалог
+function startPhrCards() {
+  const sh = openShell("Карточки");
+  let dir = "jp";
+  function choose() {
+    sh.stage("начало"); sh.count(""); sh.progress(0);
+    const opt = (d, title, text) => h("button", { class: "panel v-mode", type: "button", onclick: () => { dir = d; start(); } }, h("b", {}, title), h("span", { class: "muted" }, text));
+    sh.set(h("div", { class: "task explain" }, h("div", { class: "eyebrow" }, "Фразы"), h("h2", {}, "Карточки"),
+      h("p", {}, "Посмотри на карточку и вспомни ответ, потом переверни её и честно отметь, вспомнила или нет. Что не вспомнилось — вернётся в конце."),
+      opt("jp", "Фраза → перевод", "Видишь ただいま, вспоминаешь, что это «Я дома!»."),
+      opt("ru", "Ситуация → фраза", "Видишь картинку и ситуацию, вспоминаешь, что сказать по-японски.")));
+  }
+  function start() {
+    const queue = shuffle(PHRASES.slice()).sort((a, b) => pLevel(a.id) - pLevel(b.id));
+    const total = queue.length; let known = 0, firstOk = 0; const tried = new Set();
+    function show() {
+      sh.stage(dir === "jp" ? "фраза → перевод" : "ситуация → фраза"); sh.count(`${known} / ${total}`); sh.progress(known / total);
+      if (!queue.length) return end();
+      const x = queue[0];
+      const front = dir === "jp" ? [h("div", { class: "ph-big" }, phForm(x))] : [wordIcon(x.jp, "v-pic-mid"), h("div", { class: "v-meaning" }, x.ru), h("div", { class: "muted ph-front-sit" }, pick1(x.sit))];
+      const back = [wordIcon(x.jp, "v-pic-mid"), h("div", { class: "ph-big" }, phForm(x)), h("div", { class: "facts" }, h("span", {}, `«${x.cyr}»`), phRegChip(x)),
+        h("div", { class: "v-meaning" }, x.ru), h("div", { class: "muted ph-back-when" }, x.when)];
+      const cardEl = h("button", { class: "v-flash", type: "button", "aria-label": "Перевернуть карточку" }, h("div", { class: "v-face" }, front, h("span", { class: "muted v-tap" }, "нажми, чтобы перевернуть")));
+      const bar = h("div", { class: "row v-flash-bar" });
+      const mark = (ok) => {
+        if (!tried.has(x.id)) { tried.add(x.id); pGrade(x.id, ok); if (ok) firstOk++; save(); }
+        queue.shift();
+        if (ok) known++; else queue.push(x);
+        show();
+      };
+      const flip = () => {
+        if (cardEl.classList.contains("flipped")) return;
+        cardEl.classList.add("flipped"); say(phSay(x));
+        cardEl.replaceChildren(h("div", { class: "v-face" }, back));
+        bar.replaceChildren(h("button", { class: "btn v-no", type: "button", onclick: () => mark(false) }, "Не помню"), h("button", { class: "btn primary", type: "button", onclick: () => mark(true) }, "Помню"));
+      };
+      cardEl.addEventListener("click", flip);
+      bar.append(h("button", { class: "btn primary", type: "button", onclick: flip }, "Перевернуть"));
+      sh.set(h("div", { class: "task v-cards" }, cardEl, bar));
+    }
+    show();
+    function end() {
+      sh.stage("готово"); sh.count(""); sh.progress(1);
+      if (firstOk) award(Math.min(3, Math.ceil(firstOk / 3)));
+      sh.set(h("div", { class: "summary" },
+        h("div", { class: "say-row" }, mascot("happy", true), bubble("yay", `Вспомнила сразу ${firstOk} из ${total}`)),
+        h("div", { class: "big-stats" }, h("div", {}, h("b", {}, `${pKnownN()}/${total}`), h("span", {}, "фраз выучено"))),
+        h("div", { class: "row", style: "justify-content:center" },
+          h("button", { class: "btn primary", type: "button", onclick: () => start() }, "Ещё раз"),
+          h("button", { class: "btn", type: "button", onclick: () => closeShell() }, "Готово"))));
+    }
+  }
+  choose();
+}
+
 /* Игра «Апорт»: чтение знаков */
 function startFetch() {
   const pool = learned("hira");
@@ -4767,8 +5221,38 @@ function wordsView() {
   const dict = h("div", { class: "v-dict" }, groups.length ? groups.map(([st, l]) => [h("div", { class: "v-dict-h" }, st.title), l.map(wordRow)])
     : h("p", { class: "muted" }, wordsFilter === "known" ? "Пока пусто: слово попадает сюда после трёх верных ответов подряд." : "Все слова выучены!"));
   return h("div", {}, head, h("h2", { class: "section-title" }, starSticker("#FFB0CD"), "Темы"), cats,
+    h("h2", { class: "section-title" }, starSticker("#FFB0CD"), "Фразы"), phrPanel(),
     h("h2", { class: "section-title" }, starSticker("#FFB0CD"), "Грамматика"), gramPanel(),
     h("h2", { class: "section-title" }, starSticker("#FFB0CD"), "Словарик"), seg, dict);
+}
+// Фразы: разговорник по порциям (строчка открывает фразу с диалогом) и занятия
+function phrPanel() {
+  const p = pState(), n = pKnownN(), T = p.test;
+  const btn = (t, f, primary) => h("button", { class: "btn" + (primary ? " primary" : ""), type: "button", onclick: f }, t);
+  return h("section", { class: "panel gr-panel ph-panel" },
+    h("div", { class: "gr-panel-top" },
+      h("div", {}, h("div", { class: "eyebrow", lang: "ja" }, "あいさつ"), h("h3", {}, "Вежливые фразы")),
+      h("span", { class: "v-cat-n num" }, `${n}/${PHRASES.length}`, p.res ? h("i", { class: "v-cat-dot", title: "Начато" }) : null)),
+    h("div", { class: "muted v-line" }, "Приветствия, «спасибо», «я дома» и другие. Нажми на фразу — там когда её говорят и что отвечают." + (T && T.best ? ` Лучший тест ${T.best.score}/${T.best.tot}.` : "")),
+    h("div", { class: "v-progress" }, h("span", { style: `width:${(n / PHRASES.length) * 100}%` })),
+    h("div", { class: "v-actions" },
+      btn(p.res ? "Продолжить" : "Учить", () => startPhrases("learn"), true),
+      btn("Карточки", () => startPhrCards()),
+      btn("Повторить", () => startPhrases("review")),
+      btn("Тест", () => startPhrases("test"))),
+    PHR_GROUPS.map((gr) => [h("div", { class: "v-dict-h" }, gr.title), h("div", { class: "gr-list" }, gr.ids.map(phById).map((x) =>
+      h("button", { class: "v-row ph-row", type: "button", onclick: () => phraseSheet(x) },
+        wordIcon(x.jp, "v-row-ico"),
+        h("span", { class: "v-row-main" }, h("b", {}, phForm(x)), h("span", { class: "ph-row-ru" }, x.ru.replace(/ \(.*\)$/, ""), x.reg ? h("i", { class: "ph-reg " + x.reg }, PH_REG[x.reg]) : null), h("span", { class: "muted" }, x.cyr)),
+        levelDots(null, pLevel(x.id)))))]));
+}
+function phraseSheet(x) {
+  openSheet(x.jp, (close) => [
+    h("div", { class: "sheet-head" }, h("div", {}, h("div", { class: "eyebrow", lang: "ja" }, "あいさつ"), h("h2", {}, x.ru)), h("button", { class: "icon-btn", type: "button", "aria-label": "Закрыть", onclick: close }, icon("close"))),
+    phCard(x, true),
+    h("div", { class: "row", style: "justify-content:center" },
+      h("button", { class: "btn primary", type: "button", onclick: () => { closeAllSheets(); setTimeout(() => startPhrases("review", [x.id]), 60); } }, "Потренировать"),
+      h("button", { class: "btn", type: "button", onclick: close }, "Закрыть"))]);
 }
 // Грамматика: шпаргалка (строчка открывает правило с примерами) и занятия
 function gramPanel() {

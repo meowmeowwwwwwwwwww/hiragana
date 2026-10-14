@@ -154,6 +154,57 @@ const WordIcons = (() => {
     "くち": `<path d="M10 50 Q30 26 50 38 Q70 26 90 50 Q70 80 50 80 Q30 80 10 50 Z" fill="#FF7F9C" ${st()}/><path d="M14 50 Q50 62 86 50" fill="none" ${st(4)}/>` + shine(36, 40, -10),
     "かお": `<path d="M20 60 Q14 86 28 88 L30 50 Z M80 60 Q86 86 72 88 L70 50 Z" fill="#7A4E36" ${st()}/><circle cx="50" cy="56" r="32" fill="#FFE6D4" ${st()}/><path d="M17 56 Q14 18 50 18 Q86 18 83 56 Q80 42 72 40 Q66 46 60 40 Q50 48 40 40 Q34 46 28 40 Q20 42 17 56 Z" fill="#7A4E36" ${st()}/><path d="M66 22 l10 -8 v16 Z M66 22 l-10 -8 v16 Z" fill="#FF9EC0" ${st(3.4)}/><circle cx="66" cy="22" r="3.4" fill="#FF7FA8" ${st(2.6)}/>` + shine(36, 28, -30, 0.7) + face(50, 62)
   };
+  // ---- вежливые фразы (вкладка «Слова» → «Фразы»): сценки в рамке ----
+  {
+    const SK = "#FFE6D4";
+    const frame = (bg, inner) => `<rect x="6" y="8" width="88" height="84" rx="16" fill="${bg}"/>` + inner + `<rect x="6" y="8" width="88" height="84" rx="16" fill="none" ${st()}/>`;
+    const ground = (c = "#B9E6A8", y = 80) => `<path d="M6 ${y} H94 V78 Q94 92 80 92 H20 Q6 92 6 78 Z" fill="${c}"/><path d="M6 ${y} H94" stroke="${O}" stroke-width="3" opacity=".25"/>`;
+    // машущая рука: плечо (sx, sy) → ладонь (x, y), рядом дуги движения
+    const wave = (sx, sy, x, y, sleeve = "#FFB0CD", motion = true) => bar(`M${sx} ${sy} Q${(sx + x) / 2 + 6} ${(sy + y) / 2 + 6} ${x} ${y + 6}`, sleeve, 7) +
+      `<ellipse cx="${x}" cy="${y}" rx="6.5" ry="7.5" fill="${SK}" ${st(3.4)}/>` +
+      (motion ? `<path d="M${x + 10} ${y - 8} q5 8 0 16 M${x - 10} ${y - 8} q-5 8 0 16" fill="none" stroke="#C9B6C0" stroke-width="3.4" stroke-linecap="round"/>` : "");
+    const heart = (x, y, s = 1, c = "#FF7FA8") => `<path d="M${x} ${y + 6 * s} C${x - 12 * s} ${y - 2 * s} ${x - 8 * s} ${y - 12 * s} ${x} ${y - 6 * s} C${x + 8 * s} ${y - 12 * s} ${x + 12 * s} ${y - 2 * s} ${x} ${y + 6 * s} Z" fill="${c}" ${st(2.6)}/>`;
+    const sun = (x, y, r) => { let s = ""; for (let i = 0; i < 8; i++) s += `<path d="M${x} ${y - r - 3} V${y - r - 8}" transform="rotate(${i * 45} ${x} ${y})" stroke="#FFB347" stroke-width="4" stroke-linecap="round"/>`; return s + `<circle cx="${x}" cy="${y}" r="${r}" fill="#FFD84D" ${st(3.4)}/>`; };
+    const moon = (x, y, r) => `<path d="M${x} ${y - r} A${r} ${r} 0 1 0 ${x + r * 0.95} ${y + r * 0.45} A${r * 0.78} ${r * 0.78} 0 1 1 ${x} ${y - r} Z" fill="#FFE9A0" ${st(3.4)}/>`;
+    const bow = (deg, inner, cx = 50, cy = 90) => `<g transform="rotate(${deg} ${cx} ${cy})">${inner}</g>`;
+    const sweat = (x, y) => `<path d="M${x} ${y} q-5 7 0 10 q5 -3 0 -10 Z" fill="#AED8FF" ${st(2.4)}/>`;
+    const house = (x, y, k = 1, door = "#C98E5A") => `<rect x="${x - 18 * k}" y="${y}" width="${36 * k}" height="${26 * k}" rx="3" fill="#FFF0E0" ${st(4)}/><path d="M${x - 25 * k} ${y + 3 * k} L${x} ${y - 19 * k} L${x + 25 * k} ${y + 3 * k} Z" fill="#FF7FA8" ${st(4)}/><rect x="${x - 6 * k}" y="${y + 10 * k}" width="${12 * k}" height="${16 * k}" rx="2" fill="${door}" ${st(3)}/>`;
+    const bowl = (y = 66, empty = false) => (empty ? "" : `<path d="M26 ${y} Q26 ${y - 18} 50 ${y - 18} Q74 ${y - 18} 74 ${y} Z" fill="#fff" ${st(4)}/>`) +
+      `<path d="M18 ${y} H82 Q80 ${y + 24} 50 ${y + 24} Q20 ${y + 24} 18 ${y} Z" fill="#FFB0CD" ${st()}/><g fill="#fff"><circle cx="34" cy="${y + 10}" r="2.6"/><circle cx="50" cy="${y + 13}" r="2.6"/><circle cx="66" cy="${y + 10}" r="2.6"/></g>`;
+    const tie = { shirt: "#AED8FF", collar: "#fff" };
+    Object.assign(I, {
+      "おはよう": frame("#FFE3D1", ground() + sun(76, 30, 9) + person(42, 44, 17, { long: true, shirt: "#FFB0CD" }) + wave(56, 72, 70, 52, "#FFB0CD") + spark(18, 22, 5)),
+      "おはよう ございます": frame("#FFE3D1", sun(78, 28, 8) + bow(-16, person(52, 40, 17, tie)) + ground("#B9E6A8", 74) + spark(20, 22, 5) + spark(84, 56, 5, "#FFB0CD")),
+      "こんにちは": frame("#CDEBFF", ground() + sun(78, 28, 10) + `<path d="M14 34 q0 -7 7 -6 q2 -6 9 -4 q6 -1 6 5 q5 0 5 5 Z" fill="#fff" ${st(3)}/>` + person(42, 46, 17, { shirt: "#FFE27A" }) + wave(56, 74, 70, 54, "#FFE27A")),
+      "こんばんは": frame("#8C84D6", ground("#6E6AB8") + moon(76, 28, 10) + spark(20, 22, 4) + spark(30, 34, 3) + person(42, 46, 17, { long: true, shirt: "#FFB0CD" }) + wave(56, 74, 70, 54, "#FFB0CD")),
+      "さようなら": frame("#FFF0E0", `<path d="M6 80 H94 V78 Q94 92 80 92 H20 Q6 92 6 78 Z" fill="#F6D9B8"/>` +
+        `<rect x="20" y="58" width="13" height="20" rx="4" fill="#FF6B6B" ${st(3.4)}/>` + person(42, 44, 17, { shirt: "#8FA8E8" }) + wave(56, 72, 72, 46, "#8FA8E8")),
+      "おやすみなさい": frame("#6E6AB8", moon(74, 26, 9) + spark(22, 22, 4) + `<path d="M14 56 Q14 44 28 46 H52 Q62 46 62 56 Q62 64 52 64 H24 Q14 64 14 56 Z" fill="#EAF4FF" ${st(4)}/>` +
+        `<circle cx="38" cy="50" r="13" fill="${SK}" ${st(4)}/><path d="M25 48 Q26 36 38 36 Q50 36 51 48 Q44 42 38 43 Q31 42 25 48 Z" fill="#7A4E36" ${st(3)}/>` + sleepy(38, 53, 0.5) +
+        `<path d="M12 64 Q50 56 88 64 V86 Q88 90 84 90 H16 Q12 90 12 86 Z" fill="#FFB0CD" ${st()}/><path d="M24 74 h10 M48 72 h10 M70 76 h10" stroke="#fff" stroke-width="3.4" stroke-linecap="round"/>` +
+        `<text x="62" y="46" font-family="system-ui,sans-serif" font-weight="800" font-size="12" fill="#FFE27A">z</text><text x="70" y="40" font-family="system-ui,sans-serif" font-weight="800" font-size="9" fill="#FFE27A">z</text>`),
+      "ありがとう": frame("#FFE8F0", person(50, 38, 17, { long: true, shirt: "#FFB0CD" }) + heart(50, 72, 1.25) + spark(18, 24, 6) + spark(82, 30, 5, "#FF9EC0") + heart(80, 56, 0.5, "#FFB0CD")),
+      "ありがとう ございます": frame("#FFF5E4", bow(-16, person(50, 40, 17, tie)) + ground("#F6D9B8", 74) + heart(80, 50, 0.8) + heart(84, 30, 0.5, "#FFB0CD") + spark(18, 24, 6) + flower(20, 82, 5, "#FFB0CD")),
+      "すみません": frame("#EAF4FF", bow(-18, person(52, 40, 17, { long: true, shirt: "#C8B8FF" })) + ground("#CFE3F7", 74) + sweat(76, 28) + sweat(84, 40) + `<path d="M18 24 l6 6 M24 24 l-6 6" stroke="#9A7BFF" stroke-width="3" stroke-linecap="round"/>`),
+      "いいえ": `<circle cx="40" cy="62" r="26" fill="${SK}" ${st()}/><path d="M28 58 q4 4 8 0 M44 58 q4 4 8 0 M35 71 q5 4 10 0" fill="none" ${st(2.6)}/><ellipse cx="25" cy="67" rx="4" ry="2.4" fill="#FFA3BA"/><ellipse cx="55" cy="67" rx="4" ry="2.4" fill="#FFA3BA"/>` +
+        `<path d="M8 50 q-5 8 0 16 M74 50 q5 8 0 16" fill="none" stroke="#C9B6C0" stroke-width="3.4" stroke-linecap="round"/>` +
+        `<path d="M62 10 h26 a6 6 0 0 1 6 6 v16 a6 6 0 0 1 -6 6 h-14 l-8 7 v-7 h-4 a6 6 0 0 1 -6 -6 v-16 a6 6 0 0 1 6 -6 Z" fill="#FFE1E8" ${st(3.4)}/><path d="M68 17 L82 31 M82 17 L68 31" stroke="#E2557E" stroke-width="5" stroke-linecap="round"/>`,
+      "いってきます": frame("#DFF3D6", ground() + house(26, 42, 0.9) + person(64, 42, 14, { long: true, shirt: "#FFB0CD" }) + `<rect x="74" y="58" width="12" height="16" rx="4" fill="#FF6B6B" ${st(3)}/>` +
+        `<path d="M48 76 h-10 M52 68 h-8" stroke="#C9B6C0" stroke-width="3" stroke-linecap="round"/><path d="M76 28 l8 6 -8 6" fill="none" stroke="#5A3848" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>`),
+      "いってらっしゃい": frame("#FFF0E0", `<rect x="16" y="20" width="44" height="62" rx="4" fill="#C98E5A" ${st(4)}/><rect x="22" y="26" width="32" height="56" fill="#FFF8EE"/>` +
+        person(38, 46, 13, { shirt: "#FFE27A" }) + wave(48, 70, 70, 44, "#FFE27A") + heart(80, 70, 0.7)),
+      "ただいま": frame("#FFE8F0", ground() + house(36, 46, 1.25, "#FFF8EE") + heart(36, 18, 0.7) + person(74, 50, 12, { long: true, shirt: "#FFB0CD" }) + `<path d="M62 30 l-8 6 8 6" fill="none" stroke="#5A3848" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>`),
+      "おかえりなさい": frame("#FFF0E0", `<path d="M6 76 H94" stroke="#E8C9A8" stroke-width="3"/>` + wave(36, 66, 18, 42, "#AED8FF", false) + wave(64, 66, 82, 42, "#AED8FF", false) + person(50, 42, 16, { shirt: "#AED8FF" }) + heart(22, 22, 0.6) + heart(78, 22, 0.6, "#FFB0CD")),
+      "いただきます": frame("#FFF5E4", bowl(68) + `<path d="M30 46 q-4 -6 0 -12 M70 46 q-4 -6 0 -12" fill="none" stroke="#C9B6C0" stroke-width="3.4" stroke-linecap="round"/>` +
+        `<rect x="37" y="42" width="12" height="12" rx="3" fill="#AED8FF" ${st(3.4)}/><rect x="51" y="42" width="12" height="12" rx="3" fill="#AED8FF" ${st(3.4)}/>` +
+        `<path d="M50 44 H42 Q38 30 41 20 Q43 13 46 13 Q50 13 50 20 Z" fill="${SK}" ${st(3.4)}/><path d="M50 44 H58 Q62 30 59 20 Q57 13 54 13 Q50 13 50 20 Z" fill="${SK}" ${st(3.4)}/>` + spark(20, 24, 6) + spark(80, 24, 5, "#FFB0CD")),
+      "ごちそうさまでした": frame("#FFF5E4", bowl(56, true) + `<path d="M24 56 Q50 64 76 56" fill="#F3E3EA"/>` + face(50, 68, 0.75) + bar("M22 48 L80 40", "#E8B07C", 5) + bar("M24 54 L82 46", "#FF9EC0", 5) + spark(18, 22, 6) + spark(82, 22, 7) + spark(52, 26, 4, "#FFB0CD")),
+      "はじめまして": frame("#EAF4FF", person(28, 46, 13, { long: true, shirt: "#FFB0CD" }) + person(72, 46, 13, { shirt: "#8FA8E8" }) + spark(50, 30, 7) + heart(50, 52, 0.55) + spark(42, 18, 4, "#FFB0CD") + spark(60, 18, 4, "#9A7BFF")),
+      "です": person(46, 38, 20, { long: true, shirt: "#FFB0CD" }) + `<rect x="54" y="70" width="22" height="14" rx="3" fill="#fff" ${st(3)}/><path d="M58 75 h14 M58 80 h9" stroke="#FF7FA8" stroke-width="2.4" stroke-linecap="round"/>` +
+        `<path d="M64 6 h26 a6 6 0 0 1 6 6 v12 a6 6 0 0 1 -6 6 h-12 l-6 6 v-6 h-8 a6 6 0 0 1 -6 -6 v-12 a6 6 0 0 1 6 -6 Z" fill="#FFF1C4" ${st(3.4)}/><circle cx="68" cy="18" r="2.4" fill="${O}"/><circle cx="76" cy="18" r="2.4" fill="${O}"/><circle cx="84" cy="18" r="2.4" fill="${O}"/>`,
+      "よろしく おねがい します": frame("#FFE8F0", bow(-26, person(56, 42, 17, { long: true, shirt: "#FFB0CD" })) + ground("#FFCFE0", 74) + flower(80, 82, 5, "#fff") + flower(20, 82, 5, "#C8B8FF") + spark(82, 24, 6) + heart(70, 18, 0.55) + spark(18, 22, 4, "#FFB0CD"))
+    });
+  }
   return { get: (w) => I[w], has: (w) => !!I[w], all: () => Object.keys(I) };
 })();
 if (typeof module !== "undefined") module.exports = WordIcons;
