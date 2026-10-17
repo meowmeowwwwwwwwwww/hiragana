@@ -824,6 +824,58 @@ details.how .how-body { display: grid; gap: 10px; margin-top: 12px; max-width: 6
 .gr-task .act-reveal .gr-line { font-size: 18px; }
 .gr-slot, .gr-tile { min-width: 52px; font-size: 20px; }
 .gr-meet .v-trap { max-width: 46ch; }
+/* Знакомство */
+.in-chart { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; width: 100%; }
+.in-person { display: grid; justify-items: center; align-content: start; gap: 2px; min-width: 0; padding: 6px 2px 8px; border-radius: 18px; border: 2px solid #fff; background: rgb(255 255 255 / .85); box-shadow: 0 2px 0 var(--line); color: var(--ink); text-align: center; }
+.in-person:active { transform: translateY(2px); box-shadow: none; }
+.in-pic { width: 52px; height: 52px; }
+.in-person b { font-family: var(--kana); font-weight: 600; font-size: 13px; line-height: 1.2; word-break: keep-all; }
+.in-hon { margin-top: -3px; font-family: var(--kana); font-weight: 600; font-size: 11px; color: var(--muted); }
+.in-mini { display: inline-flex; align-items: center; gap: 2px; font-size: 11px; font-weight: 800; color: var(--muted); white-space: nowrap; }
+.in-flag { width: 20px; height: 20px; flex: none; }
+.in-facts { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.in-facts > span { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 999px; background: var(--cream); font-size: 13px; font-weight: 800; color: var(--ink-soft); }
+.in-facts .in-flag { width: 24px; height: 24px; margin-left: -4px; }
+.in-meet { gap: 10px; }
+.in-speech .ph-say { max-width: 100%; }
+.in-name { font-family: var(--kana); font-weight: 600; font-size: 24px; line-height: 1.2; color: var(--ink); }
+.in-name.big { font-size: 34px; }
+.in-card { gap: 2px; }
+.in-card .v-pic { width: 92px; height: 92px; }
+.in-fact { display: inline-flex; align-items: center; gap: 6px; font-size: 19px; font-weight: 800; color: var(--primary); }
+.in-fact .in-flag { width: 30px; height: 30px; }
+.in-q { display: grid; gap: 10px; justify-items: center; }
+.in-heard { grid-template-columns: auto 1fr auto; width: 100%; }
+.in-heard .gr-line { font-size: 22px; }
+.in-who-ans { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.in-ava { width: 36px; height: 36px; flex: none; }
+.in-dlg { max-width: 100%; }
+.in-line { display: flex; align-items: flex-end; gap: 6px; }
+.in-line.b { flex-direction: row-reverse; }
+.in-line .ph-say { max-width: calc(100% - 42px); }
+.in-line.cur .ph-say { box-shadow: 0 0 0 3px var(--primary); }
+.in-line .gr-line { font-size: 18px; }
+.in-me { gap: 14px; }
+.in-form { display: grid; gap: 14px; }
+.in-field { display: grid; gap: 6px; text-align: left; }
+.in-label { font-size: 13px; font-weight: 800; letter-spacing: .04em; color: var(--primary); }
+.in-hint { font-size: 13px; }
+.in-name-input { max-width: 100%; width: 100%; font-family: var(--kana); font-weight: 600; font-size: 20px; background: #fff; }
+.in-opts { display: flex; flex-wrap: wrap; gap: 6px; }
+.in-opt { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 4px 12px; border-radius: 999px; border: 2px solid #fff; background: rgb(255 255 255 / .85); box-shadow: 0 2px 0 var(--line); color: var(--ink); }
+.in-opt b { font-family: var(--kana); font-weight: 600; font-size: 17px; }
+.in-opt span { font-size: 12px; font-weight: 700; color: var(--muted); }
+.in-opt[aria-pressed="true"] { background: linear-gradient(180deg, var(--primary-2), var(--primary)); color: #fff; }
+.in-opt[aria-pressed="true"] span { color: #fff; }
+.in-age { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.in-age > .num { min-width: 2ch; font-size: 28px; font-weight: 800; text-align: center; color: var(--ink); }
+.in-step { min-width: 48px; font-size: 22px; font-weight: 800; }
+.in-age-r { display: grid; }
+.in-age-r b { font-family: var(--kana); font-weight: 600; font-size: 22px; color: var(--primary-deep); }
+.in-out { display: grid; gap: 10px; justify-items: center; padding-top: 6px; border-top: 3px dashed var(--line); }
+.in-out-h { margin: 6px 0 0; }
+.in-task .choice-btn.ja { font-size: 18px; word-break: keep-all; }
+.in-panel .v-actions.three { grid-template-columns: 1fr 1.15fr 1fr; }
 /* Фразы */
 .ph-row { grid-template-columns: 44px 1fr auto; }
 .ph-row .v-row-main { gap: 1px; }
@@ -859,6 +911,7 @@ details.how .how-body { display: grid; gap: 10px; margin-top: 12px; max-width: 6
 .v-pic-big { width: 120px; height: 120px; }
 .v-word { font-family: var(--kana); font-weight: 600; font-size: 60px; line-height: 1.1; color: var(--ink); }
 .v-word.long { font-size: 48px; }
+.v-word.xlong { font-size: 40px; }
 .v-meaning { font-size: 22px; font-weight: 800; color: var(--primary); }
 .v-trap { width: 100%; max-width: 46ch; text-align: left; font-size: 14px; padding: 10px 14px; border-radius: 18px; background: var(--warn-soft); border: 3px solid #fff; color: var(--ink); }
 .v-trap b { color: var(--warn); }
@@ -1814,6 +1867,97 @@ const WordIcons = (() => {
       "よろしく おねがい します": frame("#FFE8F0", bow(-26, person(56, 42, 17, { long: true, shirt: "#FFB0CD" })) + ground("#FFCFE0", 74) + flower(80, 82, 5, "#fff") + flower(20, 82, 5, "#C8B8FF") + spark(82, 24, 6) + heart(70, 18, 0.55) + spark(18, 22, 4, "#FFB0CD"))
     });
   }
+  // ---- урок «Новые друзья»: флаги, национальности, университет, герои учебника (ключ "p:id") ----
+  {
+    const SK = "#FFE6D4";
+    // флаг 70×50 в своих координатах; flag(k, x, y, s) ставит его в картинку
+    const FW = 70, FH = 50, FD = Math.hypot(FW, FH);
+    const pts = (P) => "M" + P.map((p) => p.map((v) => v.toFixed(1)).join(" ")).join(" L") + " Z";
+    // диагональная полоса из угла в угол, обрезанная по краю флага
+    const diag = (w, c, flip) => {
+      const a = (w * FD) / FW, b = (w * FD) / FH;
+      const P = flip ? [[FW, 0], [FW, a], [b, FH], [0, FH], [0, FH - a], [FW - b, 0]] : [[0, 0], [b, 0], [FW, FH - a], [FW, FH], [FW - b, FH], [0, a]];
+      return `<path d="${pts(P)}" fill="${c}"/>`;
+    };
+    const trig = (x, y, deg) => `<g transform="rotate(${deg} ${x} ${y})" fill="${O}"><rect x="${x - 5}" y="${y - 4.6}" width="10" height="2.2" rx="1"/><rect x="${x - 5}" y="${y - 1.1}" width="10" height="2.2" rx="1"/><rect x="${x - 5}" y="${y + 2.4}" width="10" height="2.2" rx="1"/></g>`;
+    const FLAG = {
+      jp: `<rect width="70" height="50" rx="4" fill="#fff"/><circle cx="35" cy="25" r="13" fill="#FF5C6C"/>`,
+      kr: `<rect width="70" height="50" rx="4" fill="#fff"/><circle cx="35" cy="25" r="11" fill="#4A6FC8"/><path d="M24 25 A11 11 0 0 1 46 25 A5.5 5.5 0 0 1 35 25 A5.5 5.5 0 0 0 24 25 Z" fill="#FF5C6C"/>` +
+        trig(13, 11, -34) + trig(57, 11, 34) + trig(13, 39, 34) + trig(57, 39, -34),
+      us: `<rect width="70" height="50" rx="4" fill="#fff"/>` + [0, 2, 4, 6].map((i) => `<rect y="${(i * 50 / 7).toFixed(2)}" width="70" height="${(50 / 7).toFixed(2)}" fill="#FF5C6C"/>`).join("") +
+        `<rect width="30" height="${(50 * 4 / 7).toFixed(2)}" fill="#4A6FC8"/>` + [6, 15, 24].flatMap((x) => [7, 15, 23].map((y) => `<circle cx="${x}" cy="${y - 1}" r="2" fill="#fff"/>`)).join(""),
+      uk: `<rect width="70" height="50" rx="4" fill="#4A6FC8"/>` + diag(6, "#fff") + diag(6, "#fff", true) + diag(2, "#FF5C6C") + diag(2, "#FF5C6C", true) +
+        `<rect x="28" width="14" height="50" fill="#fff"/><rect y="18" width="70" height="14" fill="#fff"/><rect x="31.5" width="7" height="50" fill="#FF5C6C"/><rect y="21.5" width="70" height="7" fill="#FF5C6C"/>`,
+      ru: `<rect width="70" height="50" rx="4" fill="#fff"/><rect y="16.7" width="70" height="16.7" fill="#4A7FD8"/><path d="M0 33.3 H70 V46 Q70 50 66 50 H4 Q0 50 0 46 Z" fill="#FF5C6C"/>`
+    };
+    const flag = (k, x, y, s = 1, w = 5) => `<g transform="translate(${x} ${y}) scale(${s})">${FLAG[k]}<rect width="70" height="50" rx="4" fill="none" ${st(w)}/></g>`;
+    // страна: флаг на древке над травкой
+    const country = (k) => `<ellipse cx="50" cy="88" rx="40" ry="7" fill="#B9E6A8" ${st(4)}/>` + bar("M16 12 V86", "#E8B07A", 4) + `<circle cx="16" cy="11" r="5" fill="#FFE27A" ${st(3.4)}/>` + flag(k, 21, 15) + spark(86, 76, 5) + spark(34, 76, 4, "#FFB0CD");
+    // национальность: человек с флажком в руке
+    const nat = (k, o, extra = "") => person(42, 40, 21, o) + extra + bar("M76 88 V34", "#E8B07A", 3) + flag(k, 77, 32, 0.3, 9) + `<ellipse cx="76" cy="72" rx="6" ry="6.5" fill="${SK}" ${st(3.4)}/>`;
+    const ponytail = (cx, cy, r, c) => `<path d="M${cx + r * 0.6} ${cy - r * 0.6} Q${cx + r * 1.9} ${cy - r * 0.5} ${cx + r * 1.5} ${cy + r * 1.1} Q${cx + r * 1.2} ${cy + r * 0.3} ${cx + r * 0.7} ${cy}" fill="${c}" ${st(4)}/>`;
+    const ribbon = (x, y, c = "#FFB347", k = 1) => `<path d="M${x} ${y} l${9 * k} ${-7 * k} v${14 * k} Z M${x} ${y} l${-9 * k} ${-7 * k} v${14 * k} Z" fill="${c}" ${st(3)}/><circle cx="${x}" cy="${y}" r="${3 * k}" fill="${c}" ${st(2.4)}/>`;
+    const glasses = (cx, cy, r) => { const k = r / 30, y = cy + r * 0.2; return `<circle cx="${cx - 7 * k}" cy="${y}" r="${6 * k}" fill="#fff" fill-opacity=".35" ${st(2.6)}/><circle cx="${cx + 7 * k}" cy="${y}" r="${6 * k}" fill="#fff" fill-opacity=".35" ${st(2.6)}/>` + face(cx, y, k).replace(/<ellipse[^>]*>/g, ""); };
+    const bubble = (x, y, w, txt, c = "#FFF1C4", tc = "#CF8600") => `<path d="M${x} ${y} h${w} a6 6 0 0 1 6 6 v14 a6 6 0 0 1 -6 6 h${-(w - 18)} l-7 7 v-7 h-5 a6 6 0 0 1 -6 -6 v-14 a6 6 0 0 1 6 -6 Z" fill="${c}" ${st(3.4)}/>` +
+      `<text x="${x + w / 2}" y="${y + 20}" font-size="16" text-anchor="middle" font-family="system-ui,sans-serif" font-weight="900" fill="${tc}">${txt}</text>`;
+    // герои таблицы из учебника
+    const MARY = { hair: "#F2C46B", shirt: "#FFF6EE", collar: "#FFD7B0" }, TAKESHI = { hair: "#2E2630", shirt: "#fff" }, SORA = { hair: "#2E2630", long: true, shirt: "#FFD2B0", collar: "#fff" },
+      ROBERT = { hair: "#E3CF9A", shirt: "#F1E6D6", collar: "#FFD2B0" }, YAMA = { hair: "#2E2630", shirt: "#ECE8F2", collar: "#fff", tie: "#FFB347" };
+    const mary = (cx, cy, r) => ponytail(cx, cy, r, MARY.hair) + person(cx, cy, r, MARY) + ribbon(cx + r * 0.8, cy - r * 0.75, "#FFB347", r / 24) + `<path d="M${cx - r * 0.9} ${cy + r * 1.1} L${cx - r * 0.5} ${cy + r * 2.1}" stroke="#E8955A" stroke-width="${r / 4}" stroke-linecap="round"/>`;
+    const takeshi = (cx, cy, r) => person(cx, cy, r, TAKESHI) + `<path d="M${cx - r * 0.5} ${cy - r * 1.05} l${r * 0.15} ${-r * 0.3} l${r * 0.2} ${r * 0.24} l${r * 0.2} ${-r * 0.3} l${r * 0.2} ${r * 0.28} l${r * 0.2} ${-r * 0.26} l${r * 0.15} ${r * 0.3}" fill="${TAKESHI.hair}" ${st(3)}/>`;
+    const sora = (cx, cy, r) => person(cx, cy, r, SORA);
+    const robert = (cx, cy, r) => person(cx, cy, r, ROBERT);
+    const yama = (cx, cy, r) => person(cx, cy, r, YAMA) + glasses(cx, cy, r);
+    const portrait = (bg, inner) => `<circle cx="50" cy="50" r="46" fill="${bg}"/>` + inner;
+    Object.assign(I, {
+      "p:mary": portrait("#FFE8D6", mary(50, 42, 24)),
+      "p:takeshi": portrait("#E3F0FF", takeshi(50, 42, 24)),
+      "p:sora": portrait("#FFE1EC", sora(50, 42, 24)),
+      "p:robert": portrait("#E8F6E2", robert(50, 42, 24)),
+      "p:yamashita": portrait("#EDE6FF", yama(50, 42, 24)),
+      // ---- флаги без древка (таблица в «Знакомстве») ----
+      "f:にほん": flag("jp", 15, 25), "f:かんこく": flag("kr", 15, 25), "f:アメリカ": flag("us", 15, 25), "f:イギリス": flag("uk", 15, 25), "f:ロシア": flag("ru", 15, 25),
+      // ---- страны и национальности ----
+      "にほん": country("jp"),
+      "かんこく": country("kr"),
+      "アメリカ": country("us"),
+      "イギリス": country("uk"),
+      "ロシア": country("ru"),
+      "にほんじん": nat("jp", TAKESHI),
+      "かんこくじん": nat("kr", SORA),
+      "アメリカじん": ponytail(42, 40, 21, MARY.hair) + nat("us", MARY, ribbon(42 + 21 * 0.8, 40 - 21 * 0.75, "#FFB347", 0.85)),
+      "イギリスじん": nat("uk", ROBERT),
+      "ロシアじん": nat("ru", { long: true, hair: "#B07A4E", shirt: "#FFB0CD" }, ribbon(42 + 21 * 0.75, 40 - 21 * 0.8, "#FF7FA8", 0.85)),
+      // ---- университет, курс, возраст ----
+      "だいがく": `<ellipse cx="50" cy="90" rx="44" ry="5" fill="#B9E6A8"/><rect x="14" y="44" width="72" height="44" rx="3" fill="#FFF0E0" ${st()}/><path d="M8 46 L50 18 L92 46 Z" fill="#AED8FF" ${st()}/>` +
+        `<circle cx="50" cy="35" r="6" fill="#fff" ${st(3)}/><path d="M50 32 V35 L52 37" fill="none" ${st(2)}/>` +
+        [24, 38, 62, 76].map((x) => `<rect x="${x - 3.5}" y="50" width="7" height="32" rx="2" fill="#fff" ${st(3)}/>`).join("") +
+        `<path d="M43 88 V68 Q50 60 57 68 V88" fill="#C98E5A" ${st(3.4)}/><rect x="10" y="84" width="80" height="6" rx="2" fill="#E8D7C6" ${st(3.4)}/>` + bar("M50 18 V6", "#C9B6C0", 2) + `<path d="M51 6 h12 l-3 4 l3 4 h-12 Z" fill="#FF7FA8" ${st(2.6)}/>`,
+      "りゅうがくせい": `<circle cx="74" cy="66" r="18" fill="#AED8FF" ${st(4)}/><path d="M60 58 q8 -2 10 6 q-2 8 -8 8 M78 50 q6 6 2 12 q6 4 10 0" fill="#B9E6A8" stroke="${O}" stroke-width="2.6" stroke-linejoin="round"/>` +
+        person(36, 42, 19, { shirt: "#AED8FF", hair: "#F2C46B" }) +
+        `<g transform="rotate(-20 72 18)"><path d="M54 18 Q72 12 90 18 Q72 24 54 18 Z" fill="#fff" ${st(3.4)}/><path d="M70 17 L62 6 H68 L78 17 Z M70 19 L62 30 H68 L78 19 Z" fill="#FFB0CD" ${st(3)}/></g>` +
+        `<path d="M8 22 q6 -4 12 0" fill="none" stroke="#C9B6C0" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6"/>`,
+      "せんせい": `<rect x="8" y="10" width="40" height="30" rx="4" fill="#5E9E7A" ${st(4)}/><path d="M16 22 H38 M16 30 H30" stroke="#fff" stroke-width="3" stroke-linecap="round"/>` +
+        yama(62, 42, 21) + bar("M40 48 L22 34", "#E8B07A", 3) +
+        `<circle cx="20" cy="80" r="10" fill="#FF7F9C" ${st(4)}/><path d="M20 70 q2 -6 7 -7" fill="none" ${st(3)}/><path d="M22 66 q6 -6 10 -2 q-6 4 -10 2 Z" fill="#9FD49A" ${st(2.4)}/>` + shine(16, 76, -30, 0.6),
+      "せんこう": `<path d="M50 30 Q32 20 10 24 V82 Q32 78 50 88 Q68 78 90 82 V24 Q68 20 50 30 Z" fill="#fff" ${st()}/><path d="M50 30 V88" ${st(3.4)}/>` +
+        `<text x="30" y="64" font-size="26" text-anchor="middle" font-family="Klee One, serif" font-weight="600" fill="#FF7FA8">あ</text><text x="70" y="64" font-size="26" text-anchor="middle" font-family="Klee One, serif" font-weight="600" fill="#5E9E7A">ア</text>` +
+        `<path d="M64 22 V40 L68 36 L72 40 V22" fill="#FF9EC0" ${st(3)}/>` + spark(14, 12, 6) + spark(86, 10, 5, "#FFB0CD"),
+      "なんねんせい": [1, 2, 3, 4].map((n, i) => `<rect x="${8 + i * 21}" y="${74 - i * 14}" width="21" height="${18 + i * 14}" fill="${["#FFE1EC", "#FFD2E2", "#FFC0D6", "#FFADC9"][i]}" ${st(4)}/><text x="${18.5 + i * 21}" y="${88}" font-size="13" text-anchor="middle" font-family="system-ui,sans-serif" font-weight="900" fill="${O}">${n}</text>`).join("") +
+        person(60, 28, 9, { long: true, shirt: "#FFB0CD" }) + bubble(10, 8, 26, "?"),
+      "なんさい": `<rect x="18" y="56" width="64" height="30" rx="8" fill="#FFE1EC" ${st()}/><path d="M18 66 q8 8 16 0 q8 8 16 0 q8 8 16 0 q8 8 16 0" fill="none" stroke="#FF9EC0" stroke-width="4"/><rect x="12" y="84" width="76" height="7" rx="3" fill="#fff" ${st(4)}/>` +
+        `<rect x="45" y="34" width="10" height="22" rx="3" fill="#AED8FF" ${st(3.4)}/><path d="M50 18 q-6 8 0 12 q6 -4 0 -12 Z" fill="#FFB347" ${st(2.6)}/>` + bubble(62, 6, 26, "?") + spark(18, 30, 6),
+      "はたち": `<rect x="14" y="54" width="72" height="32" rx="8" fill="#FFF1C4" ${st()}/><path d="M14 64 q9 8 18 0 q9 8 18 0 q9 8 18 0 q9 8 18 0" fill="none" stroke="#FFB347" stroke-width="4"/><rect x="8" y="84" width="84" height="7" rx="3" fill="#fff" ${st(4)}/>` +
+        `<text x="50" y="50" font-size="38" text-anchor="middle" font-family="system-ui,sans-serif" font-weight="900" fill="#FF7FA8" stroke="${O}" stroke-width="2.4" paint-order="stroke">20</text>` +
+        spark(12, 20, 7) + spark(88, 22, 6, "#FFB0CD") + spark(80, 8, 4, "#9A7BFF") + `<path d="M24 12 l4 8 M70 10 l-3 9 M10 40 l8 2" stroke="#FF9EC0" stroke-width="3" stroke-linecap="round"/>`,
+      // ---- фразы урока: あのう и そうですか ----
+      "あのう": `<rect x="6" y="8" width="88" height="84" rx="16" fill="#F1ECFF"/>` + person(42, 48, 17, { long: true, shirt: "#FFB0CD" }) +
+        bar("M60 74 Q66 56 64 38", "#FFB0CD", 7) + `<ellipse cx="64" cy="34" rx="6.5" ry="7.5" fill="${SK}" ${st(3.4)}/>` + `<path d="M26 38 q-5 7 0 10 q5 -3 0 -10 Z" fill="#AED8FF" ${st(2.4)}/>` +
+        bubble(66, 14, 18, "…", "#fff", "#9A7BFF") + `<rect x="6" y="8" width="88" height="84" rx="16" fill="none" ${st()}/>`,
+      "そうですか": `<rect x="6" y="8" width="88" height="84" rx="16" fill="#E6F6EE"/>` + `<g transform="rotate(10 40 70)">` + person(40, 48, 17, { shirt: "#AED8FF" }) + `</g>` +
+        `<path d="M14 42 q-4 6 0 12 M66 40 q4 6 0 12" fill="none" stroke="#9FD49A" stroke-width="3.4" stroke-linecap="round"/>` + bubble(60, 14, 20, "!", "#FFF1C4", "#CF8600") + `<rect x="6" y="8" width="88" height="84" rx="16" fill="none" ${st()}/>`
+    });
+  }
   return { get: (w) => I[w], has: (w) => !!I[w], all: () => Object.keys(I) };
 })();
 if (typeof module !== "undefined") module.exports = WordIcons;
@@ -2556,7 +2700,26 @@ const VOCAB_WORDS = [
   { w: "こうこうせい", cyr: "ко:ко:сэ:", lat: "kookoosee", ru: "старшеклассник", mn: "*こうこう* — старшая школа, *せい* — ученик. Два «*ко:*» — как два старших класса.", trap: "Три долгих звука: «о:» — через う, «э:» — через い: こ・う・こ・う・せ・い." },
   { w: "ぎんこういん", cyr: "гинко:ин", lat: "ginkooin", ru: "сотрудник банка", mn: "*ぎんこう* — банк, *いん* — сотрудник. В банке звенят монетки: «*гинь-ко*!»" },
   { w: "せんぱい", cyr: "сэмпай", lat: "senpai", ru: "сэмпай (старший товарищ)", mn: "Как в аниме: «Заметь меня, *сэмпай*!» ん перед ぱ звучит как «м»." },
-  { w: "こうはい", cyr: "ко:хай", lat: "koohai", ru: "кохай (младший товарищ)", mn: "Пара к せんぱい: сэмпай учит, а младший — «*ко:хай*» — слушает." }
+  { w: "こうはい", cyr: "ко:хай", lat: "koohai", ru: "кохай (младший товарищ)", mn: "Пара к せんぱい: сэмпай учит, а младший — «*ко:хай*» — слушает." },
+  // ---- урок «Новые друзья»: страны и национальности (иностранные названия — катаканой) ----
+  { w: "にほん", cyr: "нихон", lat: "Nihon", ru: "Япония", mn: "*にほん* — «корень солнца»: страна, где восходит солнце. А にほんご ты уже знаешь — японский язык." },
+  { w: "にほんじん", cyr: "нихондзин", lat: "nihonjin", ru: "японец, японка", mn: "*にほん* — Япония, *じん* — человек. Человек из Японии. Одно слово и для мужчин, и для женщин." },
+  { w: "かんこく", cyr: "канкоку", lat: "Kankoku", ru: "Корея (Южная)", mn: "*Кан-ко-ку* — звонко, как палочки по миске с кимчи." },
+  { w: "かんこくじん", cyr: "канкокудзин", lat: "kankokujin", ru: "кореец, кореянка", mn: "*かんこく* — Корея, *じん* — человек. Так о себе скажет Сора из учебника." },
+  { w: "アメリカ", cyr: "амэрика", lat: "Amerika", ru: "Америка (США)", mn: "Почти как по-русски: *Амэрика*. Иностранные названия пишут катаканой." },
+  { w: "アメリカじん", cyr: "амэрикадзин", lat: "amerikajin", ru: "американец, американка", mn: "*アメリカ* + *じん*: страна + человек. Так о себе говорит Мэри.", trap: "Страна — катаканой, а じん — всё равно хираганой: アメリカじん." },
+  { w: "イギリス", cyr: "игирису", lat: "Igirisu", ru: "Великобритания, Англия", mn: "От португальского «Inglês» — «*игирису*». Пишется катаканой." },
+  { w: "イギリスじん", cyr: "игирисудзин", lat: "igirisujin", ru: "британец, англичанин", mn: "*イギリス* + *じん*. Так о себе скажет Роберт." },
+  { w: "ロシア", cyr: "росиа", lat: "Roshia", ru: "Россия", mn: "Почти как по-русски: «*Росиа*». Пишется катаканой.", trap: "シ «си» и ツ «цу» похожи: у シ точки слева, а длинная черта идёт снизу вверх. ロツア — ошибка." },
+  { w: "ロシアじん", cyr: "росиадзин", lat: "roshiajin", ru: "русский, русская", mn: "Это про тебя! *ロシア* + *じん*: わたし は ロシアじん です." },
+  // ---- урок «Новые друзья»: университет, курс, возраст ----
+  { w: "だいがく", cyr: "дайгаку", lat: "daigaku", ru: "университет", mn: "*だい* — большой, *がく* — учёба: «большая учёба». А だいがくせい — студент." },
+  { w: "りゅうがくせい", cyr: "рю:гакусэ:", lat: "ryuugakusee", ru: "иностранный студент", mn: "*りゅう* — «приехавший издалека» + *がくせい* — учащийся. Мэри из Америки — りゅうがくせい.", trap: "りゅ — с маленькой ゅ, а долгое «ю:» пишется через う: り・ゅ・う. В конце — せい, как в がくせい." },
+  { w: "せんせい", cyr: "сэнсэ:", lat: "sensee", ru: "учитель (и обращение к нему)", mn: "Как в аниме: «*Сэнсэй*!» Говорят после фамилии вместо さん: やました せんせい. О себе так не говорят.", trap: "Долгое «э:» пишется через い: せんせい, а не せんせえ." },
+  { w: "せんこう", cyr: "сэнко:", lat: "senkoo", ru: "специальность (в вузе)", mn: "Мэри: «*せんこう* は にほんご です» — «моя специальность — японский».", trap: "Долгое «о:» пишется через う: せんこう, а не せんこお." },
+  { w: "なんねんせい", cyr: "наннэнсэ:", lat: "nannensee", ru: "на каком курсе? в каком классе?", mn: "*なん* — «что, сколько», *ねんせい* — курс. Отвечают числом: よねんせい — четвёртый курс.", trap: "ん здесь дважды: なん・ねん・せい. А долгое «э:» — через い." },
+  { w: "なんさい", cyr: "нансай", lat: "nansai", ru: "сколько лет?", mn: "*なん* — «сколько», *さい* — лет. Отвечают: じゅうきゅうさい です — 19 лет." },
+  { w: "はたち", cyr: "хатати", lat: "hatachi", ru: "двадцать лет", mn: "20 лет — особый возраст: в Японии это совершеннолетие. Поэтому и слово особое — *はたち*, а не «にじゅっさい»." }
 ];
 // Темы (раздел «Слова»): каждое слово — ровно в одной теме; новые слова добавляются в VOCAB_WORDS и сюда
 const VOCAB_CATS = [
@@ -2567,6 +2730,8 @@ const VOCAB_CATS = [
   { id: "home", title: "Дом и вещи", jp: "いえ の もの", icon: "まど", words: ["まど", "いす", "つくえ", "とけい", "ざっし"] },
   { id: "people", title: "Люди", jp: "ひと", icon: "かのじょ", words: ["わたし", "わたくし", "あなた", "かれ", "かのじょ", "あのひと", "あのかた", "だれ", "かぞく"] },
   { id: "jobs", title: "Профессии и учёба", jp: "しごと と がっこう", icon: "いしゃ", words: ["いしゃ", "きょうし", "しゅふ", "べんごし", "ぎんこういん", "がくせい", "だいがくせい", "こうこうせい", "せんぱい", "こうはい"] },
+  { id: "countries", title: "Страны и национальности", jp: "くに と ひと", icon: "にほん", words: ["にほん", "にほんじん", "かんこく", "かんこくじん", "アメリカ", "アメリカじん", "イギリス", "イギリスじん", "ロシア", "ロシアじん"] },
+  { id: "uni", title: "Университет и возраст", jp: "だいがく", icon: "りゅうがくせい", words: ["だいがく", "りゅうがくせい", "せんせい", "せんこう", "なんねんせい", "なんさい", "はたち"] },
   { id: "short", title: "Короткие слова", jp: "みじかい ことば", icon: "ええ", words: ["さん", "ええ", "そう"] }
 ];
 const VOCAB_SETS = VOCAB_CATS.map((c) => Object.assign({}, c, { words: c.words.map((w) => VOCAB_WORDS.find((x) => x.w === w)) }));
@@ -2575,7 +2740,9 @@ const VOCAB_EVERY = { id: "all", title: "Все слова", jp: "ぜんぶ", wo
 const vSet = (id) => (id === "all" ? VOCAB_EVERY : VOCAB_SETS.find((x) => x.id === id) || VOCAB_EVERY);
 const vCatOf = (w) => (VOCAB_SETS.find((st) => st.words.some((x) => x.w === w)) || VOCAB_EVERY).id;
 // Неверные написания: сначала ловушки из учебника, потом похожие знаки, тэнтэн, маленькие/большие, перестановки
-const VOCAB_TRAPS = { "いしゃ": ["いしや", "いしゅ", "いさ"], "きょうし": ["きようし", "きょし", "きょおし"], "しゅふ": ["しゆふ", "しょふ", "すふ"], "がくせい": ["がくせえ", "がくせ", "かくせい"], "こうこうせい": ["こおこうせい", "こうこせい", "こうこうせえ"], "ええ": ["えい", "え", "いい"], "そう": ["そお", "そ", "さう"], "かのじょ": ["かのじよ", "かのしょ", "かのじゅ"], "とけい": ["とけえ", "ときい", "とけ"], "とうきょう": ["ときょう", "とうきよう", "とおきょう"], "おちゃ": ["おちや", "おちょ", "おしゃ"], "ざっし": ["ざつし", "さっし", "ざし"] };
+const VOCAB_TRAPS = { "いしゃ": ["いしや", "いしゅ", "いさ"], "きょうし": ["きようし", "きょし", "きょおし"], "しゅふ": ["しゆふ", "しょふ", "すふ"], "がくせい": ["がくせえ", "がくせ", "かくせい"], "こうこうせい": ["こおこうせい", "こうこせい", "こうこうせえ"], "ええ": ["えい", "え", "いい"], "そう": ["そお", "そ", "さう"], "かのじょ": ["かのじよ", "かのしょ", "かのじゅ"], "とけい": ["とけえ", "ときい", "とけ"], "とうきょう": ["ときょう", "とうきよう", "とおきょう"], "おちゃ": ["おちや", "おちょ", "おしゃ"], "ざっし": ["ざつし", "さっし", "ざし"],
+  "りゅうがくせい": ["りゆうがくせい", "りゅがくせい", "りゅうがくせえ"], "せんせい": ["せんせえ", "せんせ", "ぜんせい"], "せんこう": ["せんこお", "せんこ", "ぜんこう"],
+  "なんねんせい": ["なねんせい", "なんねんせえ", "なんねせい"], "アメリカじん": ["アメリカしん", "アメリカぢん", "あめりかじん"], "ロシア": ["ロツア", "ロシマ", "コシア"] };
 // Грамматика из учебника (вкладка «Слова» → «Грамматика»). g — форма, ru — значение, pat — схема и её перевод, about — правило,
 // ex — примеры: в s форма взята в [скобки] (в задании «вставь» там пропуск), q — вопрос собеседника перед ответом, r — как читается.
 // fam — с чем путают (неверные варианты — из той же семьи), same — равнозначная форма (её в неверные варианты не берём)
@@ -2631,13 +2798,45 @@ const GRAMMAR = [
     trap: "После だれ никогда не ставят は: не だれ は, а だれ が.",
     ex: [{ s: "だれ [が] いしゃ ですか。", r: "дарэ га ися дэс ка", ru: "Кто (здесь) врач?" },
       { s: "だれ [が] せんぱい ですか。", r: "дарэ га сэмпай дэс ка", ru: "Кто сэмпай?" },
-      { q: "だれ が きょうし ですか。", s: "わたし [が] きょうし です。", r: "ватаси га кё:си дэс", ru: "— Кто преподаватель? — Преподаватель — это я." }] }
+      { q: "だれ が きょうし ですか。", s: "わたし [が] きょうし です。", r: "ватаси га кё:си дэс", ru: "— Кто преподаватель? — Преподаватель — это я." }] },
+  // ---- урок «Новые друзья»: чей, откуда, какой курс, сколько лет ----
+  { id: "no", g: "の", cyr: "но", ru: "чей, какой (связывает два слова)", fam: "p", pat: ["A の B", "B, который относится к A"],
+    about: "Связывает два слова: первое уточняет второе. わたし の せんこう — «моя специальность», アリゾナ だいがく の がくせい — «студентка Аризонского университета». Порядок обратный русскому: сначала «чей», потом «что».",
+    trap: "Сначала тот, кому принадлежит: わたし の せんこう, а не せんこう の わたし.",
+    ex: [{ s: "アリゾナ だいがく [の] がくせい です。", r: "аридзона дайгаку но гакусэ: дэс", ru: "Я студентка Аризонского университета." },
+      { s: "わたし [の] せんこう は にほんご です。", r: "ватаси но сэнко: ва нихонго дэс", ru: "Моя специальность — японский язык." },
+      { s: "やました せんせい は にほんご [の] せんせい です。", r: "Ямасита сэнсэ: ва нихонго но сэнсэ: дэс", ru: "Ямасита-сэнсэй — преподаватель японского." }] },
+  { id: "jin", g: "じん", cyr: "дзин", ru: "человек из страны (национальность)", fam: "s", kind: "Суффикс", pat: ["A じん", "человек из страны A"],
+    about: "Прибавь じん к названию страны — получится национальность: にほん → にほんじん «японец», アメリカ → アメリカじん «американец». Одно слово и для мужчин, и для женщин.",
+    trap: "Страна может быть катаканой, а じん — всегда хираганой: ロシアじん.",
+    ex: [{ s: "メアリー さん は アメリカ[じん] です。", r: "Мэари:-сан ва амэрикадзин дэс", ru: "Мэри — американка." },
+      { s: "ソラ さん は かんこく[じん] です。", r: "Сора-сан ва канкокудзин дэс", ru: "Сора — кореянка." },
+      { s: "わたし は ロシア[じん] です。", r: "ватаси ва росиадзин дэс", ru: "Я русская." }] },
+  { id: "nensei", g: "ねんせい", cyr: "нэнсэ:", ru: "-й курс, -й класс", fam: "s", kind: "Суффикс", pat: ["… ねんせい", "студент …-го курса"],
+    about: "Число + ねんせい — на каком ты курсе или в каком классе: いちねんせい — первый курс, にねんせい — второй, さんねんせい — третий. Спросить: なんねんせい ですか.",
+    trap: "Четвёртый курс — よねんせい: не よんねんせい и не しねんせい!",
+    ex: [{ s: "メアリー さん は に[ねんせい] です。", r: "Мэари:-сан ва нинэнсэ: дэс", ru: "Мэри — второкурсница." },
+      { q: "なんねんせい ですか。", s: "よ[ねんせい] です。", r: "ёнэнсэ: дэс", ru: "— На каком ты курсе? — На четвёртом." },
+      { s: "ソラ さん は さん[ねんせい] です。", r: "Сора-сан ва саннэнсэ: дэс", ru: "Сора — на третьем курсе." }] },
+  { id: "sai", g: "さい", cyr: "сай", ru: "лет (возраст)", fam: "s", kind: "Суффикс", pat: ["… さい", "… лет"],
+    about: "Число + さい — возраст: じゅうきゅうさい — 19 лет, にじゅうにさい — 22 года. Спросить: なんさい ですか. Числа на 1, 8 и 10 немного меняются: いっさい, はっさい, じゅっさい.",
+    trap: "20 лет — особое слово はたち, а не にじゅっさい.",
+    ex: [{ s: "メアリー さん は じゅうきゅう[さい] です。", r: "Мэари:-сан ва дзю:кю:сай дэс", ru: "Мэри 19 лет." },
+      { q: "たけし さん は なんさい ですか。", s: "にじゅうに[さい] です。", r: "нидзю:нисай дэс", ru: "— Сколько лет Такэси? — 22 года." },
+      { s: "やました せんせい は よんじゅうなな[さい] です。", r: "Ямасита сэнсэ: ва ёндзю:нанасай дэс", ru: "Ямасите-сэнсэю 47 лет." }] },
+  { id: "nan", g: "なん", cyr: "нан", ru: "что? сколько? (в вопросе)", fam: "s", kind: "Вопросительное слово", pat: ["なん … ですか", "что? сколько? какой?"],
+    about: "なん — «что». Со счётным словом получается «сколько, какой по счёту»: なんさい — сколько лет, なんねんせい — какой курс. Отвечают числом с тем же словом: よねんせい です.",
+    trap: "Отдельно «что» — это なに, но перед です и счётными словами говорят なん: せんこう は なん ですか.",
+    ex: [{ s: "[なん]ねんせい ですか。", r: "наннэнсэ: дэс ка", ru: "На каком ты курсе?" },
+      { s: "ロバート さん は [なん]さい ですか。", r: "Роба:то-сан ва нансай дэс ка", ru: "Сколько лет Роберту?" },
+      { s: "せんこう は [なん] ですか。", r: "сэнко: ва нан дэс ка", ru: "Какая у тебя специальность?" }] }
 ];
-// Занятие «Учить» — три порции
+// Занятие «Учить» — порции
 const GRAM_GROUPS = [
   { title: "Это — …, это не …", short: "это / не это", ids: ["wa", "desu", "ja", "dewa"] },
   { title: "Вопрос и ответ", short: "вопрос и ответ", ids: ["ka", "desuka", "soo"] },
-  { title: "Тоже и кто именно", short: "тоже и кто", ids: ["mo", "ga"] }
+  { title: "Тоже и кто именно", short: "тоже и кто", ids: ["mo", "ga"] },
+  { title: "Знакомство: чей, откуда, сколько", short: "знакомство", ids: ["no", "jin", "nensei", "sai", "nan"] }
 ];
 const grById = (id) => GRAMMAR.find((x) => x.id === id);
 // Вежливые фразы из учебника (вкладка «Слова» → «Фразы»). jp — фраза целиком, opt — хвост, который можно опустить (おやすみ(なさい)),
@@ -2739,18 +2938,29 @@ const PHRASES = [
     when: "В конце знакомства, после того как назвала себя. Ещё говорят, когда просят о чём-то: «очень на вас рассчитываю».",
     note: "Буквально: «прошу хорошо (ко мне относиться)». Среди друзей хватает короткого よろしく.",
     sit: ["Ты назвала своё имя новому классу и заканчиваешь знакомство", "Ты познакомилась с новым тренером и хочешь закончить вежливо"],
-    dlg: [["たなか です。よろしく おねがい します。", "Я Танака. Рада знакомству."], ["こちらこそ、よろしく おねがい します。", "Я тоже, рада знакомству."]], spell: ["よろしく おねかい します", "よろじく おねがい します", "よろしく おねがい しまず"] }
+    dlg: [["たなか です。よろしく おねがい します。", "Я Танака. Рада знакомству."], ["こちらこそ、よろしく おねがい します。", "Я тоже, рада знакомству."]], spell: ["よろしく おねかい します", "よろじく おねがい します", "よろしく おねがい しまず"] },
+  { id: "anou", jp: "あのう", cyr: "ано:", ru: "Э-э… простите… (чтобы заговорить)",
+    when: "Когда хочешь вежливо обратиться к кому-то или задать вопрос и немного стесняешься. Так Мэри начинает вопрос Такэси: あのう、りゅうがくせい ですか。",
+    note: "Долгое «о:» — через う: あのう. Не путай с あの «тот»: あの ひと — тот человек.",
+    sit: ["Хочешь спросить незнакомого студента, иностранец ли он. С чего начнёшь?", "Нужно обратиться к учителю после урока, а ты немного робеешь"],
+    dlg: [["あのう、りゅうがくせい ですか。", "Простите, вы иностранный студент?"], ["いいえ、にほんじん です。", "Нет, я японец."]], spell: ["あのお", "あぬう", "おのう"] },
+  { id: "soudesuka", jp: "そうですか", cyr: "со: дэс ка", ru: "Вот как; понятно",
+    when: "Когда тебе что-то рассказали, а ты показываешь, что услышала и поняла: «а, вот как». Это не вопрос — голос в конце опускается.",
+    note: "Пишется как вопрос (そう です か), но здесь это «ага, понятно». Долгое «о:» — через う.",
+    sit: ["Такэси говорит, что он не иностранный студент, а японец. Как ты отреагируешь?", "Подруга рассказала, что учится на третьем курсе. Ты киваешь и говоришь…"],
+    dlg: [["いいえ、にほんじん です。", "Нет, я японец."], ["そうですか。なんねんせい ですか。", "Вот как. А на каком вы курсе?"]], spell: ["そおですか", "そうでずか", "そうですが"] }
 ];
 // Занятие «Учить» — четыре порции
 const PHR_GROUPS = [
   { title: "Привет и пока", short: "привет и пока", ids: ["ohayo", "ohayog", "konnichiwa", "konbanwa", "sayonara", "oyasumi"] },
   { title: "Спасибо и извините", short: "спасибо", ids: ["arigato", "arigatog", "sumimasen", "iie"] },
   { title: "Дома и за столом", short: "дома", ids: ["ittekimasu", "itterasshai", "tadaima", "okaeri", "itadakimasu", "gochisosama"] },
-  { title: "Знакомство", short: "знакомство", ids: ["hajimemashite", "desu", "yoroshiku"] }
+  { title: "Знакомство", short: "знакомство", ids: ["hajimemashite", "desu", "yoroshiku", "anou", "soudesuka"] }
 ];
 const phById = (id) => PHRASES.find((x) => x.id === id);
 const grPlain = (e) => e.s.replace(/[\[\]]/g, "");
-const LOOKALIKE = [["ぬ", "め"], ["ね", "れ", "わ"], ["る", "ろ"], ["さ", "ち", "き"], ["は", "ほ"], ["い", "こ", "り"], ["あ", "お"], ["う", "つ"], ["ま", "も"], ["て", "そ"], ["に", "た"], ["く", "へ"], ["す", "む"], ["や", "か"], ["ひ", "ふ"], ["み", "め"], ["よ", "ま"], ["け", "は"], ["ん", "し"]];
+const LOOKALIKE = [["ぬ", "め"], ["ね", "れ", "わ"], ["る", "ろ"], ["さ", "ち", "き"], ["は", "ほ"], ["い", "こ", "り"], ["あ", "お"], ["う", "つ"], ["ま", "も"], ["て", "そ"], ["に", "た"], ["く", "へ"], ["す", "む"], ["や", "か"], ["ひ", "ふ"], ["み", "め"], ["よ", "ま"], ["け", "は"], ["ん", "し"],
+  ["シ", "ツ"], ["ソ", "ン"], ["ク", "ケ", "タ"], ["ア", "マ"], ["メ", "ナ"], ["ロ", "コ"], ["ル", "レ"], ["カ", "ヤ"], ["リ", "ソ"], ["ス", "ヌ"], ["イ", "ト"]];
 function vSpellings(w, n = 3) {
   const out = new Set(VOCAB_TRAPS[w] || []), ch = [...w];
   const add = (a) => { const v = a.join(""); if (v !== w && !VOCAB_ALL.some((x) => x.w === v)) out.add(v); };
@@ -5013,7 +5223,8 @@ function startOrders() {
 
 /* ===================== Кроссворд хираганой ===================== */
 // Слова кроссворда — те же, что в «Словах к тесту»
-const CW_WORDS = VOCAB_ALL.map((x) => [x.w, x.cyr, x.ru, ""]);
+// кроссворд — хираганой: слова с катаканой (アメリカじん) в него не берём
+const CW_WORDS = VOCAB_ALL.filter((x) => !isKata(x.w)).map((x) => [x.w, x.cyr, x.ru, ""]);
 const CW_N = 8, CW_ROWS = 9, CW_WORDS_N = 7;
 // Генератор: 7 слов (сначала те, что реже попадались), слова пересекаются по общим знакам,
 // соседние слова не слипаются. Слово без общих знаков с остальными встаёт отдельным островком.
@@ -5211,6 +5422,7 @@ function vMnemo(x) {
   x.mn.split("*").forEach((part, i) => p.append(i % 2 ? h("b", {}, part) : document.createTextNode(part)));
   return h("div", { class: "mnemo" }, h("div", { class: "mnemo-title" }, heartSticker("#FFB0CD"), "Как запомнить"), p);
 }
+const vWordCls = (w) => ([...w].length > 6 ? " long xlong" : [...w].length > 4 ? " long" : "");
 const vTrapNote = (x) => x.trap ? h("div", { class: "v-trap" }, h("b", { lang: "ja" }, "きを つけて！"), " ", x.trap) : null;
 // --- задания: каждое получает слово и onDone(ok) ---
 function vTaskPicToKana(x, onDone, pool = VOCAB_ALL) {
@@ -5280,7 +5492,7 @@ function vTaskWrite(x, sh, onDone) {
     const c = chars[ci], small = isSmall(c);
     const slots = h("div", { class: "slots", "aria-label": "Слово" }, chars.map((y, j) => h("span", { class: "slot" + (j < ci ? "" : " empty") + (j === ci ? " cur" : "") + (isSmall(y) ? " small" : ""), lang: "ja" }, y)));
     const tip = h("button", { class: "hint-chip as-btn", type: "button", onclick: () => { tip.textContent = `«${x.cyr}»`; tip.disabled = true; } }, "как звучит?");
-    const head = h("div", { class: "v-write-head" }, wordIcon(x.w, "v-pic-s"), h("div", {}, h("div", { class: "task-label" }, "Напиши слово хираганой"), h("div", { class: "v-ru" }, x.ru), h("div", { class: "task-sub" }, tip, sayBtn(x.w))));
+    const head = h("div", { class: "v-write-head" }, wordIcon(x.w, "v-pic-s"), h("div", {}, h("div", { class: "task-label" }, isKata(x.w) ? (/[\u3041-\u3096]/.test(x.w) ? "Напиши слово катаканой и хираганой" : "Напиши слово катаканой") : "Напиши слово хираганой"), h("div", { class: "v-ru" }, x.ru), h("div", { class: "task-sub" }, tip, sayBtn(x.w))));
     const task = writeTask({ reward: true, k: c, mode: "memory", allowForgot: true, compact: true,
       label: small ? `Знак ${ci + 1} из ${chars.length} — маленький, внизу клетки` : `Знак ${ci + 1} из ${chars.length}`,
       nextLabel: ci + 1 < chars.length ? "Следующий знак" : "Готово",
@@ -5373,7 +5585,7 @@ function startVocab(mode, only, setId = "all") {
         h("div", { class: "v-known" }, list.map((y, j) => h("span", { class: j < i ? "seen" : j === i ? "cur" : "" }, wordIcon(y.w), j < i ? h("span", { lang: "ja" }, y.w) : null))),
         h("div", { class: "meet v-meet" },
           wordIcon(x.w, "v-pic-big"),
-          h("div", { class: "v-word" + ([...x.w].length > 4 ? " long" : ""), lang: "ja" }, kanaText(x.w)),
+          h("div", { class: "v-word" + vWordCls(x.w), lang: "ja" }, kanaText(x.w)),
           h("div", { class: "facts" }, h("span", {}, `${x.cyr} · ${x.lat}`), sayBtn(x.w)),
           h("div", { class: "v-meaning" }, x.ru),
           vMnemo(x), vTrapNote(x)),
@@ -5476,8 +5688,8 @@ function startCards(setId = "all") {
       sh.stage(dir === "pic" ? "картинка → слово" : "слово → значение"); sh.count(`${known} / ${total}`); sh.progress(known / total);
       if (!queue.length) return end();
       const x = queue[0];
-      const front = dir === "pic" ? [wordIcon(x.w, "v-pic-big"), h("div", { class: "v-meaning" }, x.ru)] : [h("div", { class: "v-word" + ([...x.w].length > 4 ? " long" : ""), lang: "ja" }, kanaText(x.w)), sayBtn(x.w)];
-      const back = [wordIcon(x.w, "v-pic-mid"), h("div", { class: "v-word" + ([...x.w].length > 4 ? " long" : ""), lang: "ja" }, kanaText(x.w)),
+      const front = dir === "pic" ? [wordIcon(x.w, "v-pic-big"), h("div", { class: "v-meaning" }, x.ru)] : [h("div", { class: "v-word" + vWordCls(x.w), lang: "ja" }, kanaText(x.w)), sayBtn(x.w)];
+      const back = [wordIcon(x.w, "v-pic-mid"), h("div", { class: "v-word" + vWordCls(x.w), lang: "ja" }, kanaText(x.w)),
         h("div", { class: "facts" }, h("span", {}, `${x.cyr} · ${x.lat}`), sayBtn(x.w)), h("div", { class: "v-meaning" }, x.ru), x.trap ? vTrapNote(x) : null];
       const cardEl = h("button", { class: "v-flash", type: "button", "aria-label": "Перевернуть карточку" }, h("div", { class: "v-face" }, front, h("span", { class: "muted v-tap" }, "нажми, чтобы перевернуть")));
       const bar = h("div", { class: "row v-flash-bar" });
@@ -5665,9 +5877,9 @@ function startGrammar(mode, only) {
   const spread = (q) => { for (let j = 1; j < q.length; j++) if (q[j].id === q[j - 1].id) { const z = (j + 2) % q.length; [q[j], q[z]] = [q[z], q[j]]; } return q; };
   function intro() {
     sh.stage("начало");
-    const parts = [h("div", { class: "eyebrow", lang: "ja" }, "ぶんぽう"), h("h2", {}, "Частицы и связки"),
+    const parts = [h("div", { class: "eyebrow", lang: "ja" }, "ぶんぽう"), h("h2", {}, "Частицы, связки, суффиксы"),
       h("div", { class: "gr-strip", lang: "ja" }, GRAMMAR.map((x) => h("span", { class: gLevel(x.id) >= 3 ? "ok" : "" }, kanaText(x.g)))),
-      h("p", {}, "Это маленькие слова, на которых держится японское предложение. Учим тремя порциями: " + GROUPS.map((gr) => `«${gr.title}»`).join(", ") + "."),
+      h("p", {}, "Это маленькие слова, на которых держится японское предложение. Учим порциями: " + GROUPS.map((gr) => `«${gr.title}»`).join(", ") + "."),
       h("p", {}, "С каждой: правило, схема и примеры со словами из учебника. Потом узнаёшь её, вставляешь в предложение и сам собираешь фразу из слов. В конце — всё вперемешку."),
       h("p", { class: "muted" }, "Можно выйти в любой момент: продолжишь с того же места.")];
     const go = h("button", { class: "btn primary", type: "button", onclick: next }, "Начать");
@@ -5744,7 +5956,7 @@ function startGrammar(mode, only) {
     if (mode === "learn") { delete g.res; award(10); }
     save();
     sh.set(h("div", { class: "summary" },
-      h("div", { class: "say-row" }, mascot("happy", true), bubble("yay", mode === "learn" ? "Частицы и связки пройдены!" : "Повторение готово")),
+      h("div", { class: "say-row" }, mascot("happy", true), bubble("yay", mode === "learn" ? "Грамматика пройдена!" : "Повторение готово")),
       h("div", { class: "big-stats" }, h("div", {}, h("b", {}, stats.tot ? Math.round((100 * stats.ok) / stats.tot) + "%" : "—"), h("span", {}, "верно с первого раза")), h("div", {}, h("b", {}, `${gKnownN()}/${GRAMMAR.length}`), h("span", {}, "тем выучено"))),
       h("p", { class: "note" }, "Тема считается выученной после трёх верных ответов подряд. Шпаргалка со всеми правилами — на вкладке «Слова»."),
       h("div", { class: "row", style: "justify-content:center" },
@@ -5823,7 +6035,7 @@ const phText = (x) => (x.pre || "") + x.jp;
 const phSay = (x) => x.say || x.jp;
 const phGroup = (x) => PHR_GROUPS.find((g) => g.ids.includes(x.id));
 // пары «по-дружески — вежливо» и фразы, которые в ответе тоже не ошибка (их в неверные варианты не берём)
-const PH_CLOSE = { ohayo: ["ohayog"], ohayog: ["ohayo"], arigato: ["arigatog"], arigatog: ["arigato"], hajimemashite: ["yoroshiku"], yoroshiku: ["hajimemashite"] };
+const PH_CLOSE = { ohayo: ["ohayog"], ohayog: ["ohayo"], arigato: ["arigatog"], arigatog: ["arigato"], hajimemashite: ["yoroshiku"], yoroshiku: ["hajimemashite"], anou: ["sumimasen"], sumimasen: ["anou"] };
 // на что отвечают этой фразой: おかえり ← ただいま и т. п.
 const phPrompts = (y) => PHRASES.filter((x) => x.reply === y.id);
 const PH_REG = { f: "по-дружески", p: "вежливо" };
@@ -5867,8 +6079,9 @@ function pTaskForm(x, onDone) {
 }
 // Ситуация → что сказать; в вариантах — пара «по-дружески / вежливо», если есть
 function pTaskSit(x, onDone) {
-  const twin = (PH_CLOSE[x.id] || []).filter((id) => phGroup(phById(id)) === phGroup(x) && x.reg).map(phById);
-  const opts = [x].concat(twin, phOthers(x, 3 - twin.length, twin.map((y) => y.id)));
+  const close = PH_CLOSE[x.id] || [];
+  const twin = close.filter((id) => phGroup(phById(id)) === phGroup(x) && x.reg).map(phById);
+  const opts = [x].concat(twin, phOthers(x, 3 - twin.length, close));
   return phTask(choiceTask({ label: "Что ты скажешь?", card: h("div", { class: "gr-card ph-sit" }, h("div", { class: "gr-pat-title" }, "Ситуация"), h("div", { class: "gr-ru big" }, pick1(x.sit))), kind: "ja", say: phSay(x), hideSay: true,
     options: shuffle(opts.map(phText)), answer: phText(x), reveal: h("span", {}, phReveal(x), h("div", { class: "muted" }, x.when)), onDone: ({ ok }) => onDone(ok) }));
 }
@@ -6128,6 +6341,395 @@ function startPhrCards() {
   choose();
 }
 
+/* ===================== Знакомство (じこしょうかい): урок «Новые друзья» ===================== */
+// Таблица героев учебника: call — как к человеку обращаются, name — как он себя называет, c — страна (слово из VOCAB_WORDS),
+// year — курс, age — возраст, status/uni — кто он, f — женский род для перевода, tip — на что обратить внимание.
+// S.intro: res — место в «Учить» { pi, stats }, done — урок пройден, best — лучшая тренировка { score, tot }, me — мой рассказ о себе
+const INTRO_PEOPLE = [
+  { id: "mary", call: "メアリー さん", name: "メアリー ハート", ru: "Мэри Харт", ruCall: "Мэри", f: true, c: "アメリカ", year: 2, age: 19, uni: "アリゾナ だいがく", uniRu: "Аризонского университета", major: "にほんご",
+    tip: "の связывает два слова: アリゾナ だいがく の がくせい — студентка (какого?) Аризонского университета." },
+  { id: "takeshi", call: "たけし さん", name: "きむら たけし", ru: "Кимура Такэси", ruCall: "Такэси", c: "にほん", status: "だいがくせい", year: 4, age: 22,
+    tip: "Японцы называют сначала фамилию, потом имя: きむら たけし. Четвёртый курс — よねんせい, без ん." },
+  { id: "sora", call: "ソラ さん", name: "キム ソラ", ru: "Ким Сора", ruCall: "Сора", f: true, c: "かんこく", status: "りゅうがくせい", year: 3, age: 20,
+    tip: "Соре 20 лет — для этого возраста есть особое слово はたち, а не にじゅっさい." },
+  { id: "robert", call: "ロバート さん", name: "ロバート スミス", ru: "Роберт Смит", ruCall: "Роберт", c: "イギリス", status: "りゅうがくせい", year: 4, age: 22,
+    tip: "Страна — катаканой (イギリス), а じん — хираганой: イギリスじん." },
+  { id: "yamashita", call: "やました せんせい", name: "やました", ru: "Ямасита-сэнсэй", ruCall: "Ямасита-сэнсэй", c: "にほん", teacher: true, major: "にほんご", age: 47,
+    tip: "К учителю обращаются не さん, а せんせい: やました せんせい. О себе он говорит просто やました です." }
+];
+const ipById = (id) => INTRO_PEOPLE.find((p) => p.id === id);
+const NAT_RU = { "ロシア": ["русский", "русская"], "にほん": ["японец", "японка"], "かんこく": ["кореец", "кореянка"], "アメリカ": ["американец", "американка"], "イギリス": ["британец", "британка"] };
+const STATUS_RU = { "だいがくせい": ["студент", "студентка"], "りゅうがくせい": ["иностранный студент", "иностранная студентка"], "こうこうせい": ["старшеклассник", "старшеклассница"], "がくせい": ["ученик", "ученица"] };
+const MAJOR_RU = { "にほんご": ["японский язык", "японского языка"] };
+// курс: 4 — よねんせい (не よん)
+const YEAR_KANA = ["", "いち", "に", "さん", "よ"], YEAR_RU = ["", "первом", "втором", "третьем", "четвёртом"];
+const yearWord = (n) => YEAR_KANA[n] + "ねんせい";
+const inClass = (st) => st === "こうこうせい" || st === "がくせい";
+// возраст: числа на 1, 8, 10 сжимаются (いっさい, はっさい, じゅっさい), 20 — はたち
+const AGE_CUT = { "いち": ["いっ", "ис"], "はち": ["はっ", "хас"], "じゅう": ["じゅっ", "дзюс"] };
+function ageWord(n) {
+  if (n === 20) return "はたち";
+  const t = numToks(n), cut = AGE_CUT[t[t.length - 1]];
+  if (cut) t[t.length - 1] = cut[0];
+  return t.join("") + "さい";
+}
+function ageCyr(n) {
+  if (n === 20) return "хатати";
+  const t = numToks(n), cut = AGE_CUT[t[t.length - 1]];
+  return (cut ? numCyr(t.slice(0, -1)) + cut[1] : numCyr(t)) + "сай";
+}
+const ageRu = (n) => `${n} ${plural(n, "год", "года", "лет")}`;
+// Рассказ о себе по образцу Мэри из учебника: [фраза, перевод]
+function introLines(p) {
+  const f = p.f ? 1 : 0;
+  const L = [["はじめまして。", "Приятно познакомиться."], [`${p.name} です。`, `Меня зовут ${p.ru}.`], [`${p.c}じん です。`, `Я ${NAT_RU[p.c][f]}.`]];
+  if (p.teacher) L.push([`${p.major} の せんせい です。`, `Я преподаватель ${MAJOR_RU[p.major][1]}.`]);
+  else if (p.uni) L.push([`${p.uni} の がくせい です。`, `Я ${f ? "студентка" : "студент"} ${p.uniRu}.`]);
+  else if (p.status) L.push([`${p.status} です。`, `Я ${STATUS_RU[p.status][f]}.`]);
+  if (p.year) L.push([`${yearWord(p.year)} です。`, inClass(p.status) ? `Я в ${YEAR_RU[p.year]} классе.` : `Я на ${YEAR_RU[p.year]} курсе.`]);
+  if (p.major && !p.teacher) L.push([`せんこう は ${p.major} です。`, `Моя специальность — ${MAJOR_RU[p.major][0]}.`]);
+  if (p.age) L.push([`${ageWord(p.age)} です。`, `Мне ${ageRu(p.age)}.`]);
+  L.push(["よろしく おねがい します。", f ? "Рада знакомству." : "Рад знакомству."]);
+  return L;
+}
+const ipSpeechText = (L) => L.map((l) => l[0]).join(" ");
+const ipPic = (p, cls = "") => wordIcon("p:" + p.id, cls);
+const ipLine = (s, ru) => h("div", { class: "gr-sent" }, h("div", { class: "gr-line", lang: "ja" }, kanaText(s)), h("div", { class: "gr-ru" }, ru));
+const ipNat = (p) => NAT_RU[p.c][p.f ? 1 : 0];
+// Строчка таблицы: страна, курс, возраст
+const ipFacts = (p) => h("div", { class: "in-facts" },
+  h("span", {}, wordIcon("f:" + p.c, "in-flag"), ipNat(p)), h("span", {}, p.year ? `${p.year}-й курс` : "преподаватель"), h("span", {}, ageRu(p.age)));
+function ipSpeech(L) {
+  return h("div", { class: "ph-dlg in-speech" }, L.map(([jp, ru]) => h("div", { class: "ph-say a" },
+    h("div", {}, h("div", { class: "gr-line", lang: "ja" }, kanaText(jp)), h("div", { class: "gr-ru" }, ru)), sayBtn(jp))));
+}
+const ipListen = (L, text = "Послушать рассказ") => {
+  const b = h("button", { class: "btn v-listen", type: "button", onclick: () => say(ipSpeechText(L)) }, icon("speaker"), " " + text);
+  b.hidden = !jaVoice;
+  return b;
+};
+// Таблица героев, как в учебнике
+function ipChart(onPick) {
+  return h("div", { class: "in-chart" }, INTRO_PEOPLE.map((p) => h("button", { class: "in-person", type: "button", onclick: () => onPick(p), "aria-label": p.ru },
+    ipPic(p, "in-pic"), h("b", { lang: "ja" }, kanaText(p.call.split(" ")[0])), h("span", { class: "in-hon", lang: "ja" }, p.call.split(" ")[1]),
+    h("span", { class: "in-mini" }, wordIcon("f:" + p.c, "in-flag"), p.year ? `${p.year} курс` : "сэнсэй"),
+    h("span", { class: "in-mini" }, ageRu(p.age)))));
+}
+function personSheet(p) {
+  const L = introLines(p);
+  openSheet(p.ru, (close) => [
+    h("div", { class: "sheet-head" }, h("div", {}, h("div", { class: "eyebrow", lang: "ja" }, "じこしょうかい"), h("h2", {}, p.ru)), h("button", { class: "icon-btn", type: "button", "aria-label": "Закрыть", onclick: close }, icon("close"))),
+    h("div", { class: "meet in-meet" }, ipPic(p, "v-pic-big"), h("div", { class: "in-name big", lang: "ja" }, kanaText(p.call)), ipFacts(p), ipListen(L), ipSpeech(L),
+      h("div", { class: "v-trap" }, h("b", { lang: "ja" }, "ポイント"), " ", p.tip)),
+    h("div", { class: "row", style: "justify-content:center" }, h("button", { class: "btn", type: "button", onclick: close }, "Закрыть"))]);
+}
+// Карточка героя для задания: что видно из таблицы — страна, курс или возраст
+function ipCard(p, what) {
+  const fact = what === "nat" ? [wordIcon("f:" + p.c, "in-flag"), vByW(p.c).ru] : what === "year" ? `${p.year}-й курс` : what === "age" ? ageRu(p.age) : null;
+  return h("div", { class: "v-card in-card" }, ipPic(p, "v-pic"), h("div", { class: "in-name", lang: "ja" }, kanaText(p.call)), fact ? h("div", { class: "in-fact" }, fact) : null);
+}
+// Собрать фразу из кусочков (o.toks — правильный порядок, o.decoys — лишние)
+function tileTask(o) {
+  const toks = o.toks, need = toks.length, picked = [];
+  const tiles = shuffle(toks.map((t, j) => ({ t, id: "a" + j })).concat(o.decoys.filter((d) => !toks.includes(d)).map((t, j) => ({ t, id: "d" + j }))));
+  const slots = h("div", { class: "num-slots gr-slots" }), pool = h("div", { class: "num-tiles" });
+  const fb = h("div", { class: "act-bar", hidden: true });
+  let done = false, tries = 0;
+  const draw = () => {
+    slots.replaceChildren(...Array.from({ length: need }, (_, j) => h("button", { class: "num-slot gr-slot" + (picked[j] ? " full" : ""), type: "button", lang: "ja", disabled: done || !picked[j], onclick: () => { picked.splice(j, 1); draw(); } }, picked[j] ? kanaText(picked[j].t) : "")));
+    pool.replaceChildren(...tiles.map((tl) => h("button", { class: "num-tile gr-tile", type: "button", lang: "ja", disabled: done || picked.includes(tl) || picked.length >= need, onclick: () => { picked.push(tl); draw(); if (picked.length === need) check(); } }, kanaText(tl.t))));
+  };
+  function check() {
+    done = true; tries++; draw();
+    const ok = picked.map((y) => y.t).join("|") === toks.join("|");
+    if (ok && tries === 1) award(1);
+    fb.hidden = false;
+    const nextBtn = h("button", { class: "btn primary", type: "button", onclick: () => o.onDone(tries === 1 && ok) }, "Дальше");
+    const again = h("button", { class: "btn", type: "button", onclick: () => { done = false; picked.length = 0; fb.hidden = true; draw(); } }, "Ещё раз");
+    fb.replaceChildren(h("div", { class: "act-verdict " + (ok ? "ok" : "bad") }, mascot(ok ? "happy" : "sad"),
+      h("div", {}, h("div", { class: "verdict-title" }, jpTitle(ok ? "good" : "oops"), ok ? "Верно" : "Не совсем", ok && tries === 1 ? h("span", { class: "gain" }, "+1 ★") : null),
+        h("div", { class: "act-reveal" }, ok ? o.reveal : o.hint))), ok ? nextBtn : again);
+    if (ok) say(o.sayText);
+  }
+  draw();
+  return h("div", { class: "task gr-task" }, h("div", { class: "task-head" }, h("div", { class: "task-label" }, o.label)), o.top, slots, pool, fb);
+}
+// --- задания по таблице: герой и onDone(ok) ---
+// Упражнение A: メアリー さん は アメリカじん です。
+function iTaskNat(p, onDone) {
+  const s = `${p.call} は ${p.c}じん です。`;
+  const decoys = shuffle(Object.keys(NAT_RU).filter((c) => c !== p.c)).slice(0, 2).map((c) => c + "じん").concat("の");
+  return tileTask({ label: "Расскажи по таблице: кто откуда?", top: ipCard(p, "nat"), toks: p.call.split(" ").concat("は", p.c + "じん", "です"), decoys, sayText: s,
+    reveal: ipLine(s, `${p.ruCall} — ${ipNat(p)}.`), hint: "Схема: имя は страна+じん です.", onDone });
+}
+const inTask = (el) => { el.classList.add("gr-task", "in-task"); return el; };
+const ipAsk = (q, p, what) => h("div", { class: "in-q" }, h("div", { class: "gr-card ph-heard in-heard" }, h("div", { class: "gr-line", lang: "ja" }, "— ", kanaText(q)), sayBtn(q)), ipCard(p, what));
+function iTaskYear(p, onDone) {
+  const right = `${yearWord(p.year)} です。`;
+  const wrong = p.year === 4 ? shuffle([1, 2, 3]).slice(0, 2).map(yearWord).concat("よんねんせい") : [1, 2, 3, 4].filter((y) => y !== p.year).map(yearWord);
+  return inTask(choiceTask({ label: "Ответь по таблице", card: ipAsk(`${p.call} は なんねんせい ですか。`, p, "year"), kind: "ja", say: right, hideSay: true,
+    options: shuffle([right].concat(wrong.map((w) => w + " です。"))), answer: right,
+    reveal: h("span", {}, ipLine(right, `На ${YEAR_RU[p.year]} курсе.`), p.year === 4 ? h("div", { class: "muted" }, "Четвёртый — よねんせい: не よん и не し.") : null), onDone: ({ ok }) => onDone(ok) }));
+}
+// похожие возрасты: соседние, ±10, цифры наоборот; для 20 — «правильные на вид» にじゅっさい и にじゅうさい
+function ageLookalikes(n) {
+  const out = new Set(n === 20 ? ["にじゅっさい", "にじゅうさい"] : []);
+  for (const x of shuffle([n + 1, n - 1, n + 10, n - 10, +String(n).split("").reverse().join(""), n + 2])) if (x > 0 && x < 100 && x !== n) out.add(ageWord(x));
+  out.delete(ageWord(n));
+  return [...out].slice(0, 3);
+}
+function iTaskAge(p, onDone) {
+  const right = `${ageWord(p.age)} です。`;
+  return inTask(choiceTask({ label: "Ответь по таблице", card: ipAsk(`${p.call} は なんさい ですか。`, p, "age"), kind: "ja", say: right, hideSay: true,
+    options: shuffle([right].concat(ageLookalikes(p.age).map((w) => w + " です。"))), answer: right,
+    reveal: h("span", {}, ipLine(right, `${ageRu(p.age)} — «${ageCyr(p.age)}».`), p.age === 20 ? h("div", { class: "muted" }, "20 лет — особое слово はたち.") : null), onDone: ({ ok }) => onDone(ok) }));
+}
+// Кто это? — рассказ без имени, угадать героя
+function iTaskWho(p, onDone) {
+  const L = introLines(p).slice(2, -1);
+  const opts = [p].concat(shuffle(INTRO_PEOPLE.filter((y) => y !== p)).slice(0, 3));
+  return inTask(choiceTask({ label: "Кто это о себе рассказывает?", card: h("div", { class: "in-q" }, ipSpeech(L), ipListen(L, "Послушать")), kind: "ja", hideSay: true,
+    options: shuffle(opts.map((y) => y.call)), answer: p.call,
+    reveal: h("span", {}, h("div", { class: "in-who-ans" }, ipPic(p, "in-ava"), h("b", {}, p.ru)), ipFacts(p)), onDone: ({ ok }) => onDone(ok) }));
+}
+// Диалоги из учебника: в [скобках] — пропуски, opts — варианты для каждого пропуска по порядку
+const INTRO_DLG = [
+  { id: "mary", title: "Мэри представляется", lines: [
+    { who: "mary", s: "はじめまして。メアリー ハート です。", ru: "Приятно познакомиться. Я Мэри Харт." },
+    { who: "mary", s: "アリゾナ だいがく [の] がくせい です。", ru: "Я студентка Аризонского университета.", opts: [["の", "は", "か", "も"]] },
+    { who: "mary", s: "[に]ねんせい です。", ru: "Я на втором курсе.", opts: [["に", "いち", "さん", "よん"]] },
+    { who: "mary", s: "[せんこう] は にほんご です。", ru: "Моя специальность — японский язык.", opts: [["せんこう", "せんせい", "せんぱい", "だいがく"]] },
+    { who: "mary", s: "[じゅうきゅうさい] です。", ru: "Мне 19 лет.", opts: [["じゅうきゅうさい", "きゅうじゅうさい", "じゅうきゅうねんせい", "はたち"]] },
+    { who: "mary", s: "よろしく おねがい します。", ru: "Рада знакомству." }] },
+  { id: "meet", title: "Такэси и Мэри", lines: [
+    { who: "takeshi", s: "こんにちは。きむら たけし です。", ru: "Здравствуйте. Я Кимура Такэси." },
+    { who: "mary", s: "メアリー ハート です。[あのう]、[りゅうがくせい] ですか。", ru: "Я Мэри Харт. Простите, вы иностранный студент?",
+      opts: [["あのう", "いいえ", "ただいま", "おはよう"], ["りゅうがくせい", "せんせい", "せんこう", "だいがく"]] },
+    { who: "takeshi", s: "[いいえ]、[にほんじん] です。", ru: "Нет, я японец.", opts: [["いいえ", "はい", "ええ", "あのう"], ["にほんじん", "アメリカじん", "かんこくじん", "イギリスじん"]] },
+    { who: "mary", s: "[そうですか]。[なんねんせい] ですか。", ru: "Вот как. А на каком вы курсе?", opts: [["そうですか", "すみません", "ただいま", "はじめまして"], ["なんねんせい", "なんさい", "だれ", "なん"]] },
+    { who: "takeshi", s: "[よ]ねんせい です。", ru: "На четвёртом.", opts: [["よ", "よん", "し", "さん"]] }] }
+];
+const dlgPlain = (ln) => ln.s.replace(/[\[\]]/g, "");
+const dlgSteps = (id) => INTRO_DLG.find((d) => d.id === id).lines.flatMap((ln, li) => (ln.opts || []).map((_, gi) => ({ k: "dlg", d: id, li, gi })));
+// Диалог целиком: текущий пропуск пустой, остальные заполнены и подсвечены
+function dlgView(D, li, gi) {
+  return h("div", { class: "ph-dlg in-dlg" }, D.lines.map((ln, j) => {
+    let k = -1;
+    const parts = ln.s.split(/(\[[^\]]*\])/).filter(Boolean).map((part) => {
+      if (part[0] !== "[") return kanaText(part);
+      k++;
+      return j === li && k === gi ? h("span", { class: "gr-gap", "aria-label": "пропуск" }) : h("b", { class: "gr-hit" }, kanaText(part.slice(1, -1)));
+    });
+    const side = ln.who === D.lines[0].who ? "a" : "b";
+    return h("div", { class: "in-line " + side + (j === li ? " cur" : "") }, ipPic(ipById(ln.who), "in-ava"),
+      h("div", { class: "ph-say " + side }, h("div", {}, h("div", { class: "gr-line", lang: "ja" }, parts), h("div", { class: "gr-ru" }, ln.ru))));
+  }));
+}
+function iTaskDlg(st, onDone) {
+  const D = INTRO_DLG.find((d) => d.id === st.d), ln = D.lines[st.li], ans = ln.s.match(/\[[^\]]*\]/g)[st.gi].slice(1, -1);
+  return grTask(choiceTask({ label: `${D.title}: вставь пропущенное`, card: dlgView(D, st.li, st.gi), kind: "ja", say: dlgPlain(ln), hideSay: true,
+    options: shuffle(ln.opts[st.gi].slice()), answer: ans, reveal: ipLine(dlgPlain(ln), ln.ru), onDone: ({ ok }) => onDone(ok) }));
+}
+
+function iState() {
+  if (!S.intro) S.intro = {};
+  return S.intro;
+}
+function startIntro(mode = "learn") {
+  const I = iState();
+  const sh = openShell(mode === "learn" ? "Знакомство" : "Тренировка");
+  const phases = mode === "learn"
+    ? [{ t: "intro" }, { t: "meet" }, { t: "nat" }, { t: "year" }, { t: "age" }, { t: "who" }, { t: "dlg", d: "mary" }, { t: "dlg", d: "meet" }, { t: "finish" }]
+    : [{ t: "mix" }, { t: "testEnd" }];
+  const stats = { ok: 0, tot: 0 };
+  let pi = -1;
+  const saved = mode === "learn" ? I.res : null;
+  const keep = () => { if (mode === "learn" && pi > 0 && pi < phases.length - 1) { I.res = { pi, stats: Object.assign({}, stats), at: Date.now() }; save(); } };
+  const next = () => { pi++; sh.progress(pi / (phases.length - 1)); keep(); run(phases[pi]); };
+  const run = (ph) => { sh.count(""); ({ intro, meet, nat, year, age, who, dlg, mix, finish, testEnd })[ph.t](ph); };
+  const students = INTRO_PEOPLE.filter((p) => p.year);
+  const taskOf = (it, done) => {
+    if (it.k === "dlg") return sh.set(iTaskDlg(it, done));
+    const p = ipById(it.p);
+    if (it.k === "nat") return sh.set(iTaskNat(p, done));
+    if (it.k === "year") return sh.set(iTaskYear(p, done));
+    if (it.k === "age") return sh.set(iTaskAge(p, done));
+    if (it.k === "who") return sh.set(iTaskWho(p, done));
+  };
+  // очередь заданий: ошибка — задание вернётся через пару шагов
+  function queueRun(stage, queue, again = true, onAns = null) {
+    const total = queue.length;
+    let doneN = 0;
+    const serve = () => {
+      sh.stage(stage); sh.count(`${doneN} / ${total}`);
+      if (!queue.length) return next();
+      const it = queue.shift();
+      taskOf(it, (ok) => {
+        stats.tot++; if (ok) stats.ok++; save();
+        if (onAns) onAns(it, ok);
+        if (ok || !again) doneN++; else queue.splice(Math.min(queue.length, 2 + Math.floor(Math.random() * 2)), 0, it);
+        serve();
+      });
+    };
+    serve();
+  }
+  const each = (list, k) => shuffle(list.map((p) => ({ k, p: p.id })));
+  function intro() {
+    sh.stage("начало");
+    const parts = [h("div", { class: "eyebrow", lang: "ja" }, "あたらしい ともだち"), h("h2", {}, "Знакомство: новые друзья"),
+      ipChart(personSheet),
+      h("p", {}, "Это таблица из учебника: кто откуда, на каком курсе и сколько кому лет. Сначала каждый герой расскажет о себе, потом ты опишешь их сама, как в упражнении A: メアリー さん は アメリカじん です。"),
+      h("p", {}, "Дальше — вопросы なんねんせい ですか и なんさい ですか, угадай героя по рассказу и заполни пропуски в двух диалогах. А в конце расскажешь о себе."),
+      h("p", { class: "muted" }, "Можно выйти в любой момент: продолжишь с того же места.")];
+    const go = h("button", { class: "btn primary", type: "button", onclick: next }, "Начать");
+    if (saved && saved.pi > 0 && saved.pi < phases.length - 1) {
+      go.textContent = "Начать сначала"; go.className = "btn";
+      const resume = () => { Object.assign(stats, saved.stats || {}); pi = saved.pi - 1; next(); };
+      parts.unshift(h("div", { class: "resume-note" }, "Ты остановилась посреди занятия. Продолжим с того же места?"));
+      return sh.set(h("div", { class: "task explain" }, parts, h("div", { class: "row" }, h("button", { class: "btn primary", type: "button", onclick: resume }, "Продолжить"), go)));
+    }
+    sh.set(h("div", { class: "task explain" }, parts, h("div", { class: "row" }, go)));
+  }
+  function meet() {
+    let i = 0;
+    const show = () => {
+      sh.stage("герои о себе"); sh.count(`${i} / ${INTRO_PEOPLE.length}`);
+      if (i >= INTRO_PEOPLE.length) return next();
+      const p = INTRO_PEOPLE[i], L = introLines(p);
+      sh.set(h("div", { class: "task" },
+        h("div", { class: "v-known" }, INTRO_PEOPLE.map((y, j) => h("span", { class: j < i ? "seen" : j === i ? "cur" : "" }, ipPic(y), j <= i ? h("span", { lang: "ja" }, y.call.split(" ")[0]) : null))),
+        h("div", { class: "meet in-meet" }, ipPic(p, "v-pic-big"), h("div", { class: "in-name big", lang: "ja" }, kanaText(p.call)), h("div", { class: "facts" }, h("span", {}, p.ru)), ipFacts(p),
+          ipListen(L), ipSpeech(L), h("div", { class: "v-trap" }, h("b", { lang: "ja" }, "ポイント"), " ", p.tip)),
+        h("div", { class: "row", style: "justify-content:center" }, h("button", { class: "btn primary", type: "button", onclick: () => { i++; show(); } }, i + 1 < INTRO_PEOPLE.length ? "Следующий герой" : "Проверим себя"))));
+    };
+    show();
+  }
+  function nat() { queueRun("кто откуда", each(INTRO_PEOPLE, "nat"), false); }
+  function year() { queueRun("なんねんせい？", each(students, "year")); }
+  function age() { queueRun("なんさい？", each(INTRO_PEOPLE, "age")); }
+  function who() { queueRun("кто это?", each(INTRO_PEOPLE, "who")); }
+  function dlg(ph) { queueRun("диалог", dlgSteps(ph.d), false); }
+  const misses = [];
+  function mix() {
+    const pool = [].concat(each(INTRO_PEOPLE, "nat"), each(students, "year"), each(INTRO_PEOPLE, "age"), each(INTRO_PEOPLE, "who"), dlgSteps("mary"), dlgSteps("meet"));
+    queueRun("вперемешку", shuffle(pool).slice(0, 12), false, (it, ok) => { if (!ok) misses.push(it); });
+  }
+  function testEnd() {
+    sh.stage("итог"); sh.count("");
+    const score = stats.ok, tot = stats.tot;
+    if (!I.best || score > I.best.score) I.best = { score, tot, at: Date.now() };
+    save();
+    const great = score >= tot - 1;
+    sh.set(h("div", { class: "summary" },
+      h("div", { class: "say-row" }, mascot(great ? "happy" : "normal", great), bubble(great ? "congrats" : "cheer", great ? "Ты знаешь всех героев!" : "Загляни в таблицу и попробуй ещё")),
+      h("h2", {}, `${score} из ${tot}`),
+      h("div", { class: "row", style: "justify-content:center" },
+        h("button", { class: "btn primary", type: "button", onclick: () => { closeShell(); startIntro("review"); } }, "Ещё раз"),
+        h("button", { class: "btn", type: "button", onclick: () => closeShell() }, "Готово"))));
+    if (great) petalBurst(document.querySelector(".summary"));
+  }
+  function finish() {
+    sh.stage("готово"); sh.count("");
+    delete I.res; I.done = true; award(10);
+    save();
+    sh.set(h("div", { class: "summary" },
+      h("div", { class: "say-row" }, mascot("happy", true), bubble("yay", "Теперь ты знаешь новых друзей!")),
+      h("div", { class: "big-stats" }, h("div", {}, h("b", {}, stats.tot ? Math.round((100 * stats.ok) / stats.tot) + "%" : "—"), h("span", {}, "верно с первого раза"))),
+      h("p", { class: "note" }, "А теперь самое интересное: расскажи о себе так же, как Мэри."),
+      h("div", { class: "row", style: "justify-content:center" },
+        h("button", { class: "btn primary", type: "button", onclick: () => { closeShell(); startMe(); } }, "Рассказать о себе"),
+        h("button", { class: "btn", type: "button", onclick: () => closeShell() }, "Готово"))));
+    petalBurst(document.querySelector(".summary"));
+  }
+  next();
+}
+
+// «О себе»: собираешь свой рассказ по образцу Мэри, слушаешь его и отвечаешь на вопросы о себе
+const ME_NAMES = [["アーニャ", "Аня"], ["ダーシャ", "Даша"], ["マーシャ", "Маша"], ["カーチャ", "Катя"], ["ナースチャ", "Настя"], ["ソーニャ", "Соня"], ["リーザ", "Лиза"], ["ポリーナ", "Полина"]];
+const ME_STATUS = [["だいがくせい", "студентка"], ["りゅうがくせい", "иностранная студентка"], ["こうこうせい", "старшеклассница"], ["がくせい", "ученица"], ["", "не говорить"]];
+function meState() {
+  const I = iState();
+  if (!I.me) I.me = { name: "", ru: "", c: "ロシア", status: "だいがくせい", year: 1, major: "にほんご", age: 18 };
+  return I.me;
+}
+// мой рассказ в том же виде, что у героев
+function meP(me = meState()) {
+  const uni = me.status === "だいがくせい" || me.status === "りゅうがくせい";
+  return { f: true, name: me.name.trim() || "…", ru: me.ru || me.name.trim() || "…", c: me.c, status: me.status, year: me.status ? me.year : 0, major: uni ? me.major : "", age: me.age };
+}
+function startMe() {
+  const me = meState();
+  const sh = openShell("О себе");
+  sh.stage("мой рассказ"); sh.progress(0);
+  const out = h("div", { class: "in-out" }), dyn = h("div", { class: "in-form" });
+  const input = h("input", { type: "text", class: "name-input in-name-input", value: me.name, autocomplete: "off", spellcheck: "false", enterkeyhint: "done", placeholder: "Например, アーニャ", "aria-label": "Имя" });
+  input.addEventListener("input", () => { me.name = input.value; const hit = ME_NAMES.find((n) => n[0] === input.value.trim()); me.ru = hit ? hit[1] : ""; save(); drawNames(); drawOut(); });
+  const names = h("div", { class: "in-opts" });
+  const drawNames = () => names.replaceChildren(...ME_NAMES.map(([jp, ru]) => h("button", { type: "button", class: "in-opt", "aria-pressed": String(me.name.trim() === jp), onclick: () => { me.name = input.value = jp; me.ru = ru; save(); drawNames(); drawOut(); } }, h("b", { lang: "ja" }, jp), h("span", {}, ru))));
+  const field = (label, body) => h("div", { class: "in-field" }, h("div", { class: "in-label" }, label), body);
+  const opts = (key, list) => h("div", { class: "in-opts" }, list.map(([v, jp, ru, ico]) => h("button", { type: "button", class: "in-opt", "aria-pressed": String(me[key] === v),
+    onclick: () => { me[key] = v; save(); drawForm(); drawOut(); } }, ico || null, jp ? h("b", { lang: "ja" }, kanaText(jp)) : null, ru ? h("span", {}, ru) : null)));
+  function drawForm() {
+    const uni = me.status === "だいがくせい" || me.status === "りゅうがくせい";
+    const step = (d) => () => { me.age = Math.max(5, Math.min(99, me.age + d)); save(); drawForm(); drawOut(); };
+    dyn.replaceChildren(
+      field("Откуда ты", opts("c", Object.keys(NAT_RU).map((c) => [c, c + "じん", NAT_RU[c][1], wordIcon("f:" + c, "in-flag")]))),
+      field("Кто ты", opts("status", ME_STATUS.map(([v, ru]) => [v, v, ru]))),
+      me.status ? field(inClass(me.status) ? "Класс" : "Курс", opts("year", [1, 2, 3, 4].map((y) => [y, yearWord(y), inClass(me.status) ? `${y}-й класс` : `${y}-й курс`]))) : "",
+      uni ? field("Специальность", opts("major", [["にほんご", "にほんご", "японский язык"], ["", "", "не говорить"]])) : "",
+      field("Сколько тебе лет", h("div", { class: "in-age" },
+        h("button", { class: "btn in-step", type: "button", "aria-label": "Меньше", onclick: step(-1) }, "−"),
+        h("b", { class: "num" }, String(me.age)),
+        h("button", { class: "btn in-step", type: "button", "aria-label": "Больше", onclick: step(1) }, "+"),
+        h("span", { class: "in-age-r" }, h("b", { lang: "ja" }, kanaText(ageWord(me.age))), h("span", { class: "muted" }, `«${ageCyr(me.age)}»`)))),
+      me.age === 20 ? h("div", { class: "v-trap" }, h("b", { lang: "ja" }, "ポイント"), " 20 лет — особое слово はたち.") : "");
+  }
+  function drawOut() {
+    const L = introLines(meP(me));
+    out.replaceChildren(h("h2", { class: "in-out-h" }, "Твой рассказ"), ipListen(L, "Послушать всё"), ipSpeech(L),
+      h("div", { class: "row", style: "justify-content:center" },
+        h("button", { class: "btn primary", type: "button", onclick: practice }, "Потренироваться"),
+        h("button", { class: "btn", type: "button", onclick: () => closeShell() }, "Готово")));
+  }
+  // вопросы одноклассницы о тебе — ответ выбираешь из похожих
+  function practice() {
+    const p = meP(me);
+    const Q = [];
+    const other = p.c === "にほん" ? "アメリカ" : "にほん";
+    Q.push({ q: `${other}じん ですか。`, a: `いいえ、${p.c}じん です。`, w: [`はい、${p.c}じん です。`, `いいえ、${p.c} です。`, `いいえ、${other}じん です。`], ru: `Нет, я ${NAT_RU[p.c][1]}.` });
+    if (p.year) Q.push({ q: "なんねんせい ですか。", a: `${yearWord(p.year)} です。`, w: (p.year === 4 ? ["よんねんせい", "さんねんせい", "にねんせい"] : [1, 2, 3, 4].filter((y) => y !== p.year).map(yearWord)).map((w) => w + " です。"), ru: inClass(p.status) ? `В ${YEAR_RU[p.year]} классе.` : `На ${YEAR_RU[p.year]} курсе.` });
+    if (p.major) Q.push({ q: "せんこう は なん ですか。", a: `${p.major} です。`, w: ["にほんじん です。", "にほん です。", "せんこう です。"], ru: `${MAJOR_RU[p.major][0][0].toUpperCase() + MAJOR_RU[p.major][0].slice(1)}.` });
+    Q.push({ q: "なんさい ですか。", a: `${ageWord(p.age)} です。`, w: ageLookalikes(p.age).map((w) => w + " です。"), ru: `${ageRu(p.age)}.` });
+    let i = 0, ok1 = 0;
+    const one = () => {
+      sh.stage("вопросы о тебе"); sh.count(`${i} / ${Q.length}`); sh.progress(i / Q.length);
+      if (i >= Q.length) return end();
+      const x = Q[i];
+      sh.set(inTask(choiceTask({ label: "Тебя спрашивают. Что ответишь?", card: h("div", { class: "gr-card ph-heard in-heard" }, wordIcon("p:sora", "v-pic-s"), h("div", { class: "gr-line", lang: "ja" }, "— ", kanaText(x.q)), sayBtn(x.q)),
+        kind: "ja", say: x.a, hideSay: true, options: shuffle([x.a].concat(x.w)), answer: x.a, reveal: ipLine(x.a, x.ru), onDone: ({ ok }) => { if (ok) ok1++; i++; one(); } })));
+      say(x.q);
+    };
+    const end = () => {
+      sh.stage("готово"); sh.count(""); sh.progress(1);
+      const L = introLines(p);
+      sh.set(h("div", { class: "summary" },
+        h("div", { class: "say-row" }, mascot("happy", true), bubble("yay", `${ok1} из ${Q.length} — теперь расскажи вслух!`)),
+        ipListen(L, "Послушать ещё раз"), ipSpeech(L),
+        h("div", { class: "row", style: "justify-content:center" },
+          h("button", { class: "btn primary", type: "button", onclick: () => closeShell() }, "Готово"),
+          h("button", { class: "btn", type: "button", onclick: () => { closeShell(); startMe(); } }, "Изменить рассказ"))));
+      if (ok1 === Q.length) petalBurst(document.querySelector(".summary"));
+    };
+    one();
+  }
+  drawNames(); drawForm(); drawOut();
+  sh.set(h("div", { class: "task explain in-me" },
+    h("div", { class: "eyebrow", lang: "ja" }, "じこしょうかい"), h("h2", {}, "Расскажи о себе"),
+    h("p", { class: "muted" }, "Выбери, что про тебя верно, — рассказ соберётся сам, как у Мэри в учебнике. Послушай его и потренируйся отвечать на вопросы."),
+    field("Как тебя зовут", h("div", { class: "in-field" }, input, h("div", { class: "muted in-hint" }, "Иностранные имена японцы пишут катаканой. Выбери похожее или впиши своё:"), names)),
+    dyn, out));
+}
+
 /* Игра «Апорт»: чтение знаков */
 function startFetch() {
   const pool = learned("hira");
@@ -6306,9 +6908,25 @@ function wordsView() {
   const dict = h("div", { class: "v-dict" }, groups.length ? groups.map(([st, l]) => [h("div", { class: "v-dict-h" }, st.title), l.map(wordRow)])
     : h("p", { class: "muted" }, wordsFilter === "known" ? "Пока пусто: слово попадает сюда после трёх верных ответов подряд." : "Все слова выучены!"));
   return h("div", {}, head, h("h2", { class: "section-title" }, starSticker("#FFB0CD"), "Темы"), cats,
+    h("h2", { class: "section-title" }, starSticker("#FFB0CD"), "Знакомство"), introPanel(),
     h("h2", { class: "section-title" }, starSticker("#FFB0CD"), "Фразы"), phrPanel(),
     h("h2", { class: "section-title" }, starSticker("#FFB0CD"), "Грамматика"), gramPanel(),
     h("h2", { class: "section-title" }, starSticker("#FFB0CD"), "Словарик"), seg, dict);
+}
+// Знакомство: таблица героев учебника (герой открывает свой рассказ), занятие, тренировка и рассказ о себе
+function introPanel() {
+  const I = iState();
+  const btn = (t, f, primary) => h("button", { class: "btn" + (primary ? " primary" : ""), type: "button", onclick: f }, t);
+  return h("section", { class: "panel gr-panel in-panel" },
+    h("div", { class: "gr-panel-top" },
+      h("div", {}, h("div", { class: "eyebrow", lang: "ja" }, "あたらしい ともだち"), h("h3", {}, "Новые друзья")),
+      h("span", { class: "v-cat-n num" }, I.done ? "✓" : "", I.res ? h("i", { class: "v-cat-dot", title: "Начато" }) : null)),
+    h("div", { class: "muted v-line" }, "Урок из учебника: кто откуда, на каком курсе и сколько кому лет. Нажми на героя — он расскажет о себе." + (I.best ? ` Лучшая тренировка ${I.best.score}/${I.best.tot}.` : "")),
+    ipChart(personSheet),
+    h("div", { class: "v-actions three" },
+      btn(I.res ? "Продолжить" : "Учить", () => startIntro("learn"), !I.done),
+      btn("Тренировка", () => startIntro("review"), !!I.done),
+      btn("О себе", () => startMe())));
 }
 // Фразы: разговорник по порциям (строчка открывает фразу с диалогом) и занятия
 function phrPanel() {
@@ -6345,7 +6963,7 @@ function gramPanel() {
   const btn = (t, f, primary) => h("button", { class: "btn" + (primary ? " primary" : ""), type: "button", onclick: f }, t);
   return h("section", { class: "panel gr-panel" },
     h("div", { class: "gr-panel-top" },
-      h("div", {}, h("div", { class: "eyebrow", lang: "ja" }, "ぶんぽう"), h("h3", {}, "Частицы и связки")),
+      h("div", {}, h("div", { class: "eyebrow", lang: "ja" }, "ぶんぽう"), h("h3", {}, "Частицы, связки, суффиксы")),
       h("span", { class: "v-cat-n num" }, `${n}/${GRAMMAR.length}`, g.res ? h("i", { class: "v-cat-dot", title: "Начато" }) : null)),
     h("div", { class: "muted v-line" }, "Нажми на строчку — там правило и примеры." + (T && T.best ? ` Лучший тест ${T.best.score}/${T.best.tot}.` : "")),
     h("div", { class: "gr-list" }, GRAMMAR.map((x) => h("button", { class: "gr-row", type: "button", onclick: () => gramSheet(x) },
@@ -6359,7 +6977,7 @@ function gramPanel() {
 }
 function gramSheet(x) {
   openSheet(x.g, (close) => [
-    h("div", { class: "sheet-head" }, h("div", {}, h("div", { class: "eyebrow" }, "Грамматика"), h("h2", {}, x.fam === "p" ? "Частица" : "Конец предложения")), h("button", { class: "icon-btn", type: "button", "aria-label": "Закрыть", onclick: close }, icon("close"))),
+    h("div", { class: "sheet-head" }, h("div", {}, h("div", { class: "eyebrow" }, "Грамматика"), h("h2", {}, x.kind || (x.fam === "p" ? "Частица" : "Конец предложения"))), h("button", { class: "icon-btn", type: "button", "aria-label": "Закрыть", onclick: close }, icon("close"))),
     grCard(x, true),
     h("div", { class: "row", style: "justify-content:center" },
       h("button", { class: "btn primary", type: "button", onclick: () => { closeAllSheets(); setTimeout(() => startGrammar("review", [x.id]), 60); } }, "Потренировать"),
@@ -6387,7 +7005,7 @@ function wordSheet(x) {
   openSheet(x.w, (close) => [
     h("div", { class: "sheet-head" }, h("div", {}, h("div", { class: "eyebrow" }, "Слово"), h("h2", {}, x.ru)), h("button", { class: "icon-btn", type: "button", "aria-label": "Закрыть", onclick: close }, icon("close"))),
     h("div", { class: "meet v-meet" }, wordIcon(x.w, "v-pic-big"),
-      h("div", { class: "v-word" + ([...x.w].length > 4 ? " long" : ""), lang: "ja" }, kanaText(x.w)),
+      h("div", { class: "v-word" + vWordCls(x.w), lang: "ja" }, kanaText(x.w)),
       h("div", { class: "facts" }, h("span", {}, `${x.cyr} · ${x.lat}`), levelDots(x.w), sayBtn(x.w)),
       vMnemo(x), vTrapNote(x)),
     h("div", { class: "row", style: "justify-content:center" },

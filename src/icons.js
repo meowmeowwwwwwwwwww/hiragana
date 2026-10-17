@@ -205,6 +205,97 @@ const WordIcons = (() => {
       "よろしく おねがい します": frame("#FFE8F0", bow(-26, person(56, 42, 17, { long: true, shirt: "#FFB0CD" })) + ground("#FFCFE0", 74) + flower(80, 82, 5, "#fff") + flower(20, 82, 5, "#C8B8FF") + spark(82, 24, 6) + heart(70, 18, 0.55) + spark(18, 22, 4, "#FFB0CD"))
     });
   }
+  // ---- урок «Новые друзья»: флаги, национальности, университет, герои учебника (ключ "p:id") ----
+  {
+    const SK = "#FFE6D4";
+    // флаг 70×50 в своих координатах; flag(k, x, y, s) ставит его в картинку
+    const FW = 70, FH = 50, FD = Math.hypot(FW, FH);
+    const pts = (P) => "M" + P.map((p) => p.map((v) => v.toFixed(1)).join(" ")).join(" L") + " Z";
+    // диагональная полоса из угла в угол, обрезанная по краю флага
+    const diag = (w, c, flip) => {
+      const a = (w * FD) / FW, b = (w * FD) / FH;
+      const P = flip ? [[FW, 0], [FW, a], [b, FH], [0, FH], [0, FH - a], [FW - b, 0]] : [[0, 0], [b, 0], [FW, FH - a], [FW, FH], [FW - b, FH], [0, a]];
+      return `<path d="${pts(P)}" fill="${c}"/>`;
+    };
+    const trig = (x, y, deg) => `<g transform="rotate(${deg} ${x} ${y})" fill="${O}"><rect x="${x - 5}" y="${y - 4.6}" width="10" height="2.2" rx="1"/><rect x="${x - 5}" y="${y - 1.1}" width="10" height="2.2" rx="1"/><rect x="${x - 5}" y="${y + 2.4}" width="10" height="2.2" rx="1"/></g>`;
+    const FLAG = {
+      jp: `<rect width="70" height="50" rx="4" fill="#fff"/><circle cx="35" cy="25" r="13" fill="#FF5C6C"/>`,
+      kr: `<rect width="70" height="50" rx="4" fill="#fff"/><circle cx="35" cy="25" r="11" fill="#4A6FC8"/><path d="M24 25 A11 11 0 0 1 46 25 A5.5 5.5 0 0 1 35 25 A5.5 5.5 0 0 0 24 25 Z" fill="#FF5C6C"/>` +
+        trig(13, 11, -34) + trig(57, 11, 34) + trig(13, 39, 34) + trig(57, 39, -34),
+      us: `<rect width="70" height="50" rx="4" fill="#fff"/>` + [0, 2, 4, 6].map((i) => `<rect y="${(i * 50 / 7).toFixed(2)}" width="70" height="${(50 / 7).toFixed(2)}" fill="#FF5C6C"/>`).join("") +
+        `<rect width="30" height="${(50 * 4 / 7).toFixed(2)}" fill="#4A6FC8"/>` + [6, 15, 24].flatMap((x) => [7, 15, 23].map((y) => `<circle cx="${x}" cy="${y - 1}" r="2" fill="#fff"/>`)).join(""),
+      uk: `<rect width="70" height="50" rx="4" fill="#4A6FC8"/>` + diag(6, "#fff") + diag(6, "#fff", true) + diag(2, "#FF5C6C") + diag(2, "#FF5C6C", true) +
+        `<rect x="28" width="14" height="50" fill="#fff"/><rect y="18" width="70" height="14" fill="#fff"/><rect x="31.5" width="7" height="50" fill="#FF5C6C"/><rect y="21.5" width="70" height="7" fill="#FF5C6C"/>`,
+      ru: `<rect width="70" height="50" rx="4" fill="#fff"/><rect y="16.7" width="70" height="16.7" fill="#4A7FD8"/><path d="M0 33.3 H70 V46 Q70 50 66 50 H4 Q0 50 0 46 Z" fill="#FF5C6C"/>`
+    };
+    const flag = (k, x, y, s = 1, w = 5) => `<g transform="translate(${x} ${y}) scale(${s})">${FLAG[k]}<rect width="70" height="50" rx="4" fill="none" ${st(w)}/></g>`;
+    // страна: флаг на древке над травкой
+    const country = (k) => `<ellipse cx="50" cy="88" rx="40" ry="7" fill="#B9E6A8" ${st(4)}/>` + bar("M16 12 V86", "#E8B07A", 4) + `<circle cx="16" cy="11" r="5" fill="#FFE27A" ${st(3.4)}/>` + flag(k, 21, 15) + spark(86, 76, 5) + spark(34, 76, 4, "#FFB0CD");
+    // национальность: человек с флажком в руке
+    const nat = (k, o, extra = "") => person(42, 40, 21, o) + extra + bar("M76 88 V34", "#E8B07A", 3) + flag(k, 77, 32, 0.3, 9) + `<ellipse cx="76" cy="72" rx="6" ry="6.5" fill="${SK}" ${st(3.4)}/>`;
+    const ponytail = (cx, cy, r, c) => `<path d="M${cx + r * 0.6} ${cy - r * 0.6} Q${cx + r * 1.9} ${cy - r * 0.5} ${cx + r * 1.5} ${cy + r * 1.1} Q${cx + r * 1.2} ${cy + r * 0.3} ${cx + r * 0.7} ${cy}" fill="${c}" ${st(4)}/>`;
+    const ribbon = (x, y, c = "#FFB347", k = 1) => `<path d="M${x} ${y} l${9 * k} ${-7 * k} v${14 * k} Z M${x} ${y} l${-9 * k} ${-7 * k} v${14 * k} Z" fill="${c}" ${st(3)}/><circle cx="${x}" cy="${y}" r="${3 * k}" fill="${c}" ${st(2.4)}/>`;
+    const glasses = (cx, cy, r) => { const k = r / 30, y = cy + r * 0.2; return `<circle cx="${cx - 7 * k}" cy="${y}" r="${6 * k}" fill="#fff" fill-opacity=".35" ${st(2.6)}/><circle cx="${cx + 7 * k}" cy="${y}" r="${6 * k}" fill="#fff" fill-opacity=".35" ${st(2.6)}/>` + face(cx, y, k).replace(/<ellipse[^>]*>/g, ""); };
+    const bubble = (x, y, w, txt, c = "#FFF1C4", tc = "#CF8600") => `<path d="M${x} ${y} h${w} a6 6 0 0 1 6 6 v14 a6 6 0 0 1 -6 6 h${-(w - 18)} l-7 7 v-7 h-5 a6 6 0 0 1 -6 -6 v-14 a6 6 0 0 1 6 -6 Z" fill="${c}" ${st(3.4)}/>` +
+      `<text x="${x + w / 2}" y="${y + 20}" font-size="16" text-anchor="middle" font-family="system-ui,sans-serif" font-weight="900" fill="${tc}">${txt}</text>`;
+    // герои таблицы из учебника
+    const MARY = { hair: "#F2C46B", shirt: "#FFF6EE", collar: "#FFD7B0" }, TAKESHI = { hair: "#2E2630", shirt: "#fff" }, SORA = { hair: "#2E2630", long: true, shirt: "#FFD2B0", collar: "#fff" },
+      ROBERT = { hair: "#E3CF9A", shirt: "#F1E6D6", collar: "#FFD2B0" }, YAMA = { hair: "#2E2630", shirt: "#ECE8F2", collar: "#fff", tie: "#FFB347" };
+    const mary = (cx, cy, r) => ponytail(cx, cy, r, MARY.hair) + person(cx, cy, r, MARY) + ribbon(cx + r * 0.8, cy - r * 0.75, "#FFB347", r / 24) + `<path d="M${cx - r * 0.9} ${cy + r * 1.1} L${cx - r * 0.5} ${cy + r * 2.1}" stroke="#E8955A" stroke-width="${r / 4}" stroke-linecap="round"/>`;
+    const takeshi = (cx, cy, r) => person(cx, cy, r, TAKESHI) + `<path d="M${cx - r * 0.5} ${cy - r * 1.05} l${r * 0.15} ${-r * 0.3} l${r * 0.2} ${r * 0.24} l${r * 0.2} ${-r * 0.3} l${r * 0.2} ${r * 0.28} l${r * 0.2} ${-r * 0.26} l${r * 0.15} ${r * 0.3}" fill="${TAKESHI.hair}" ${st(3)}/>`;
+    const sora = (cx, cy, r) => person(cx, cy, r, SORA);
+    const robert = (cx, cy, r) => person(cx, cy, r, ROBERT);
+    const yama = (cx, cy, r) => person(cx, cy, r, YAMA) + glasses(cx, cy, r);
+    const portrait = (bg, inner) => `<circle cx="50" cy="50" r="46" fill="${bg}"/>` + inner;
+    Object.assign(I, {
+      "p:mary": portrait("#FFE8D6", mary(50, 42, 24)),
+      "p:takeshi": portrait("#E3F0FF", takeshi(50, 42, 24)),
+      "p:sora": portrait("#FFE1EC", sora(50, 42, 24)),
+      "p:robert": portrait("#E8F6E2", robert(50, 42, 24)),
+      "p:yamashita": portrait("#EDE6FF", yama(50, 42, 24)),
+      // ---- флаги без древка (таблица в «Знакомстве») ----
+      "f:にほん": flag("jp", 15, 25), "f:かんこく": flag("kr", 15, 25), "f:アメリカ": flag("us", 15, 25), "f:イギリス": flag("uk", 15, 25), "f:ロシア": flag("ru", 15, 25),
+      // ---- страны и национальности ----
+      "にほん": country("jp"),
+      "かんこく": country("kr"),
+      "アメリカ": country("us"),
+      "イギリス": country("uk"),
+      "ロシア": country("ru"),
+      "にほんじん": nat("jp", TAKESHI),
+      "かんこくじん": nat("kr", SORA),
+      "アメリカじん": ponytail(42, 40, 21, MARY.hair) + nat("us", MARY, ribbon(42 + 21 * 0.8, 40 - 21 * 0.75, "#FFB347", 0.85)),
+      "イギリスじん": nat("uk", ROBERT),
+      "ロシアじん": nat("ru", { long: true, hair: "#B07A4E", shirt: "#FFB0CD" }, ribbon(42 + 21 * 0.75, 40 - 21 * 0.8, "#FF7FA8", 0.85)),
+      // ---- университет, курс, возраст ----
+      "だいがく": `<ellipse cx="50" cy="90" rx="44" ry="5" fill="#B9E6A8"/><rect x="14" y="44" width="72" height="44" rx="3" fill="#FFF0E0" ${st()}/><path d="M8 46 L50 18 L92 46 Z" fill="#AED8FF" ${st()}/>` +
+        `<circle cx="50" cy="35" r="6" fill="#fff" ${st(3)}/><path d="M50 32 V35 L52 37" fill="none" ${st(2)}/>` +
+        [24, 38, 62, 76].map((x) => `<rect x="${x - 3.5}" y="50" width="7" height="32" rx="2" fill="#fff" ${st(3)}/>`).join("") +
+        `<path d="M43 88 V68 Q50 60 57 68 V88" fill="#C98E5A" ${st(3.4)}/><rect x="10" y="84" width="80" height="6" rx="2" fill="#E8D7C6" ${st(3.4)}/>` + bar("M50 18 V6", "#C9B6C0", 2) + `<path d="M51 6 h12 l-3 4 l3 4 h-12 Z" fill="#FF7FA8" ${st(2.6)}/>`,
+      "りゅうがくせい": `<circle cx="74" cy="66" r="18" fill="#AED8FF" ${st(4)}/><path d="M60 58 q8 -2 10 6 q-2 8 -8 8 M78 50 q6 6 2 12 q6 4 10 0" fill="#B9E6A8" stroke="${O}" stroke-width="2.6" stroke-linejoin="round"/>` +
+        person(36, 42, 19, { shirt: "#AED8FF", hair: "#F2C46B" }) +
+        `<g transform="rotate(-20 72 18)"><path d="M54 18 Q72 12 90 18 Q72 24 54 18 Z" fill="#fff" ${st(3.4)}/><path d="M70 17 L62 6 H68 L78 17 Z M70 19 L62 30 H68 L78 19 Z" fill="#FFB0CD" ${st(3)}/></g>` +
+        `<path d="M8 22 q6 -4 12 0" fill="none" stroke="#C9B6C0" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6"/>`,
+      "せんせい": `<rect x="8" y="10" width="40" height="30" rx="4" fill="#5E9E7A" ${st(4)}/><path d="M16 22 H38 M16 30 H30" stroke="#fff" stroke-width="3" stroke-linecap="round"/>` +
+        yama(62, 42, 21) + bar("M40 48 L22 34", "#E8B07A", 3) +
+        `<circle cx="20" cy="80" r="10" fill="#FF7F9C" ${st(4)}/><path d="M20 70 q2 -6 7 -7" fill="none" ${st(3)}/><path d="M22 66 q6 -6 10 -2 q-6 4 -10 2 Z" fill="#9FD49A" ${st(2.4)}/>` + shine(16, 76, -30, 0.6),
+      "せんこう": `<path d="M50 30 Q32 20 10 24 V82 Q32 78 50 88 Q68 78 90 82 V24 Q68 20 50 30 Z" fill="#fff" ${st()}/><path d="M50 30 V88" ${st(3.4)}/>` +
+        `<text x="30" y="64" font-size="26" text-anchor="middle" font-family="Klee One, serif" font-weight="600" fill="#FF7FA8">あ</text><text x="70" y="64" font-size="26" text-anchor="middle" font-family="Klee One, serif" font-weight="600" fill="#5E9E7A">ア</text>` +
+        `<path d="M64 22 V40 L68 36 L72 40 V22" fill="#FF9EC0" ${st(3)}/>` + spark(14, 12, 6) + spark(86, 10, 5, "#FFB0CD"),
+      "なんねんせい": [1, 2, 3, 4].map((n, i) => `<rect x="${8 + i * 21}" y="${74 - i * 14}" width="21" height="${18 + i * 14}" fill="${["#FFE1EC", "#FFD2E2", "#FFC0D6", "#FFADC9"][i]}" ${st(4)}/><text x="${18.5 + i * 21}" y="${88}" font-size="13" text-anchor="middle" font-family="system-ui,sans-serif" font-weight="900" fill="${O}">${n}</text>`).join("") +
+        person(60, 28, 9, { long: true, shirt: "#FFB0CD" }) + bubble(10, 8, 26, "?"),
+      "なんさい": `<rect x="18" y="56" width="64" height="30" rx="8" fill="#FFE1EC" ${st()}/><path d="M18 66 q8 8 16 0 q8 8 16 0 q8 8 16 0 q8 8 16 0" fill="none" stroke="#FF9EC0" stroke-width="4"/><rect x="12" y="84" width="76" height="7" rx="3" fill="#fff" ${st(4)}/>` +
+        `<rect x="45" y="34" width="10" height="22" rx="3" fill="#AED8FF" ${st(3.4)}/><path d="M50 18 q-6 8 0 12 q6 -4 0 -12 Z" fill="#FFB347" ${st(2.6)}/>` + bubble(62, 6, 26, "?") + spark(18, 30, 6),
+      "はたち": `<rect x="14" y="54" width="72" height="32" rx="8" fill="#FFF1C4" ${st()}/><path d="M14 64 q9 8 18 0 q9 8 18 0 q9 8 18 0 q9 8 18 0" fill="none" stroke="#FFB347" stroke-width="4"/><rect x="8" y="84" width="84" height="7" rx="3" fill="#fff" ${st(4)}/>` +
+        `<text x="50" y="50" font-size="38" text-anchor="middle" font-family="system-ui,sans-serif" font-weight="900" fill="#FF7FA8" stroke="${O}" stroke-width="2.4" paint-order="stroke">20</text>` +
+        spark(12, 20, 7) + spark(88, 22, 6, "#FFB0CD") + spark(80, 8, 4, "#9A7BFF") + `<path d="M24 12 l4 8 M70 10 l-3 9 M10 40 l8 2" stroke="#FF9EC0" stroke-width="3" stroke-linecap="round"/>`,
+      // ---- фразы урока: あのう и そうですか ----
+      "あのう": `<rect x="6" y="8" width="88" height="84" rx="16" fill="#F1ECFF"/>` + person(42, 48, 17, { long: true, shirt: "#FFB0CD" }) +
+        bar("M60 74 Q66 56 64 38", "#FFB0CD", 7) + `<ellipse cx="64" cy="34" rx="6.5" ry="7.5" fill="${SK}" ${st(3.4)}/>` + `<path d="M26 38 q-5 7 0 10 q5 -3 0 -10 Z" fill="#AED8FF" ${st(2.4)}/>` +
+        bubble(66, 14, 18, "…", "#fff", "#9A7BFF") + `<rect x="6" y="8" width="88" height="84" rx="16" fill="none" ${st()}/>`,
+      "そうですか": `<rect x="6" y="8" width="88" height="84" rx="16" fill="#E6F6EE"/>` + `<g transform="rotate(10 40 70)">` + person(40, 48, 17, { shirt: "#AED8FF" }) + `</g>` +
+        `<path d="M14 42 q-4 6 0 12 M66 40 q4 6 0 12" fill="none" stroke="#9FD49A" stroke-width="3.4" stroke-linecap="round"/>` + bubble(60, 14, 20, "!", "#FFF1C4", "#CF8600") + `<rect x="6" y="8" width="88" height="84" rx="16" fill="none" ${st()}/>`
+    });
+  }
   return { get: (w) => I[w], has: (w) => !!I[w], all: () => Object.keys(I) };
 })();
 if (typeof module !== "undefined") module.exports = WordIcons;
